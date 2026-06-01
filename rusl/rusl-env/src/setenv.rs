@@ -21,6 +21,7 @@
 
 use core::ffi::{c_char, c_int};
 use core::sync::atomic::{AtomicBool, Ordering};
+use rusl_errno::__errno_location;
 
 // ---------------------------------------------------------------------------
 // 常量
@@ -223,7 +224,7 @@ pub unsafe extern "C" fn setenv(
 ) -> c_int {
     // ---- Step 1: 参数校验 ----
     if var.is_null() {
-        *rusl_core::errno::__errno_location() = EINVAL;
+        *__errno_location() = EINVAL;
         return -1;
     }
 
@@ -233,13 +234,13 @@ pub unsafe extern "C" fn setenv(
 
     // 空字符串 (l1 == 0)
     if l1 == 0 {
-        *rusl_core::errno::__errno_location() = EINVAL;
+        *__errno_location() = EINVAL;
         return -1;
     }
 
     // var 中包含 '=' (eq_pos 指向 '=', 而非 NUL)
     if *eq_pos != 0 {
-        *rusl_core::errno::__errno_location() = EINVAL;
+        *__errno_location() = EINVAL;
         return -1;
     }
 
@@ -639,7 +640,7 @@ mod tests {
             let value = cstr(b"test\0");
             let ret = setenv(ptr::null(), value.as_ptr(), 1);
             assert_eq!(ret, -1);
-            assert_eq!(*rusl_core::errno::__errno_location(), EINVAL);
+            assert_eq!(*__errno_location(), EINVAL);
         }
     });
 
@@ -650,7 +651,7 @@ mod tests {
             let value = cstr(b"test\0");
             let ret = setenv(var.as_ptr(), value.as_ptr(), 1);
             assert_eq!(ret, -1);
-            assert_eq!(*rusl_core::errno::__errno_location(), EINVAL);
+            assert_eq!(*__errno_location(), EINVAL);
         }
     });
 
@@ -661,7 +662,7 @@ mod tests {
             let value = cstr(b"test\0");
             let ret = setenv(var.as_ptr(), value.as_ptr(), 1);
             assert_eq!(ret, -1);
-            assert_eq!(*rusl_core::errno::__errno_location(), EINVAL);
+            assert_eq!(*__errno_location(), EINVAL);
         }
     });
 
@@ -672,7 +673,7 @@ mod tests {
             let value = cstr(b"test\0");
             let ret = setenv(var.as_ptr(), value.as_ptr(), 1);
             assert_eq!(ret, -1);
-            assert_eq!(*rusl_core::errno::__errno_location(), EINVAL);
+            assert_eq!(*__errno_location(), EINVAL);
         }
     });
 

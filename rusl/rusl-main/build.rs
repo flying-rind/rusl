@@ -26,7 +26,7 @@ fn link_musl_libc() {
         .and_then(|p| p.parent())
         .expect("无法定位 musl 源码根目录");
 
-    let lib_dir = musl_root.join("musl-1.2.6").join("lib");
+    let lib_dir = musl_root.join("musl-lib-origin");
 
     // musl 原生启动文件: _start → __libc_start_main → main
     // Scrt1.o 用于 PIE (Rust 默认), crti.o/crtn.o 提供 .init/.fini 段头尾
@@ -37,6 +37,9 @@ fn link_musl_libc() {
     println!("cargo:rustc-link-lib=static=c");
 
     println!("cargo:rustc-link-arg={}", lib_dir.join("crtn.o").display());
+
+    println!("cargo:rustc-link-arg=-lgcc_eh");
+    println!("cargo:rustc-link-arg=-lgcc");
 
     println!("cargo:rerun-if-changed=build.rs");
     println!("cargo:rerun-if-changed={}", lib_dir.join("libc.a").display());

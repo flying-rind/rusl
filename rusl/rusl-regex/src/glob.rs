@@ -17,6 +17,7 @@ use alloc::boxed::Box;
 use alloc::vec::Vec;
 use core::ffi::{c_char, c_int, c_uint, c_void};
 use core::cmp::Ordering;
+use rusl_errno::__errno_location;
 
 // ============================================================================
 // GLOB_* 公开常量
@@ -403,7 +404,7 @@ pub(crate) fn do_glob(
 
         if base_dir < 0 {
             if let Some(func) = errfunc {
-                let errno = unsafe { *rusl_core::errno::__errno_location() };
+                let errno = unsafe { *__errno_location() };
                 buf[*pos] = 0;
                 let ret = unsafe { func(buf.as_ptr() as *const c_char, errno) };
                 buf[*pos] = b'/';

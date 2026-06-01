@@ -11,4 +11,4 @@ mod unsetenv_test;
 pub extern crate alloc;
 
 pub use rusl::api::env::*;
-pub use rusl_core::__errno_location;
+pub use rusl::api::errno::__errno_location;

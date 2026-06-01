@@ -10,7 +10,7 @@
 /// - `d` 至少可写 n 字节
 /// - s 以 null 结尾
 #[no_mangle]
-pub unsafe extern "C" fn stpncpy(
+pub unsafe extern "C" fn __stpncpy(
     d: *mut core::ffi::c_char,
     s: *const core::ffi::c_char,
     n: usize,
@@ -33,6 +33,11 @@ pub unsafe extern "C" fn stpncpy(
         i += 1;
     }
     d.add(n)
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn stpncpy(d: *mut core::ffi::c_char, s: *const core::ffi::c_char, n: usize) -> *mut core::ffi::c_char {
+    unsafe { __stpncpy(d, s, n) }
 }
 
 /// 安全的 Rust 内部实现。

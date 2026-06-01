@@ -2,7 +2,9 @@
 
 #![allow(unused_imports, unused_variables)]
 
-use core::ffi::c_char;
+use core::ffi::{c_char, c_int};
+use rusl_core::c_types::locale_t;
+
 /// strcasecmp — 忽略大小写比较两个 C 字符串 _l 和 _r。
 ///
 /// # Safety
@@ -26,6 +28,16 @@ pub unsafe extern "C" fn strcasecmp(_l: *const core::ffi::c_char, _r: *const cor
         }
         i += 1;
     }
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn __strcasecmp_l(l: *const c_char, r: *const c_char, _loc: locale_t) -> c_int {
+    unsafe { strcasecmp(l, r) }
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn strcasecmp_l(l: *const c_char, r: *const c_char, loc: locale_t) -> c_int {
+    unsafe { __strcasecmp_l(l, r, loc) }
 }
 
 /// 安全的 Rust 内部实现。

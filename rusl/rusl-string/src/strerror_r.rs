@@ -50,6 +50,11 @@ pub unsafe extern "C" fn strerror_r(err: core::ffi::c_int, buf: *mut core::ffi::
     0
 }
 
+#[no_mangle]
+pub unsafe extern "C" fn __xpg_strerror_r(err: core::ffi::c_int, buf: *mut core::ffi::c_char, buflen: usize) -> core::ffi::c_int {
+    unsafe { strerror_r(err, buf, buflen) }
+}
+
 /// 安全的 Rust 内部实现。
 pub(crate) fn strerror_r_impl(err: core::ffi::c_int, buf: &mut [u8]) -> core::ffi::c_int {
     let msg = ERROR_MSGS.iter().find(|&&(code, _)| code == err)

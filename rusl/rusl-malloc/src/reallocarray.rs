@@ -11,6 +11,7 @@
 //! 对应 musl 源码: `src/malloc/reallocarray.c`
 
 use core::ffi::c_void;
+use rusl_errno::__errno_location;
 
 /// 带整数溢出检查的安全数组内存重分配。
 ///
@@ -58,7 +59,7 @@ pub unsafe extern "C" fn reallocarray(
     // 溢出检测: 若 n != 0 且 m * n 会溢出 usize，返回 null 并设置 errno = ENOMEM。
     if n != 0 && m > usize::MAX / n {
         unsafe {
-            *rusl_core::errno::__errno_location() = super::ENOMEM;
+            *__errno_location() = super::ENOMEM;
         }
         return core::ptr::null_mut();
     }

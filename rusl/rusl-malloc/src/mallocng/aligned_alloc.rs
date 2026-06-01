@@ -23,6 +23,7 @@
 
 use core::ffi::c_void;
 use core::sync::atomic::Ordering;
+use rusl_errno::__errno_location;
 
 // ---------------------------------------------------------------------------
 // 外部符号依赖 (由同 crate 内其他模块提供)
@@ -89,7 +90,7 @@ pub unsafe extern "C" fn aligned_alloc(align: usize, len: usize) -> *mut c_void 
     // 1) 参数校验: align 必须是 2 的幂
     //    (align & -align) == align 是经典的 2 的幂判定
     if (align & align.wrapping_neg()) != align {
-        *rusl_core::errno::__errno_location() = super::super::EINVAL;
+        *__errno_location() = super::super::EINVAL;
         return core::ptr::null_mut();
     }
 
@@ -97,7 +98,7 @@ pub unsafe extern "C" fn aligned_alloc(align: usize, len: usize) -> *mut c_void 
     //    len > SIZE_MAX - align → 溢出
     //    align >= (1ULL<<31)*UNIT → 对齐过大
     if len > usize::MAX - align || align >= (1usize << 31) * super::meta::UNIT {
-        *rusl_core::errno::__errno_location() = super::super::ENOMEM;
+        *__errno_location() = super::super::ENOMEM;
         return core::ptr::null_mut();
     }
 
@@ -107,7 +108,7 @@ pub unsafe extern "C" fn aligned_alloc(align: usize, len: usize) -> *mut c_void 
     if super::dynlink::__malloc_replaced.load(Ordering::Relaxed)
         && !super::dynlink::__aligned_alloc_replaced.load(Ordering::Relaxed)
     {
-        *rusl_core::errno::__errno_location() = super::super::ENOMEM;
+        *__errno_location() = super::super::ENOMEM;
         return core::ptr::null_mut();
     }
 

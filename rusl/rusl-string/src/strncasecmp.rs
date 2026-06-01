@@ -2,7 +2,9 @@
 
 #![allow(unused_imports, unused_variables)]
 
-use core::ffi::c_char;
+use core::ffi::{c_char, c_int};
+use rusl_core::c_types::locale_t;
+
 /// strncasecmp — 忽略大小写比较两个 C 字符串的前 n 个字符。
 ///
 /// # Safety
@@ -25,6 +27,16 @@ pub unsafe extern "C" fn strncasecmp(_l: *const core::ffi::c_char, _r: *const co
         }
     }
     0
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn __strncasecmp_l(l: *const c_char, r: *const c_char, n: usize, _loc: locale_t) -> c_int {
+    unsafe { strncasecmp(l, r, n) }
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn strncasecmp_l(l: *const c_char, r: *const c_char, n: usize, loc: locale_t) -> c_int {
+    unsafe { __strncasecmp_l(l, r, n, loc) }
 }
 
 /// 安全的 Rust 内部实现。

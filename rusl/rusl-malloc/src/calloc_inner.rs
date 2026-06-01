@@ -25,6 +25,7 @@
 
 use core::ffi::{c_void, c_int};
 use core::sync::atomic::Ordering;
+use rusl_errno::__errno_location;
 
 // ============================================================================
 // 常量定义
@@ -65,7 +66,7 @@ pub(crate) const ENOMEM: c_int = 12;
 /// - Stage 0 使用全局静态 errno（非线程安全），Stage 5 将升级为 per-thread TLS
 ///
 /// # 实现细节
-/// 内部调用 [`rusl_core::errno::__errno_location`] 获取当前线程的 errno 指针，
+/// 内部调用 [`rusl_errno::__errno_location`] 获取当前线程的 errno 指针，
 /// 然后直接写入。在 Stage 0 中，此指针指向一个全局 `static mut ERRNO`。
 /// 在未来的 Stage 5 中，将升级为通过线程指针寄存器获取 per-thread TLS 中的 errno。
 ///
@@ -73,7 +74,7 @@ pub(crate) const ENOMEM: c_int = 12;
 /// - `calloc` 检测到乘法溢出时：`set_errno(ENOMEM); return null_mut();`
 /// - 底层 `malloc` 返回 NULL 后：errno 已由 malloc 设置，calloc 无需重复设置
 pub(crate) unsafe fn set_errno(val: c_int) {
-    *rusl_core::errno::__errno_location() = val;
+    *__errno_location() = val;
 }
 
 // ============================================================================
@@ -223,14 +224,14 @@ mod tests {
     test!("test_errno_location_returns_valid_pointer" {
         // 验证 errno 基础设施可正常读写。
         // 此测试不通过 `set_errno` 包装函数（其为 `todo!()`），
-        // 而是直接使用 `rusl_core::errno::__errno_location` 验证底层机制。
-        let ptr = unsafe { rusl_core::errno::__errno_location() };
+        // 而是直接使用 `rusl_errno::__errno_location` 验证底层机制。
+        let ptr = rusl_errno::__errno_location();
         assert!(!ptr.is_null(), "__errno_location 应返回有效指针");
     });
 
     test!("test_errno_read_write_roundtrip" {
         unsafe {
-            let errno_ptr = rusl_core::errno::__errno_location();
+            let errno_ptr = rusl_errno::__errno_location();
             // 保存当前值
             let saved = *errno_ptr;
             // 写入测试值
@@ -244,7 +245,7 @@ mod tests {
 
     test!("test_errno_read_write_zero" {
         unsafe {
-            let errno_ptr = rusl_core::errno::__errno_location();
+            let errno_ptr = rusl_errno::__errno_location();
             let saved = *errno_ptr;
             *errno_ptr = ENOMEM;
             *errno_ptr = 0;
@@ -255,7 +256,7 @@ mod tests {
 
     test!("test_errno_multiple_values" {
         unsafe {
-            let errno_ptr = rusl_core::errno::__errno_location();
+            let errno_ptr = rusl_errno::__errno_location();
             let saved = *errno_ptr;
             for val in &[1i32, 2, 12, 22, 38, 0] {
                 *errno_ptr = *val;
@@ -331,7 +332,7 @@ mod tests {
 
     test!("test_set_errno_sets_enomem" {
         unsafe {
-            let errno_ptr = rusl_core::errno::__errno_location();
+            let errno_ptr = rusl_errno::__errno_location();
             let saved = *errno_ptr;
             set_errno(ENOMEM);
             assert_eq!(*errno_ptr, ENOMEM,
@@ -342,7 +343,7 @@ mod tests {
 
     test!("test_set_errno_sets_zero" {
         unsafe {
-            let errno_ptr = rusl_core::errno::__errno_location();
+            let errno_ptr = rusl_errno::__errno_location();
             let saved = *errno_ptr;
             set_errno(ENOMEM);
             set_errno(0);

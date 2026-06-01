@@ -6,6 +6,7 @@
 
 use core::ffi::c_char;
 use core::str::FromStr;
+use rusl_errno::__errno_location;
 
 /// Linux ERANGE 值
 const ERANGE: i32 = 34;
@@ -15,7 +16,7 @@ const ERANGE: i32 = 34;
 unsafe fn set_erange() {
     #[cfg(not(test))]
     unsafe {
-        *rusl_core::errno::__errno_location() = ERANGE;
+        *__errno_location() = ERANGE;
     }
 }
 

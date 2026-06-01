@@ -1,0 +1,5120 @@
+RUSTFLAGS="-C panic=abort" cargo +nightly -Z panic-abort-tests test -p rusl --no-default-features -- test-threads=1
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/rusl/rusl/test-framework/Cargo.toml
+workspace: /home/mangp/桌面/OS/rusl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/rusl/rusl/rusl-core/Cargo.toml
+workspace: /home/mangp/桌面/OS/rusl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/rusl/rusl/rusl-internal/Cargo.toml
+workspace: /home/mangp/桌面/OS/rusl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/rusl/rusl/rusl-errno/Cargo.toml
+workspace: /home/mangp/桌面/OS/rusl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/rusl/rusl/rusl-ctype/Cargo.toml
+workspace: /home/mangp/桌面/OS/rusl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/rusl/rusl/rusl-string/Cargo.toml
+workspace: /home/mangp/桌面/OS/rusl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/rusl/rusl/rusl-stdlib/Cargo.toml
+workspace: /home/mangp/桌面/OS/rusl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/rusl/rusl/rusl-prng/Cargo.toml
+workspace: /home/mangp/桌面/OS/rusl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/rusl/rusl/rusl-search/Cargo.toml
+workspace: /home/mangp/桌面/OS/rusl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/rusl/rusl/rusl-malloc/Cargo.toml
+workspace: /home/mangp/桌面/OS/rusl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/rusl/rusl/rusl-regex/Cargo.toml
+workspace: /home/mangp/桌面/OS/rusl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/rusl/rusl/rusl-env/Cargo.toml
+workspace: /home/mangp/桌面/OS/rusl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/rusl/rusl/rusl-unistd/Cargo.toml
+workspace: /home/mangp/桌面/OS/rusl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/rusl/rusl/rusl-stdio/Cargo.toml
+workspace: /home/mangp/桌面/OS/rusl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/rusl/rusl/rusl-exit/Cargo.toml
+workspace: /home/mangp/桌面/OS/rusl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/rusl/rusl/rusl-main/Cargo.toml
+workspace: /home/mangp/桌面/OS/rusl/rusl/Cargo.toml
+warning: /home/mangp/桌面/OS/rusl/rusl/rusl-prng/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/rusl/rusl/rusl-unistd/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/rusl/rusl/rusl-exit/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/rusl/rusl/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/rusl/rusl/rusl-stdlib/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/rusl/rusl/test-framework/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/rusl/rusl/rusl-stdio/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/rusl/rusl/rusl-core/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/rusl/rusl/rusl-env/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/rusl/rusl/rusl-regex/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/rusl/rusl/rusl-ctype/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/rusl/rusl/rusl-string/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/rusl/rusl/rusl-search/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/rusl/rusl/rusl-malloc/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/rusl/rusl/rusl-internal/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/rusl/rusl/rusl-errno/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/rusl/rusl/rusl-main/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: the feature `lang_items` is internal to the compiler or standard library
+  --> rusl-core/src/lib.rs:14:12
+   |
+14 | #![feature(lang_items)]
+   |            ^^^^^^^^^^
+   |
+   = note: using it is strongly discouraged
+   = note: `#[warn(internal_features)]` on by default
+
+warning: `rusl-core` (lib) generated 1 warning
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/search/hsearch_test.rs:14:5
+   |
+14 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+   |
+   = note: `#[warn(unused_unsafe)]` (part of `#[warn(unused)]`) on by default
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/search/hsearch_test.rs:23:5
+   |
+23 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/search/hsearch_test.rs:33:5
+   |
+33 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/search/hsearch_test.rs:44:5
+   |
+44 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/search/hsearch_test.rs:55:5
+   |
+55 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/search/hsearch_test.rs:65:5
+   |
+65 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/search/hsearch_test.rs:79:5
+   |
+79 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/search/hsearch_test.rs:165:5
+    |
+165 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/search/insque_test.rs:19:5
+   |
+19 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/search/insque_test.rs:43:5
+   |
+43 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/search/insque_test.rs:60:5
+   |
+60 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/search/insque_test.rs:74:5
+   |
+74 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/search/insque_test.rs:95:5
+   |
+95 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/search/insque_test.rs:111:5
+    |
+111 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/search/insque_test.rs:127:5
+    |
+127 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/search/insque_test.rs:136:5
+    |
+136 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/search/lsearch_test.rs:19:5
+   |
+19 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/search/lsearch_test.rs:37:5
+   |
+37 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/search/lsearch_test.rs:54:5
+   |
+54 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/search/lsearch_test.rs:72:5
+   |
+72 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/search/lsearch_test.rs:91:5
+   |
+91 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/search/lsearch_test.rs:111:5
+    |
+111 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/search/lsearch_test.rs:130:5
+    |
+130 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/search/lsearch_test.rs:158:5
+    |
+158 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/search/lsearch_test.rs:188:5
+    |
+188 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/search/tdestroy_test.rs:30:5
+   |
+30 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/search/tdestroy_test.rs:40:5
+   |
+40 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/search/twalk_test.rs:28:5
+   |
+28 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/search/twalk_test.rs:35:5
+   |
+35 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/bcmp_test.rs:6:5
+  |
+6 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+  |
+  = note: `#[warn(unused_unsafe)]` (part of `#[warn(unused)]`) on by default
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/bcmp_test.rs:14:5
+   |
+14 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/bcopy_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/bcopy_test.rs:15:5
+   |
+15 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/bzero_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/bzero_test.rs:15:5
+   |
+15 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/explicit_bzero_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/explicit_bzero_test.rs:15:5
+   |
+15 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/index_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/memccpy_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/memccpy_test.rs:16:5
+   |
+16 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/memchr_test.rs:16:5
+   |
+16 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/memchr_test.rs:24:5
+   |
+24 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/memcmp_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/memcmp_test.rs:15:5
+   |
+15 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/memcmp_test.rs:23:5
+   |
+23 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/memcpy_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/memcpy_test.rs:17:5
+   |
+17 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/memcpy_test.rs:27:5
+   |
+27 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/memmem_test.rs:16:5
+   |
+16 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/memmem_test.rs:24:5
+   |
+24 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/memmove_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/memmove_test.rs:17:5
+   |
+17 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/memrchr_test.rs:16:5
+   |
+16 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/memset_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/memset_test.rs:15:5
+   |
+15 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/memset_test.rs:23:5
+   |
+23 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/rindex_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/strcasecmp_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/strcasestr_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/strchr_test.rs:16:5
+   |
+16 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/strcmp_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/strcmp_test.rs:15:5
+   |
+15 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/strcpy_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/strcpy_test.rs:16:5
+   |
+16 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/strcspn_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/strcspn_test.rs:15:5
+   |
+15 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/strerror_r_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/strlcpy_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/strlcpy_test.rs:16:5
+   |
+16 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/strlen_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/strlen_test.rs:15:5
+   |
+15 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/strncasecmp_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/strncmp_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/strncmp_test.rs:15:5
+   |
+15 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/strncpy_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/strncpy_test.rs:16:5
+   |
+16 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/strnlen_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/strnlen_test.rs:15:5
+   |
+15 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/strpbrk_test.rs:16:5
+   |
+16 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/strrchr_test.rs:16:5
+   |
+16 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/strsep_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/strsignal_test.rs:6:5
+  |
+6 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/strspn_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/strspn_test.rs:15:5
+   |
+15 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/strstr_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/strstr_test.rs:15:5
+   |
+15 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/strstr_test.rs:23:5
+   |
+23 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/strtok_r_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/strtok_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/strverscmp_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/swab_test.rs:7:5
+  |
+7 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/swab_test.rs:15:5
+   |
+15 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/wcscasecmp_l_test.rs:6:5
+  |
+6 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/wcscasecmp_test.rs:6:5
+  |
+6 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/wcschr_test.rs:15:5
+   |
+15 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/wcscmp_test.rs:6:5
+  |
+6 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/wcscmp_test.rs:14:5
+   |
+14 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/wcscpy_test.rs:6:5
+  |
+6 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/wcscspn_test.rs:6:5
+  |
+6 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/wcslen_test.rs:6:5
+  |
+6 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/wcslen_test.rs:14:5
+   |
+14 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/wcsncasecmp_l_test.rs:6:5
+  |
+6 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/wcsncasecmp_test.rs:6:5
+  |
+6 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/wcsncmp_test.rs:6:5
+  |
+6 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/wcsncpy_test.rs:6:5
+  |
+6 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/wcsnlen_test.rs:6:5
+  |
+6 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/wcsnlen_test.rs:14:5
+   |
+14 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/wcspbrk_test.rs:15:5
+   |
+15 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/wcsspn_test.rs:6:5
+  |
+6 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/wcsstr_test.rs:6:5
+  |
+6 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/wcsstr_test.rs:14:5
+   |
+14 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/wcstok_test.rs:6:5
+  |
+6 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/wcswcs_test.rs:6:5
+  |
+6 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/wmemchr_test.rs:15:5
+   |
+15 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/wmemcmp_test.rs:6:5
+  |
+6 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/wmemcmp_test.rs:14:5
+   |
+14 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/wmemcpy_test.rs:6:5
+  |
+6 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/string/wmemcpy_test.rs:15:5
+   |
+15 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/wmemmove_test.rs:6:5
+  |
+6 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/string/wmemset_test.rs:6:5
+  |
+6 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+   Compiling rusl v0.1.0 (/home/mangp/桌面/OS/rusl/rusl/rusl-main)
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/ctype_get_mb_cur_max_test.rs:59:5
+   |
+59 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+   |
+   = note: `#[warn(unused_unsafe)]` (part of `#[warn(unused)]`) on by default
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/ctype_get_mb_cur_max_test.rs:66:5
+   |
+66 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/ctype_get_mb_cur_max_test.rs:74:5
+   |
+74 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/ctype_get_mb_cur_max_test.rs:82:5
+   |
+82 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/ctype_integration_test.rs:42:5
+   |
+42 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/ctype_integration_test.rs:70:5
+   |
+70 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/ctype_integration_test.rs:101:5
+    |
+101 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/ctype_integration_test.rs:129:5
+    |
+129 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/ctype_integration_test.rs:159:5
+    |
+159 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/ctype_integration_test.rs:188:5
+    |
+188 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/isalpha_test.rs:69:5
+   |
+69 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/isalpha_test.rs:76:5
+   |
+76 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/isalpha_test.rs:85:5
+   |
+85 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/isalpha_test.rs:94:5
+   |
+94 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isalpha_test.rs:103:5
+    |
+103 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isalpha_test.rs:110:5
+    |
+110 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/isascii_test.rs:55:5
+   |
+55 |     unsafe { let _ = isascii(b'A' as c_int); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/isascii_test.rs:59:5
+   |
+59 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/isascii_test.rs:67:5
+   |
+67 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/isascii_test.rs:75:5
+   |
+75 |     unsafe { assert_ne!(isascii(0), 0); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/isascii_test.rs:79:5
+   |
+79 |     unsafe { assert_ne!(isascii(127), 0); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/isascii_test.rs:83:5
+   |
+83 |     unsafe { assert_eq!(isascii(128), 0); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/isascii_test.rs:87:5
+   |
+87 |     unsafe { assert_eq!(isascii(255), 0); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/isascii_test.rs:91:5
+   |
+91 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/isascii_test.rs:99:5
+   |
+99 |     unsafe { assert_eq!(isascii(-1), 0, "isascii(EOF) == 0"); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isascii_test.rs:103:5
+    |
+103 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswcntrl_test.rs:69:5
+   |
+69 |     unsafe { iswcntrl(0x00); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswcntrl_test.rs:74:5
+   |
+74 |     unsafe { iswcntrl_l(0x00, core::ptr::null_mut()); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswcntrl_test.rs:79:5
+   |
+79 |     unsafe { iswcntrl(wint_t::MAX); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswcntrl_test.rs:86:5
+   |
+86 |     unsafe { iswcntrl_l(0x00, 0xdead_beef as locale_t); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswcntrl_test.rs:95:5
+   |
+95 |     unsafe { iswcntrl(0x00); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswcntrl_test.rs:100:5
+    |
+100 |     unsafe { iswcntrl(0x7F); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswcntrl_test.rs:105:5
+    |
+105 |     unsafe { iswcntrl(0x20); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswcntrl_test.rs:110:5
+    |
+110 |     unsafe { iswcntrl(0x41); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswcntrl_test.rs:115:5
+    |
+115 |     unsafe { iswcntrl(0x9F); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswcntrl_test.rs:120:5
+    |
+120 |     unsafe { iswcntrl(0xA0); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswcntrl_test.rs:125:5
+    |
+125 |     unsafe { iswcntrl(0x2028); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswcntrl_test.rs:130:5
+    |
+130 |     unsafe { iswcntrl(0x2029); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswcntrl_test.rs:135:5
+    |
+135 |     unsafe { iswcntrl(0x2027); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswcntrl_test.rs:140:5
+    |
+140 |     unsafe { iswcntrl(0xFFF9); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswcntrl_test.rs:145:5
+    |
+145 |     unsafe { iswcntrl(0xFFFB); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswcntrl_test.rs:150:5
+    |
+150 |     unsafe { iswcntrl(0xFFF8); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswcntrl_test.rs:155:5
+    |
+155 |     unsafe { iswcntrl(0x4E2D); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswcntrl_test.rs:162:5
+    |
+162 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswctype_test.rs:119:2
+    |
+119 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswctype_test.rs:127:2
+    |
+127 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswctype_test.rs:136:2
+    |
+136 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswctype_test.rs:144:2
+    |
+144 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswctype_test.rs:153:2
+    |
+153 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswctype_test.rs:165:2
+    |
+165 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswctype_test.rs:173:2
+    |
+173 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswctype_test.rs:181:2
+    |
+181 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswctype_test.rs:190:2
+    |
+190 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswctype_test.rs:199:2
+    |
+199 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswctype_test.rs:208:2
+    |
+208 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswctype_test.rs:217:2
+    |
+217 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswctype_test.rs:226:2
+    |
+226 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswdigit_test.rs:52:5
+   |
+52 |     unsafe { iswdigit(0x30); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswdigit_test.rs:57:5
+   |
+57 |     unsafe { iswdigit_l(0x30, core::ptr::null_mut()); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswdigit_test.rs:66:5
+   |
+66 |     unsafe { iswdigit(0x30); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswdigit_test.rs:71:5
+   |
+71 |     unsafe { iswdigit(0x39); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswdigit_test.rs:76:5
+   |
+76 |     unsafe { iswdigit(0x35); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswdigit_test.rs:81:5
+   |
+81 |     unsafe { iswdigit(0x2F); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswdigit_test.rs:86:5
+   |
+86 |     unsafe { iswdigit(0x3A); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswdigit_test.rs:91:5
+   |
+91 |     unsafe { iswdigit(0x41); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswdigit_test.rs:96:5
+   |
+96 |     unsafe { iswdigit(0x0660); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswdigit_test.rs:101:5
+    |
+101 |     unsafe { iswdigit(wint_t::MAX); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswdigit_test.rs:106:5
+    |
+106 |     unsafe { iswdigit(0x20); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswdigit_test.rs:111:5
+    |
+111 |     unsafe { iswdigit_l(0x30, core::ptr::null_mut()); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswgraph_test.rs:40:5
+   |
+40 |     unsafe { iswgraph(0x41); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswgraph_test.rs:45:5
+   |
+45 |     unsafe { iswgraph_l(0x41, core::ptr::null_mut()); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswgraph_test.rs:54:5
+   |
+54 |     unsafe { iswgraph(0x41); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswgraph_test.rs:59:5
+   |
+59 |     unsafe { iswgraph(0x30); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswgraph_test.rs:64:5
+   |
+64 |     unsafe { iswgraph(0x21); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswgraph_test.rs:69:5
+   |
+69 |     unsafe { iswgraph(0x20); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswgraph_test.rs:74:5
+   |
+74 |     unsafe { iswgraph(0x09); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswgraph_test.rs:79:5
+   |
+79 |     unsafe { iswgraph(0x0A); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswgraph_test.rs:84:5
+   |
+84 |     unsafe { iswgraph(0x7F); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswgraph_test.rs:89:5
+   |
+89 |     unsafe { iswgraph(wint_t::MAX); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswgraph_test.rs:94:5
+   |
+94 |     unsafe { iswgraph(0x4E2D); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswgraph_test.rs:99:5
+   |
+99 |     unsafe { iswgraph_l(0x41, core::ptr::null_mut()); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswlower_test.rs:40:5
+   |
+40 |     unsafe { iswlower(0x61); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswlower_test.rs:45:5
+   |
+45 |     unsafe { iswlower_l(0x61, core::ptr::null_mut()); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswlower_test.rs:54:5
+   |
+54 |     unsafe { iswlower(0x61); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswlower_test.rs:59:5
+   |
+59 |     unsafe { iswlower(0x7A); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswlower_test.rs:64:5
+   |
+64 |     unsafe { iswlower(0x6D); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswlower_test.rs:69:5
+   |
+69 |     unsafe { iswlower(0x41); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswlower_test.rs:74:5
+   |
+74 |     unsafe { iswlower(0x5A); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswlower_test.rs:79:5
+   |
+79 |     unsafe { iswlower(0x31); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswlower_test.rs:84:5
+   |
+84 |     unsafe { iswlower(0x20); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswlower_test.rs:89:5
+   |
+89 |     unsafe { iswlower(wint_t::MAX); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswlower_test.rs:94:5
+   |
+94 |     unsafe { iswlower(0x00E8); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswlower_test.rs:99:5
+   |
+99 |     unsafe { iswlower(0x00C8); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswlower_test.rs:104:5
+    |
+104 |     unsafe { iswlower_l(0x61, core::ptr::null_mut()); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswprint_test.rs:35:5
+   |
+35 |     unsafe { iswprint_l(0x41, core::ptr::null_mut()); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswprint_test.rs:44:5
+   |
+44 |     unsafe { iswprint(0x20); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswprint_test.rs:49:5
+   |
+49 |     unsafe { iswprint(0x41); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswprint_test.rs:54:5
+   |
+54 |     unsafe { iswprint(0x7E); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswprint_test.rs:59:5
+   |
+59 |     unsafe { iswprint(0x00); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswprint_test.rs:64:5
+   |
+64 |     unsafe { iswprint(0x1F); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswprint_test.rs:69:5
+   |
+69 |     unsafe { iswprint(0x7F); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswprint_test.rs:78:5
+   |
+78 |     unsafe { iswprint(0x80); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswprint_test.rs:83:5
+   |
+83 |     unsafe { iswprint(0x9F); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswprint_test.rs:88:5
+   |
+88 |     unsafe { iswprint(0xA0); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswprint_test.rs:97:5
+   |
+97 |     unsafe { iswprint(0x2028); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswprint_test.rs:102:5
+    |
+102 |     unsafe { iswprint(0x2029); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswprint_test.rs:107:5
+    |
+107 |     unsafe { iswprint(0x202A); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswprint_test.rs:116:5
+    |
+116 |     unsafe { iswprint(0xD7FF); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswprint_test.rs:121:5
+    |
+121 |     unsafe { iswprint(0xD800); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswprint_test.rs:126:5
+    |
+126 |     unsafe { iswprint(0xDFFF); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswprint_test.rs:131:5
+    |
+131 |     unsafe { iswprint(0xE000); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswprint_test.rs:140:5
+    |
+140 |     unsafe { iswprint(0xFFF8); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswprint_test.rs:145:5
+    |
+145 |     unsafe { iswprint(0xFFF9); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswprint_test.rs:150:5
+    |
+150 |     unsafe { iswprint(0xFFFC); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswprint_test.rs:155:5
+    |
+155 |     unsafe { iswprint(0xFFFD); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswprint_test.rs:160:5
+    |
+160 |     unsafe { iswprint(0xFFFE); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswprint_test.rs:165:5
+    |
+165 |     unsafe { iswprint(0xFFFF); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswprint_test.rs:174:5
+    |
+174 |     unsafe { iswprint(0x1FFFE); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswprint_test.rs:179:5
+    |
+179 |     unsafe { iswprint(0x1FFFD); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswprint_test.rs:184:5
+    |
+184 |     unsafe { iswprint(wint_t::MAX); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswprint_test.rs:189:5
+    |
+189 |     unsafe { iswprint(0x4E2D); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswprint_test.rs:194:5
+    |
+194 |     unsafe { iswprint_l(0x41, core::ptr::null_mut()); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswpunct_test.rs:70:5
+   |
+70 |     unsafe { iswpunct(b'.' as wint_t); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswpunct_test.rs:75:5
+   |
+75 |     unsafe { iswpunct_l(b'.' as wint_t, core::ptr::null_mut()); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswpunct_test.rs:80:5
+   |
+80 |     unsafe { iswpunct(wint_t::MAX); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswpunct_test.rs:87:5
+   |
+87 |     unsafe { iswpunct_l(0x00, 0xdead_beef as locale_t); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswpunct_test.rs:96:5
+   |
+96 |     unsafe { iswpunct(b'.' as wint_t); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:101:5
+    |
+101 |     unsafe { iswpunct(b',' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:106:5
+    |
+106 |     unsafe { iswpunct(b'!' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:111:5
+    |
+111 |     unsafe { iswpunct(b'?' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:116:5
+    |
+116 |     unsafe { iswpunct(b';' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:121:5
+    |
+121 |     unsafe { iswpunct(b':' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:126:5
+    |
+126 |     unsafe { iswpunct(b'~' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:131:5
+    |
+131 |     unsafe { iswpunct(b'@' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:136:5
+    |
+136 |     unsafe { iswpunct(b'#' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:141:5
+    |
+141 |     unsafe { iswpunct(b'`' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:150:5
+    |
+150 |     unsafe { iswpunct(b'A' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:155:5
+    |
+155 |     unsafe { iswpunct(b'z' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:160:5
+    |
+160 |     unsafe { iswpunct(b'0' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:165:5
+    |
+165 |     unsafe { iswpunct(b'9' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:170:5
+    |
+170 |     unsafe { iswpunct(b' ' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:175:5
+    |
+175 |     unsafe { iswpunct(b'\t' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:180:5
+    |
+180 |     unsafe { iswpunct(b'\n' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:185:5
+    |
+185 |     unsafe { iswpunct(0x7F); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:190:5
+    |
+190 |     unsafe { iswpunct(0x01); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:199:5
+    |
+199 |     unsafe { iswpunct(0x20000u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:204:5
+    |
+204 |     unsafe { iswpunct(0x1FFFFu32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:209:5
+    |
+209 |     unsafe { iswpunct(0x2FFFFu32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:214:5
+    |
+214 |     unsafe { iswpunct(wint_t::MAX); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:223:5
+    |
+223 |     unsafe { iswpunct(0x00BFu32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:228:5
+    |
+228 |     unsafe { iswpunct(0x2013u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:233:5
+    |
+233 |     unsafe { iswpunct(0x2014u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:238:5
+    |
+238 |     unsafe { iswpunct(0x2018u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:243:5
+    |
+243 |     unsafe { iswpunct(0x201Cu32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:252:5
+    |
+252 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:259:5
+    |
+259 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:266:5
+    |
+266 |     unsafe { iswpunct(0x4E2Du32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:271:5
+    |
+271 |     unsafe { iswpunct(0x00); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswpunct_test.rs:280:5
+    |
+280 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:121:5
+    |
+121 |     unsafe { iswspace(b' ' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:126:5
+    |
+126 |     unsafe { iswspace_l(b' ' as wint_t, core::ptr::null_mut()); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:131:5
+    |
+131 |     unsafe { iswspace(wint_t::MAX); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:136:5
+    |
+136 |     unsafe { iswspace_l(0x00, 0xdead_beef as locale_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:145:5
+    |
+145 |     unsafe { iswspace(b' ' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:150:5
+    |
+150 |     unsafe { iswspace(b'\t' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:155:5
+    |
+155 |     unsafe { iswspace(b'\n' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:160:5
+    |
+160 |     unsafe { iswspace(b'\r' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:165:5
+    |
+165 |     unsafe { iswspace(0x0B); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:170:5
+    |
+170 |     unsafe { iswspace(0x0C); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:179:5
+    |
+179 |     unsafe { iswspace(b'A' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:184:5
+    |
+184 |     unsafe { iswspace(b'0' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:189:5
+    |
+189 |     unsafe { iswspace(b'!' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:194:5
+    |
+194 |     unsafe { iswspace(0x4E2Du32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:203:5
+    |
+203 |     unsafe { iswspace(0); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:212:5
+    |
+212 |     unsafe { iswspace(0x00A0u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:217:5
+    |
+217 |     unsafe { iswspace(0x2007u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:222:5
+    |
+222 |     unsafe { iswspace(0x202Fu32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:227:5
+    |
+227 |     unsafe { iswspace(0x1680u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:236:5
+    |
+236 |     unsafe { iswspace(0x0085u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:241:5
+    |
+241 |     unsafe { iswspace(0x2000u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:246:5
+    |
+246 |     unsafe { iswspace(0x2001u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:251:5
+    |
+251 |     unsafe { iswspace(0x2002u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:256:5
+    |
+256 |     unsafe { iswspace(0x2006u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:261:5
+    |
+261 |     unsafe { iswspace(0x2008u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:266:5
+    |
+266 |     unsafe { iswspace(0x200Au32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:271:5
+    |
+271 |     unsafe { iswspace(0x2028u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:276:5
+    |
+276 |     unsafe { iswspace(0x2029u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:281:5
+    |
+281 |     unsafe { iswspace(0x205Fu32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:286:5
+    |
+286 |     unsafe { iswspace(0x3000u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:295:5
+    |
+295 |     unsafe { iswspace(wint_t::MAX); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:304:5
+    |
+304 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:311:5
+    |
+311 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswspace_test.rs:322:5
+    |
+322 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswupper_test.rs:71:5
+   |
+71 |     unsafe { iswupper(b'A' as wint_t); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswupper_test.rs:76:5
+   |
+76 |     unsafe { iswupper_l(b'A' as wint_t, core::ptr::null_mut()); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswupper_test.rs:81:5
+   |
+81 |     unsafe { iswupper(wint_t::MAX); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswupper_test.rs:88:5
+   |
+88 |     unsafe { iswupper_l(0x00, 0xdead_beef as locale_t); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswupper_test.rs:97:5
+   |
+97 |     unsafe { iswupper(b'A' as wint_t); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswupper_test.rs:102:5
+    |
+102 |     unsafe { iswupper(b'Z' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswupper_test.rs:107:5
+    |
+107 |     unsafe { iswupper(b'M' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswupper_test.rs:112:5
+    |
+112 |     unsafe { iswupper(b'@' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswupper_test.rs:117:5
+    |
+117 |     unsafe { iswupper(b'[' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswupper_test.rs:126:5
+    |
+126 |     unsafe { iswupper(b'a' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswupper_test.rs:131:5
+    |
+131 |     unsafe { iswupper(b'z' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswupper_test.rs:140:5
+    |
+140 |     unsafe { iswupper(b'0' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswupper_test.rs:145:5
+    |
+145 |     unsafe { iswupper(b'!' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswupper_test.rs:150:5
+    |
+150 |     unsafe { iswupper(b' ' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswupper_test.rs:155:5
+    |
+155 |     unsafe { iswupper(b'\n' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswupper_test.rs:160:5
+    |
+160 |     unsafe { iswupper(0); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswupper_test.rs:169:5
+    |
+169 |     unsafe { iswupper(0x00C0u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswupper_test.rs:174:5
+    |
+174 |     unsafe { iswupper(0x00C1u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswupper_test.rs:179:5
+    |
+179 |     unsafe { iswupper(0x0391u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswupper_test.rs:184:5
+    |
+184 |     unsafe { iswupper(0x0410u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswupper_test.rs:189:5
+    |
+189 |     unsafe { iswupper(0x0531u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswupper_test.rs:198:5
+    |
+198 |     unsafe { iswupper(0x00E0u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswupper_test.rs:203:5
+    |
+203 |     unsafe { iswupper(0x03B1u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswupper_test.rs:208:5
+    |
+208 |     unsafe { iswupper(0x0430u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswupper_test.rs:217:5
+    |
+217 |     unsafe { iswupper(0x4E2Du32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswupper_test.rs:222:5
+    |
+222 |     unsafe { iswupper(0x6587u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswupper_test.rs:231:5
+    |
+231 |     unsafe { iswupper(wint_t::MAX); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswupper_test.rs:240:5
+    |
+240 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswupper_test.rs:247:5
+    |
+247 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswupper_test.rs:258:5
+    |
+258 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswxdigit_test.rs:71:5
+   |
+71 |     unsafe { iswxdigit(b'5' as wint_t); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswxdigit_test.rs:76:5
+   |
+76 |     unsafe { iswxdigit_l(b'5' as wint_t, core::ptr::null_mut()); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswxdigit_test.rs:81:5
+   |
+81 |     unsafe { iswxdigit(wint_t::MAX); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswxdigit_test.rs:86:5
+   |
+86 |     unsafe { iswxdigit_l(0x00, 0xdead_beef as locale_t); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/iswxdigit_test.rs:95:5
+   |
+95 |     unsafe { iswxdigit(b'0' as wint_t); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:100:5
+    |
+100 |     unsafe { iswxdigit(b'9' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:105:5
+    |
+105 |     unsafe { iswxdigit(b'5' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:110:5
+    |
+110 |     unsafe { iswxdigit(b'/' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:115:5
+    |
+115 |     unsafe { iswxdigit(b':' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:124:5
+    |
+124 |     unsafe { iswxdigit(b'A' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:129:5
+    |
+129 |     unsafe { iswxdigit(b'F' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:134:5
+    |
+134 |     unsafe { iswxdigit(b'C' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:139:5
+    |
+139 |     unsafe { iswxdigit(b'@' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:144:5
+    |
+144 |     unsafe { iswxdigit(b'G' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:153:5
+    |
+153 |     unsafe { iswxdigit(b'a' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:158:5
+    |
+158 |     unsafe { iswxdigit(b'f' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:163:5
+    |
+163 |     unsafe { iswxdigit(b'd' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:168:5
+    |
+168 |     unsafe { iswxdigit(b'`' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:173:5
+    |
+173 |     unsafe { iswxdigit(b'g' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:182:5
+    |
+182 |     unsafe { iswxdigit(b'z' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:187:5
+    |
+187 |     unsafe { iswxdigit(b'Z' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:192:5
+    |
+192 |     unsafe { iswxdigit(b' ' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:197:5
+    |
+197 |     unsafe { iswxdigit(b'\n' as wint_t); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:202:5
+    |
+202 |     unsafe { iswxdigit(0); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:211:5
+    |
+211 |     unsafe { iswxdigit(wint_t::MAX); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:220:5
+    |
+220 |     unsafe { iswxdigit(0xFF10u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:225:5
+    |
+225 |     unsafe { iswxdigit(0xFF21u32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:230:5
+    |
+230 |     unsafe { iswxdigit(0x4E2Du32); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:239:5
+    |
+239 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:246:5
+    |
+246 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:253:5
+    |
+253 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/iswxdigit_test.rs:264:5
+    |
+264 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/isxdigit_test.rs:72:5
+   |
+72 |     unsafe { isxdigit(b'5' as c_int); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/isxdigit_test.rs:77:5
+   |
+77 |     unsafe { isxdigit_l(b'5' as c_int, core::ptr::null_mut()); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/isxdigit_test.rs:82:5
+   |
+82 |     unsafe { isxdigit(EOF); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/isxdigit_test.rs:87:5
+   |
+87 |     unsafe { isxdigit_l(0x00, 0xdead_beef as locale_t); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/isxdigit_test.rs:96:5
+   |
+96 |     unsafe { isxdigit(b'0' as c_int); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:101:5
+    |
+101 |     unsafe { isxdigit(b'9' as c_int); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:106:5
+    |
+106 |     unsafe { isxdigit(b'5' as c_int); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:111:5
+    |
+111 |     unsafe { isxdigit(b'/' as c_int); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:116:5
+    |
+116 |     unsafe { isxdigit(b':' as c_int); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:125:5
+    |
+125 |     unsafe { isxdigit(b'A' as c_int); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:130:5
+    |
+130 |     unsafe { isxdigit(b'F' as c_int); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:135:5
+    |
+135 |     unsafe { isxdigit(b'C' as c_int); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:140:5
+    |
+140 |     unsafe { isxdigit(b'@' as c_int); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:145:5
+    |
+145 |     unsafe { isxdigit(b'G' as c_int); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:154:5
+    |
+154 |     unsafe { isxdigit(b'a' as c_int); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:159:5
+    |
+159 |     unsafe { isxdigit(b'f' as c_int); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:164:5
+    |
+164 |     unsafe { isxdigit(b'e' as c_int); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:169:5
+    |
+169 |     unsafe { isxdigit(b'`' as c_int); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:174:5
+    |
+174 |     unsafe { isxdigit(b'g' as c_int); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:183:5
+    |
+183 |     unsafe { isxdigit(b'z' as c_int); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:188:5
+    |
+188 |     unsafe { isxdigit(b'Z' as c_int); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:193:5
+    |
+193 |     unsafe { isxdigit(b'!' as c_int); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:198:5
+    |
+198 |     unsafe { isxdigit(b' ' as c_int); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:203:5
+    |
+203 |     unsafe { isxdigit(b'\n' as c_int); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:208:5
+    |
+208 |     unsafe { isxdigit(0x00); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:217:5
+    |
+217 |     unsafe { isxdigit(EOF); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:226:5
+    |
+226 |     unsafe { isxdigit(0x80); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:231:5
+    |
+231 |     unsafe { isxdigit(0xFF); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:236:5
+    |
+236 |     unsafe { isxdigit(0xA0); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:245:5
+    |
+245 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:252:5
+    |
+252 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:259:5
+    |
+259 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:266:5
+    |
+266 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:277:5
+    |
+277 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:291:5
+    |
+291 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/isxdigit_test.rs:299:5
+    |
+299 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/toascii_test.rs:59:5
+   |
+59 |     unsafe { toascii(65); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/toascii_test.rs:64:5
+   |
+64 |     unsafe { toascii(0); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/toascii_test.rs:69:5
+   |
+69 |     unsafe { toascii(-1); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/toascii_test.rs:78:5
+   |
+78 |     unsafe { toascii(0); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/toascii_test.rs:83:5
+   |
+83 |     unsafe { toascii(127); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/toascii_test.rs:88:5
+   |
+88 |     unsafe { toascii(b'A' as c_int); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/toascii_test.rs:93:5
+   |
+93 |     unsafe { toascii(b'a' as c_int); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/toascii_test.rs:98:5
+   |
+98 |     unsafe { toascii(b'0' as c_int); }
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/toascii_test.rs:107:5
+    |
+107 |     unsafe { toascii(128); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/toascii_test.rs:112:5
+    |
+112 |     unsafe { toascii(255); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/toascii_test.rs:119:5
+    |
+119 |     unsafe { toascii(0xC1); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/toascii_test.rs:124:5
+    |
+124 |     unsafe { toascii(0xE9); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/toascii_test.rs:129:5
+    |
+129 |     unsafe { toascii(0x80); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/toascii_test.rs:134:5
+    |
+134 |     unsafe { toascii(0x7F); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/toascii_test.rs:145:5
+    |
+145 |     unsafe { toascii(-1); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/toascii_test.rs:150:5
+    |
+150 |     unsafe { toascii(EOF); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/toascii_test.rs:157:5
+    |
+157 |     unsafe { toascii(-128); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/toascii_test.rs:164:5
+    |
+164 |     unsafe { toascii(-127); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/toascii_test.rs:171:5
+    |
+171 |     unsafe { toascii(-129); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/toascii_test.rs:176:5
+    |
+176 |     unsafe { toascii(-2); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/toascii_test.rs:185:5
+    |
+185 |     unsafe { toascii(1000); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/toascii_test.rs:192:5
+    |
+192 |     unsafe { toascii(0x1FF); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/toascii_test.rs:197:5
+    |
+197 |     unsafe { toascii(-256); }
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/toascii_test.rs:206:5
+    |
+206 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/toascii_test.rs:218:5
+    |
+218 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/toascii_test.rs:226:5
+    |
+226 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/toascii_test.rs:237:5
+    |
+237 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/toascii_test.rs:246:5
+    |
+246 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/tolower_test.rs:15:5
+   |
+15 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/tolower_test.rs:31:5
+   |
+31 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/tolower_test.rs:45:5
+   |
+45 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/tolower_test.rs:59:5
+   |
+59 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/tolower_test.rs:66:5
+   |
+66 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/tolower_test.rs:73:5
+   |
+73 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/tolower_test.rs:80:5
+   |
+80 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/tolower_test.rs:87:5
+   |
+87 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/tolower_test.rs:95:5
+   |
+95 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/tolower_test.rs:102:5
+    |
+102 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/tolower_test.rs:113:5
+    |
+113 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/tolower_test.rs:130:5
+    |
+130 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/tolower_test.rs:145:5
+    |
+145 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/tolower_test.rs:154:5
+    |
+154 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/toupper_test.rs:15:5
+   |
+15 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/toupper_test.rs:31:5
+   |
+31 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/toupper_test.rs:45:5
+   |
+45 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/toupper_test.rs:59:5
+   |
+59 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/toupper_test.rs:66:5
+   |
+66 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/toupper_test.rs:73:5
+   |
+73 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/toupper_test.rs:80:5
+   |
+80 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/toupper_test.rs:87:5
+   |
+87 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/toupper_test.rs:95:5
+   |
+95 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/toupper_test.rs:102:5
+    |
+102 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/toupper_test.rs:113:5
+    |
+113 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/toupper_test.rs:130:5
+    |
+130 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/toupper_test.rs:145:5
+    |
+145 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/toupper_test.rs:154:5
+    |
+154 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/towctrans_test.rs:14:5
+   |
+14 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/towctrans_test.rs:30:5
+   |
+30 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/towctrans_test.rs:44:5
+   |
+44 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/towctrans_test.rs:58:5
+   |
+58 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/towctrans_test.rs:65:5
+   |
+65 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/towctrans_test.rs:73:5
+   |
+73 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/towctrans_test.rs:89:5
+   |
+89 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/towctrans_test.rs:105:5
+    |
+105 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/towctrans_test.rs:119:5
+    |
+119 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/towctrans_test.rs:126:5
+    |
+126 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/towctrans_test.rs:134:5
+    |
+134 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/towctrans_test.rs:150:5
+    |
+150 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/towctrans_test.rs:167:5
+    |
+167 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/towctrans_test.rs:175:5
+    |
+175 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/towctrans_test.rs:192:5
+    |
+192 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/towctrans_test.rs:200:5
+    |
+200 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/towctrans_test.rs:211:5
+    |
+211 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/towctrans_test.rs:226:5
+    |
+226 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/towctrans_test.rs:239:5
+    |
+239 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/towctrans_test.rs:252:5
+    |
+252 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/towctrans_test.rs:265:5
+    |
+265 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/wcswidth_test.rs:87:5
+   |
+87 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/wcswidth_test.rs:95:5
+   |
+95 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcswidth_test.rs:103:5
+    |
+103 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcswidth_test.rs:119:5
+    |
+119 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcswidth_test.rs:128:5
+    |
+128 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcswidth_test.rs:137:5
+    |
+137 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcswidth_test.rs:146:5
+    |
+146 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcswidth_test.rs:155:5
+    |
+155 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcswidth_test.rs:165:5
+    |
+165 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcswidth_test.rs:175:5
+    |
+175 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcswidth_test.rs:187:5
+    |
+187 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcswidth_test.rs:197:5
+    |
+197 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcswidth_test.rs:210:5
+    |
+210 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcswidth_test.rs:219:5
+    |
+219 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcswidth_test.rs:228:5
+    |
+228 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcswidth_test.rs:237:5
+    |
+237 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcswidth_test.rs:246:5
+    |
+246 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcswidth_test.rs:258:5
+    |
+258 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcswidth_test.rs:270:5
+    |
+270 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcswidth_test.rs:279:5
+    |
+279 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcswidth_test.rs:290:5
+    |
+290 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcswidth_test.rs:316:5
+    |
+316 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:134:5
+    |
+134 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:142:5
+    |
+142 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:149:5
+    |
+149 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:157:5
+    |
+157 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:164:5
+    |
+164 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:172:5
+    |
+172 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:187:5
+    |
+187 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:198:5
+    |
+198 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:207:5
+    |
+207 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:216:5
+    |
+216 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:225:5
+    |
+225 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:234:5
+    |
+234 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:243:5
+    |
+243 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:252:5
+    |
+252 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:264:5
+    |
+264 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:281:5
+    |
+281 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:291:5
+    |
+291 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:299:5
+    |
+299 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:307:5
+    |
+307 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:319:5
+    |
+319 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:335:5
+    |
+335 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:346:5
+    |
+346 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:357:5
+    |
+357 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:370:5
+    |
+370 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:381:5
+    |
+381 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:401:5
+    |
+401 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:417:5
+    |
+417 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:430:5
+    |
+430 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:445:5
+    |
+445 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:457:5
+    |
+457 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:470:5
+    |
+470 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:482:5
+    |
+482 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:493:5
+    |
+493 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:505:5
+    |
+505 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:545:5
+    |
+545 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wctrans_test.rs:562:5
+    |
+562 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/wcwidth_test.rs:90:5
+   |
+90 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/wcwidth_test.rs:97:5
+   |
+97 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:104:5
+    |
+104 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:117:5
+    |
+117 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:130:5
+    |
+130 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:141:5
+    |
+141 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:157:5
+    |
+157 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:171:5
+    |
+171 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:185:5
+    |
+185 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:199:5
+    |
+199 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:224:5
+    |
+224 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:231:5
+    |
+231 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:238:5
+    |
+238 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:245:5
+    |
+245 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:252:5
+    |
+252 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:284:5
+    |
+284 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:291:5
+    |
+291 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:298:5
+    |
+298 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:320:5
+    |
+320 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:327:5
+    |
+327 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:334:5
+    |
+334 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:341:5
+    |
+341 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:348:5
+    |
+348 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:357:5
+    |
+357 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:364:5
+    |
+364 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:377:5
+    |
+377 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:384:5
+    |
+384 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:391:5
+    |
+391 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:398:5
+    |
+398 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:434:5
+    |
+434 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:448:5
+    |
+448 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:455:5
+    |
+455 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:473:5
+    |
+473 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:488:5
+    |
+488 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:495:5
+    |
+495 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:502:5
+    |
+502 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:509:5
+    |
+509 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:516:5
+    |
+516 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:523:5
+    |
+523 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:548:5
+    |
+548 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:555:5
+    |
+555 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:562:5
+    |
+562 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:583:5
+    |
+583 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:597:5
+    |
+597 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:610:5
+    |
+610 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:645:5
+    |
+645 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:665:5
+    |
+665 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/ctype/wcwidth_test.rs:688:5
+    |
+688 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: `rusl` (test "search_integration") generated 29 warnings
+warning: `rusl` (test "string_integration") generated 91 warnings
+warning: `rusl` (test "ctype_integration") generated 474 warnings
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/prng/drand48_test.rs:9:5
+  |
+9 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+  |
+  = note: `#[warn(unused_unsafe)]` (part of `#[warn(unused)]`) on by default
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/drand48_test.rs:17:5
+   |
+17 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/drand48_test.rs:30:5
+   |
+30 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/drand48_test.rs:39:5
+   |
+39 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/drand48_test.rs:53:5
+   |
+53 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/drand48_test.rs:65:5
+   |
+65 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/drand48_test.rs:77:5
+   |
+77 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/prng/lcong48_test.rs:9:5
+  |
+9 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/lcong48_test.rs:25:5
+   |
+25 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/lcong48_test.rs:35:5
+   |
+35 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/lcong48_test.rs:46:5
+   |
+46 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/prng/lrand48_test.rs:9:5
+  |
+9 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/lrand48_test.rs:17:5
+   |
+17 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/lrand48_test.rs:27:5
+   |
+27 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/lrand48_test.rs:36:5
+   |
+36 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/lrand48_test.rs:46:5
+   |
+46 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/lrand48_test.rs:57:5
+   |
+57 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/lrand48_test.rs:68:5
+   |
+68 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/prng/mrand48_test.rs:9:5
+  |
+9 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/mrand48_test.rs:17:5
+   |
+17 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/mrand48_test.rs:27:5
+   |
+27 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/mrand48_test.rs:36:5
+   |
+36 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/mrand48_test.rs:46:5
+   |
+46 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/mrand48_test.rs:57:5
+   |
+57 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/mrand48_test.rs:68:5
+   |
+68 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/mrand48_test.rs:77:5
+   |
+77 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/prng/rand_r_test.rs:9:5
+  |
+9 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/rand_r_test.rs:18:5
+   |
+18 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/rand_r_test.rs:27:5
+   |
+27 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/rand_r_test.rs:39:5
+   |
+39 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/rand_r_test.rs:52:5
+   |
+52 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/rand_r_test.rs:63:5
+   |
+63 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/rand_r_test.rs:78:5
+   |
+78 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/rand_r_test.rs:89:5
+   |
+89 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/prng/rand_test.rs:9:5
+  |
+9 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/rand_test.rs:17:5
+   |
+17 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/rand_test.rs:30:5
+   |
+30 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/rand_test.rs:41:5
+   |
+41 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/rand_test.rs:52:5
+   |
+52 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/rand_test.rs:61:5
+   |
+61 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/rand_test.rs:72:5
+   |
+72 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/prng/seed48_test.rs:9:5
+  |
+9 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/seed48_test.rs:34:5
+   |
+34 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/prng/srand48_test.rs:9:5
+  |
+9 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/srand48_test.rs:20:5
+   |
+20 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/srand48_test.rs:31:5
+   |
+31 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/srand48_test.rs:41:5
+   |
+41 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/prng/srand48_test.rs:50:5
+   |
+50 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/stdlib/abs_test.rs:9:5
+  |
+9 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+  |
+  = note: `#[warn(unused_unsafe)]` (part of `#[warn(unused)]`) on by default
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/abs_test.rs:18:5
+   |
+18 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/abs_test.rs:25:5
+   |
+25 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/abs_test.rs:34:5
+   |
+34 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/atof_test.rs:12:5
+   |
+12 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/atof_test.rs:21:5
+   |
+21 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/atof_test.rs:30:5
+   |
+30 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/atof_test.rs:39:5
+   |
+39 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/atof_test.rs:48:5
+   |
+48 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/atof_test.rs:57:5
+   |
+57 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/atof_test.rs:66:5
+   |
+66 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/atoi_test.rs:14:5
+   |
+14 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/atoi_test.rs:22:5
+   |
+22 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/atoi_test.rs:30:5
+   |
+30 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/atoi_test.rs:38:5
+   |
+38 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/atoi_test.rs:46:5
+   |
+46 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/atoi_test.rs:54:5
+   |
+54 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/atoi_test.rs:62:5
+   |
+62 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/atoi_test.rs:70:5
+   |
+70 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/atoi_test.rs:78:5
+   |
+78 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/atoi_test.rs:88:5
+   |
+88 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/atoi_test.rs:96:5
+   |
+96 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/atoi_test.rs:104:5
+    |
+104 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/atoi_test.rs:112:5
+    |
+112 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/atoi_test.rs:120:5
+    |
+120 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/atoi_test.rs:128:5
+    |
+128 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/atoi_test.rs:138:5
+    |
+138 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/atoi_test.rs:146:5
+    |
+146 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/atoi_test.rs:154:5
+    |
+154 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/atoi_test.rs:162:5
+    |
+162 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/atoi_test.rs:170:5
+    |
+170 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/bsearch_test.rs:34:5
+   |
+34 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/bsearch_test.rs:50:5
+   |
+50 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/bsearch_test.rs:82:5
+   |
+82 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/div_test.rs:11:5
+   |
+11 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/div_test.rs:20:5
+   |
+20 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/div_test.rs:29:5
+   |
+29 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/div_test.rs:38:5
+   |
+38 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/div_test.rs:47:5
+   |
+47 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/div_test.rs:56:5
+   |
+56 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/div_test.rs:65:5
+   |
+65 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/div_test.rs:74:5
+   |
+74 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/div_test.rs:85:5
+   |
+85 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/div_test.rs:94:5
+   |
+94 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/div_test.rs:103:5
+    |
+103 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/div_test.rs:112:5
+    |
+112 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/div_test.rs:124:5
+    |
+124 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/div_test.rs:133:5
+    |
+133 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/div_test.rs:142:5
+    |
+142 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/div_test.rs:153:5
+    |
+153 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/div_test.rs:162:5
+    |
+162 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/div_test.rs:171:5
+    |
+171 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/div_test.rs:182:5
+    |
+182 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/div_test.rs:194:5
+    |
+194 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/ecvt_test.rs:11:5
+   |
+11 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/ecvt_test.rs:25:5
+   |
+25 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/ecvt_test.rs:37:5
+   |
+37 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/ecvt_test.rs:48:5
+   |
+48 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/ecvt_test.rs:60:5
+   |
+60 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/ecvt_test.rs:74:5
+   |
+74 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/ecvt_test.rs:85:5
+   |
+85 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/ecvt_test.rs:96:5
+   |
+96 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/ecvt_test.rs:107:5
+    |
+107 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/ecvt_test.rs:121:5
+    |
+121 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/ecvt_test.rs:130:5
+    |
+130 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/ecvt_test.rs:139:5
+    |
+139 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/ecvt_test.rs:148:5
+    |
+148 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/labs_test.rs:12:5
+   |
+12 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/labs_test.rs:21:5
+   |
+21 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/labs_test.rs:28:5
+   |
+28 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/labs_test.rs:36:5
+   |
+36 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/labs_test.rs:45:5
+   |
+45 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/labs_test.rs:52:5
+   |
+52 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/labs_test.rs:59:5
+   |
+59 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/labs_test.rs:68:5
+   |
+68 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/labs_test.rs:75:5
+   |
+75 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/labs_test.rs:82:5
+   |
+82 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/qsort_test.rs:58:5
+   |
+58 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/qsort_test.rs:89:5
+   |
+89 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/qsort_test.rs:102:5
+    |
+102 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/qsort_test.rs:116:5
+    |
+116 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/qsort_test.rs:130:5
+    |
+130 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/qsort_test.rs:160:5
+    |
+160 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/qsort_test.rs:175:5
+    |
+175 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/qsort_test.rs:252:5
+    |
+252 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/qsort_test.rs:267:5
+    |
+267 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/strtod_test.rs:13:5
+   |
+13 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/strtod_test.rs:22:5
+   |
+22 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/strtod_test.rs:31:5
+   |
+31 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/strtod_test.rs:39:5
+   |
+39 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/strtod_test.rs:48:5
+   |
+48 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/strtod_test.rs:57:5
+   |
+57 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/strtod_test.rs:66:5
+   |
+66 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/strtod_test.rs:74:5
+   |
+74 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/strtod_test.rs:94:5
+   |
+94 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtod_test.rs:102:5
+    |
+102 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtod_test.rs:110:5
+    |
+110 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtod_test.rs:118:5
+    |
+118 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtod_test.rs:128:5
+    |
+128 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtod_test.rs:136:5
+    |
+136 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtod_test.rs:144:5
+    |
+144 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtod_test.rs:154:5
+    |
+154 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/strtol_test.rs:25:5
+   |
+25 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/strtol_test.rs:33:5
+   |
+33 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/strtol_test.rs:41:5
+   |
+41 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/strtol_test.rs:49:5
+   |
+49 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/strtol_test.rs:57:5
+   |
+57 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/strtol_test.rs:65:5
+   |
+65 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/strtol_test.rs:73:5
+   |
+73 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/strtol_test.rs:81:5
+   |
+81 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/strtol_test.rs:89:5
+   |
+89 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtol_test.rs:109:5
+    |
+109 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtol_test.rs:117:5
+    |
+117 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtol_test.rs:125:5
+    |
+125 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtol_test.rs:133:5
+    |
+133 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtol_test.rs:141:5
+    |
+141 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtol_test.rs:149:5
+    |
+149 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtol_test.rs:157:5
+    |
+157 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtol_test.rs:165:5
+    |
+165 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtol_test.rs:175:5
+    |
+175 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtol_test.rs:183:5
+    |
+183 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtol_test.rs:193:5
+    |
+193 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtol_test.rs:201:5
+    |
+201 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtol_test.rs:211:5
+    |
+211 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtol_test.rs:219:5
+    |
+219 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtol_test.rs:229:5
+    |
+229 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtol_test.rs:239:5
+    |
+239 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtol_test.rs:247:5
+    |
+247 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtol_test.rs:255:5
+    |
+255 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtol_test.rs:267:5
+    |
+267 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/strtol_test.rs:275:5
+    |
+275 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/wcstod_test.rs:31:5
+   |
+31 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/wcstod_test.rs:40:5
+   |
+40 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/wcstod_test.rs:48:5
+   |
+48 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/wcstod_test.rs:56:5
+   |
+56 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/wcstod_test.rs:64:5
+   |
+64 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/wcstod_test.rs:72:5
+   |
+72 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/wcstod_test.rs:92:5
+   |
+92 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/wcstod_test.rs:100:5
+    |
+100 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/wcstod_test.rs:110:5
+    |
+110 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/wcstod_test.rs:118:5
+    |
+118 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/wcstod_test.rs:127:5
+    |
+127 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/wcstod_test.rs:137:5
+    |
+137 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/wcstol_test.rs:41:5
+   |
+41 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/wcstol_test.rs:49:5
+   |
+49 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/wcstol_test.rs:57:5
+   |
+57 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/wcstol_test.rs:65:5
+   |
+65 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/wcstol_test.rs:73:5
+   |
+73 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/wcstol_test.rs:81:5
+   |
+81 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/stdlib/wcstol_test.rs:89:5
+   |
+89 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/wcstol_test.rs:109:5
+    |
+109 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/wcstol_test.rs:117:5
+    |
+117 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/wcstol_test.rs:125:5
+    |
+125 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/wcstol_test.rs:133:5
+    |
+133 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/wcstol_test.rs:141:5
+    |
+141 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/wcstol_test.rs:151:5
+    |
+151 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/wcstol_test.rs:161:5
+    |
+161 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/wcstol_test.rs:169:5
+    |
+169 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/wcstol_test.rs:177:5
+    |
+177 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/wcstol_test.rs:187:5
+    |
+187 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/wcstol_test.rs:197:5
+    |
+197 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/wcstol_test.rs:205:5
+    |
+205 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/wcstol_test.rs:213:5
+    |
+213 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/wcstol_test.rs:225:5
+    |
+225 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/stdlib/wcstol_test.rs:233:5
+    |
+233 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: `rusl` (test "prng_integration") generated 48 warnings
+warning: `rusl` (test "stdlib_integration") generated 165 warnings
+error[E0308]: mismatched types
+   --> rusl-main/tests/env/setenv_test.rs:252:40
+    |
+252 |         assert_eq!(__errno_location(), EINVAL, "var 为 NULL 时 errno 应设为 EINVAL");
+    |                                        ^^^^^^ expected `*mut i32`, found `i32`
+    |
+    = note: expected raw pointer `*mut i32`
+                      found type `i32`
+
+error[E0308]: mismatched types
+   --> rusl-main/tests/env/setenv_test.rs:265:40
+    |
+265 |         assert_eq!(__errno_location(), EINVAL, "var 为空字符串时 errno 应设为 EINVAL");
+    |                                        ^^^^^^ expected `*mut i32`, found `i32`
+    |
+    = note: expected raw pointer `*mut i32`
+                      found type `i32`
+
+error[E0308]: mismatched types
+   --> rusl-main/tests/env/setenv_test.rs:278:40
+    |
+278 |         assert_eq!(__errno_location(), EINVAL, "var 含 '=' 时 errno 应设为 EINVAL");
+    |                                        ^^^^^^ expected `*mut i32`, found `i32`
+    |
+    = note: expected raw pointer `*mut i32`
+                      found type `i32`
+
+error[E0308]: mismatched types
+   --> rusl-main/tests/env/setenv_test.rs:292:40
+    |
+292 |         assert_eq!(__errno_location(), EINVAL, "var 为 '=' 时 errno 应设为 EINVAL");
+    |                                        ^^^^^^ expected `*mut i32`, found `i32`
+    |
+    = note: expected raw pointer `*mut i32`
+                      found type `i32`
+
+error[E0308]: mismatched types
+   --> rusl-main/tests/env/setenv_test.rs:304:40
+    |
+304 |         assert_eq!(__errno_location(), EINVAL, "var 含 '=' 时 errno 应设为 EINVAL");
+    |                                        ^^^^^^ expected `*mut i32`, found `i32`
+    |
+    = note: expected raw pointer `*mut i32`
+                      found type `i32`
+
+error[E0070]: invalid left-hand side of assignment
+   --> rusl-main/tests/env/setenv_test.rs:382:28
+    |
+382 |         __errno_location() = 9999;
+    |         ------------------ ^
+    |         |
+    |         cannot assign to this expression
+
+error[E0308]: mismatched types
+   --> rusl-main/tests/env/setenv_test.rs:390:23
+    |
+390 |         assert_eq!(e, 9999, "成功调用后 errno 应保持不变");
+    |                       ^^^^ expected `*mut i32`, found integer
+    |
+    = note: expected raw pointer `*mut i32`
+                      found type `{integer}`
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/env/clearenv_test.rs:45:5
+   |
+45 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+   |
+   = note: `#[warn(unused_unsafe)]` (part of `#[warn(unused)]`) on by default
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/env/clearenv_test.rs:52:5
+   |
+52 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/env/clearenv_test.rs:82:5
+   |
+82 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/env/clearenv_test.rs:90:5
+   |
+90 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/env/clearenv_test.rs:99:5
+   |
+99 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/env/clearenv_test.rs:117:5
+    |
+117 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/env/clearenv_test.rs:126:5
+    |
+126 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/env/clearenv_test.rs:143:5
+    |
+143 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/env/clearenv_test.rs:162:5
+    |
+162 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/env/clearenv_test.rs:330:5
+    |
+330 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/env/clearenv_test.rs:349:5
+    |
+349 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/env/clearenv_test.rs:437:5
+    |
+437 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/env/clearenv_test.rs:478:5
+    |
+478 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/env/clearenv_test.rs:494:5
+    |
+494 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+Some errors have detailed explanations: E0070, E0308.
+For more information about an error, try `rustc --explain E0070`.
+warning: `rusl` (test "env_integration") generated 14 warnings
+error: could not compile `rusl` (test "env_integration") due to 7 previous errors; 14 warnings emitted
+warning: build failed, waiting for other jobs to finish...
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/env/clearenv_test.rs:45:5
+   |
+45 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/ctype_get_mb_cur_max_test.rs:59:5
+   |
+59 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/stdlib/abs_test.rs:9:5
+  |
+9 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> rusl-main/tests/prng/drand48_test.rs:9:5
+  |
+9 |     unsafe {
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/search/hsearch_test.rs:14:5
+   |
+14 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: `rusl` (test "integration") generated 821 warnings (816 duplicates)
+error: could not compile `rusl` (test "integration") due to 7 previous errors; 821 warnings emitted
+make: *** [Makefile:27：test-c] 错误 101

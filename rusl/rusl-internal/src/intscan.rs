@@ -9,6 +9,7 @@
 //! `pub(crate)` — 仅在 rusl crate 内部使用。
 
 use core::ffi::{c_int, c_uint, c_ulonglong};
+use rusl_errno::__errno_location;
 
 /// 内部 FILE 类型的占位符声明。
 ///
@@ -150,12 +151,12 @@ pub(crate) fn __intscan_bytes(
 
     // 非法基数
     if base_val > 36 || base_val == 1 {
-        unsafe { *rusl_core::errno::__errno_location() = EINVAL; }
+        unsafe { *__errno_location() = EINVAL; }
         return (0, 0);
     }
 
     if input.is_empty() {
-        unsafe { *rusl_core::errno::__errno_location() = EINVAL; }
+        unsafe { *__errno_location() = EINVAL; }
         return (0, 0);
     }
 
@@ -187,7 +188,7 @@ pub(crate) fn __intscan_bytes(
                 if pok != 0 {
                     cur.unget(); // pok 模式也回退 'x'
                 }
-                unsafe { *rusl_core::errno::__errno_location() = EINVAL; }
+                unsafe { *__errno_location() = EINVAL; }
                 return (0, cur.consumed());
             }
             actual_base = 16;
@@ -205,7 +206,7 @@ pub(crate) fn __intscan_bytes(
         // 检查首字符是否有效
         if val(c) >= actual_base as u8 {
             cur.unget();
-            unsafe { *rusl_core::errno::__errno_location() = EINVAL; }
+            unsafe { *__errno_location() = EINVAL; }
             return (0, cur.consumed());
         }
     }
@@ -222,7 +223,7 @@ pub(crate) fn __intscan_bytes(
     // Step 5: 溢出
     let mut y = y;
     if overflow {
-        unsafe { *rusl_core::errno::__errno_location() = ERANGE; }
+        unsafe { *__errno_location() = ERANGE; }
         y = lim;
         if (lim & 1) != 0 {
             neg = 0;
@@ -234,10 +235,10 @@ pub(crate) fn __intscan_bytes(
     if y >= lim {
         if (lim & 1) == 0 && neg == 0 {
             // 有符号正溢出
-            unsafe { *rusl_core::errno::__errno_location() = ERANGE; }
+            unsafe { *__errno_location() = ERANGE; }
             return (lim - 1, consumed);
         } else if y > lim {
-            unsafe { *rusl_core::errno::__errno_location() = ERANGE; }
+            unsafe { *__errno_location() = ERANGE; }
             return (lim, consumed);
         }
     }
@@ -360,11 +361,11 @@ pub fn __intscan(
 ) -> c_ulonglong {
     let _ = (_f, _pok);
     if (base as u32) > 36 || base == 1 {
-        unsafe { *rusl_core::errno::__errno_location() = EINVAL; }
+        unsafe { *__errno_location() = EINVAL; }
         return 0;
     }
     let _ = lim;
-    unsafe { *rusl_core::errno::__errno_location() = EINVAL; }
+    unsafe { *__errno_location() = EINVAL; }
     0
 }
 

@@ -36,21 +36,19 @@ pub unsafe extern "C" fn strsignal(signum: core::ffi::c_int) -> *mut core::ffi::
     if let Some(&(_, msg)) = SIGNAL_MSGS.iter().find(|&&(sig, _)| sig == signum) {
         return msg.as_ptr() as *mut core::ffi::c_char;
     }
-    // 未知信号，格式化到静态缓冲区
+    let buf = UNKNOWN_BUF.as_mut_ptr();
     let msg = b"Unknown signal ";
     let mut i = 0;
     for &b in msg {
-        UNKNOWN_BUF[i] = b;
+        unsafe { *buf.add(i) = b; }
         i += 1;
     }
-    // 追加信号号（简单整数格式化）
     let mut n = signum;
     if n < 0 {
-        UNKNOWN_BUF[i] = b'-';
+        unsafe { *buf.add(i) = b'-'; }
         i += 1;
         n = -n;
     }
-    // 反转数字
     let mut digits = [0u8; 12];
     let mut nd = 0;
     if n == 0 {
@@ -65,11 +63,11 @@ pub unsafe extern "C" fn strsignal(signum: core::ffi::c_int) -> *mut core::ffi::
     }
     while nd > 0 {
         nd -= 1;
-        UNKNOWN_BUF[i] = digits[nd];
+        unsafe { *buf.add(i) = digits[nd]; }
         i += 1;
     }
-    UNKNOWN_BUF[i] = 0;
-    UNKNOWN_BUF.as_mut_ptr() as *mut core::ffi::c_char
+    unsafe { *buf.add(i) = 0; }
+    buf as *mut core::ffi::c_char
 }
 
 /// 安全的 Rust 内部实现。

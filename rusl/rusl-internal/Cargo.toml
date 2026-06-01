@@ -15,6 +15,7 @@ c-test = []
 
 [dependencies]
 rusl-core = { path = "../rusl-core", features = ["rusl"]}
+rusl-errno = { path = "../rusl-errno" }
 
 [profile.dev]
 panic = "abort"

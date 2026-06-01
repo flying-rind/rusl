@@ -9,6 +9,7 @@ use super::*;
 use super::syscalls::*;
 use super::stack_check::*;
 use core::sync::atomic::Ordering;
+use rusl_errno::__errno_location;
 
 /// bump 分配器的核心实现。
 ///
@@ -41,7 +42,7 @@ pub(crate) fn simple_malloc(n: usize) -> *mut c_void {
     // ====================================================================
     if n > usize::MAX / 2 {
         unsafe {
-            *rusl_core::errno::__errno_location() = ENOMEM;
+            *__errno_location() = ENOMEM;
         }
         return core::ptr::null_mut();
     }

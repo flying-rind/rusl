@@ -25,6 +25,12 @@
 
 - **各crate禁止导出任何内部符号，导出的只有musl中用户可见的对外符号**
 
+- **musl `__` 前缀符号必须同时导出**：musl 中 `__xxx` 是主实现，`xxx` 是其弱别名（如 `__strchrnul`/`strchrnul`、`__stpcpy`/`stpcpy`、`__memrchr`/`memrchr`）。musl 内部代码直接调用 `__` 版本，rusl 必须同时提供两者。
+
+- **集成测试时应该只测试musl libc对于用户可见的对外导出接口**，禁止测试任何`__`开头的内部符号，这些符号应该放在单元测试中。
+
+- **集成测试中不能使用extern "C"**,而是使用rusl-main的api模块导出接口。
+
 # 测试musl-libc
 
 ```

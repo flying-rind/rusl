@@ -11,7 +11,7 @@ use core::ffi::c_char;
 /// - `d` 至少可写 strlen(s) + 1 字节
 /// - s 以 null 结尾
 #[no_mangle]
-pub unsafe extern "C" fn stpcpy(d: *mut core::ffi::c_char, s: *const core::ffi::c_char) -> *mut core::ffi::c_char {
+pub unsafe extern "C" fn __stpcpy(d: *mut core::ffi::c_char, s: *const core::ffi::c_char) -> *mut core::ffi::c_char {
     let dest = d as *mut u8;
     let src = s as *const u8;
     let mut i = 0;
@@ -23,6 +23,11 @@ pub unsafe extern "C" fn stpcpy(d: *mut core::ffi::c_char, s: *const core::ffi::
         }
         i += 1;
     }
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn stpcpy(d: *mut core::ffi::c_char, s: *const core::ffi::c_char) -> *mut core::ffi::c_char {
+    unsafe { __stpcpy(d, s) }
 }
 
 /// 安全的 Rust 内部实现。

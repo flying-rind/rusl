@@ -8,6 +8,10 @@
 
 use core::ffi::{c_int, c_long, c_ulong};
 
+extern "C" {
+    fn __errno_location() -> *mut c_int;
+}
+
 /// Convert raw kernel syscall return value to libc convention.
 ///
 /// If `r` > `-4096UL` (i.e., r is in the error range), sets errno = -r and returns -1.
@@ -19,8 +23,7 @@ pub unsafe extern "C" fn __syscall_ret(r: c_ulong) -> c_long {
     // are in the range [1, 4095] so negative values = [0xfffff001, 0xffffffff]
     if r > (0usize.wrapping_sub(4096)) as c_ulong {
         let errno_val = -(r as c_long);
-        // Call __errno_location to get a pointer to the thread's errno
-        let errno_ptr = crate::errno::__errno_location();
+        let errno_ptr = __errno_location();
         *errno_ptr = errno_val as c_int;
         -1
     } else {

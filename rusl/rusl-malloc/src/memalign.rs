@@ -134,7 +134,7 @@ pub(crate) fn memalign_safe(align: usize, len: usize) -> Option<&'static mut [u8
 #[cfg(test)]
 mod tests {
     use rusl_core::test;
-
+    use rusl_errno::__errno_location;
     use super::*;
 
     // ---- 辅助函数 ----
@@ -151,13 +151,13 @@ mod tests {
 
     /// 通过 `__errno_location` 读取当前的 errno 值。
     unsafe fn get_errno() -> i32 {
-        unsafe { *rusl_core::errno::__errno_location() }
+        unsafe { *__errno_location() }
     }
 
     /// 将 errno 重置为 0，便于测试 errno 设置行为。
     unsafe fn clear_errno() {
         unsafe {
-            *rusl_core::errno::__errno_location() = 0;
+            *__errno_location() = 0;
         }
     }
 
@@ -467,7 +467,7 @@ mod tests {
             assert_eq!(get_errno(), 0, "clear_errno 后 errno 应为 0");
 
             // 手动设置 errno 验证读写
-            *rusl_core::errno::__errno_location() = 42;
+            *__errno_location() = 42;
             assert_eq!(get_errno(), 42);
 
             clear_errno();

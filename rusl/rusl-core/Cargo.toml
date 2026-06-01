@@ -15,7 +15,6 @@ rusl = []
 
 [dependencies]
 test-framework = { path = "../test-framework" }
-# compiler_builtins = { version = "0.1", features = ["mem"] }
 
 [profile.dev]
 panic = "abort"

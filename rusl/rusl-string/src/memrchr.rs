@@ -9,7 +9,7 @@ use core::ffi::c_void;
 /// - `m` 非空
 /// - 当 `n > 0` 时，`m` 至少可读 n 字节
 #[no_mangle]
-pub unsafe extern "C" fn memrchr(m: *const core::ffi::c_void, c: core::ffi::c_int, n: usize) -> *mut core::ffi::c_void {
+pub unsafe extern "C" fn __memrchr(m: *const core::ffi::c_void, c: core::ffi::c_int, n: usize) -> *mut core::ffi::c_void {
     let p = m as *const u8;
     let mut i = n;
     while i > 0 {
@@ -19,6 +19,11 @@ pub unsafe extern "C" fn memrchr(m: *const core::ffi::c_void, c: core::ffi::c_in
         }
     }
     core::ptr::null_mut()
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn memrchr(m: *const core::ffi::c_void, c: core::ffi::c_int, n: usize) -> *mut core::ffi::c_void {
+    unsafe { __memrchr(m, c, n) }
 }
 
 /// 安全的 Rust 内部实现。

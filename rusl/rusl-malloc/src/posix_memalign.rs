@@ -18,6 +18,7 @@
 use core::ffi::{c_int, c_ulong, c_void};
 use core::mem;
 use core::ptr::NonNull;
+use rusl_errno::__errno_location;
 
 // ===========================================================================
 // 错误码常量 — 引用父模块的统一定义
@@ -90,7 +91,7 @@ pub(crate) fn aligned_alloc_inner(
     let ptr = unsafe { super::mallocng::aligned_alloc::aligned_alloc(align, len) };
     if ptr.is_null() {
         // aligned_alloc 返回 NULL 时已设置 errno，据此区分错误类型
-        let errno_val = unsafe { *rusl_core::errno::__errno_location() };
+        let errno_val = unsafe { *__errno_location() };
         if errno_val == EINVAL {
             Err(AlignedAllocError::InvalidAlignment)
         } else {

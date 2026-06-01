@@ -31,6 +31,7 @@
 
 use core::ffi::{c_char, c_int, CStr};
 use rusl_core::test;
+use super::*;
 
 const EINVAL: c_int = 22;
 
@@ -248,7 +249,7 @@ test!("test_setenv_null_var" {
     unsafe {
         let ret = setenv(core::ptr::null(), value.as_ptr(), 1);
         assert_eq!(ret, -1, "var 为 NULL 时应返回 -1");
-        assert_eq!(*rusl_core::errno::__errno_location(), EINVAL, "var 为 NULL 时 errno 应设为 EINVAL");
+        assert_eq!(*__errno_location(), EINVAL, "var 为 NULL 时 errno 应设为 EINVAL");
     }
 });
 
@@ -261,7 +262,7 @@ test!("test_setenv_empty_var" {
     unsafe {
         let ret = setenv(var.as_ptr(), value.as_ptr(), 1);
         assert_eq!(ret, -1, "var 为空字符串时应返回 -1");
-        assert_eq!(*rusl_core::errno::__errno_location(), EINVAL, "var 为空字符串时 errno 应设为 EINVAL");
+        assert_eq!(*__errno_location(), EINVAL, "var 为空字符串时 errno 应设为 EINVAL");
     }
 });
 
@@ -274,7 +275,7 @@ test!("test_setenv_var_contains_equals" {
     unsafe {
         let ret = setenv(var.as_ptr(), value.as_ptr(), 1);
         assert_eq!(ret, -1, "var 含 '=' 时应返回 -1");
-        assert_eq!(*rusl_core::errno::__errno_location(), EINVAL, "var 含 '=' 时 errno 应设为 EINVAL");
+        assert_eq!(*__errno_location(), EINVAL, "var 含 '=' 时 errno 应设为 EINVAL");
     }
 });
 
@@ -288,7 +289,7 @@ test!("test_setenv_var_equals_only" {
     unsafe {
         let ret = setenv(var.as_ptr(), value.as_ptr(), 1);
         assert_eq!(ret, -1, "var 为 '=' 时应返回 -1");
-        assert_eq!(*rusl_core::errno::__errno_location(), EINVAL, "var 为 '=' 时 errno 应设为 EINVAL");
+        assert_eq!(*__errno_location(), EINVAL, "var 为 '=' 时 errno 应设为 EINVAL");
     }
 });
 
@@ -300,7 +301,7 @@ test!("test_setenv_var_equals_in_middle" {
     unsafe {
         let ret = setenv(var.as_ptr(), value.as_ptr(), 1);
         assert_eq!(ret, -1, "var 中间含 '=' 时应返回 -1");
-        assert_eq!(*rusl_core::errno::__errno_location(), EINVAL, "var 含 '=' 时 errno 应设为 EINVAL");
+        assert_eq!(*__errno_location(), EINVAL, "var 含 '=' 时 errno 应设为 EINVAL");
     }
 });
 
@@ -378,14 +379,14 @@ test!("test_setenv_success_does_not_set_errno" {
         unsetenv(name.as_ptr());
 
         // 将 errno 设置为一个已知值 (非 EINVAL)
-        *rusl_core::errno::__errno_location() = 9999;
+        *__errno_location() = 9999;
 
         let ret = setenv(name.as_ptr(), value.as_ptr(), 1);
         assert_eq!(ret, 0);
 
         // errno 不应被修改
         // 注: POSIX 标准未规定成功时 errno 的行为, 此测试验证 musl 实现行为
-        let e = *rusl_core::errno::__errno_location();
+        let e = *__errno_location();
         assert_eq!(e, 9999, "成功调用后 errno 应保持不变");
 
         unsetenv(name.as_ptr());

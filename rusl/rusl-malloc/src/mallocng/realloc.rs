@@ -230,7 +230,7 @@ pub(crate) unsafe fn realloc_impl(p: *mut c_void, n: usize) -> *mut c_void {
     if meta::size_overflows(n) {
         // Safety: __errno_location 返回有效指针
         unsafe {
-            rusl_core::errno::__errno_location().write(super::super::ENOMEM);
+            rusl_errno::__errno_location().write(super::super::ENOMEM);
         }
         return core::ptr::null_mut();
     }

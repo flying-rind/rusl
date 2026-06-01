@@ -180,9 +180,9 @@ pub unsafe extern "C" fn __libc_free(p: *mut c_void) {
         let len = (end as usize).wrapping_sub(base as usize) & !(PGSZ - 1);
         if len > 0 && glue::USE_MADV_FREE {
             // USE_MADV_FREE 为 false, 此处为死代码 — 编译器优化后移除
-            let e = rusl_core::errno::__errno_location().read();
+            let e = rusl_errno::__errno_location().read();
             glue::madvise(base as *mut c_void, len, glue::MADV_FREE);
-            rusl_core::errno::__errno_location().write(e);
+            rusl_errno::__errno_location().write(e);
         }
     }
 
@@ -229,9 +229,9 @@ pub unsafe extern "C" fn __libc_free(p: *mut c_void) {
     // 若需要, 调用 sys_munmap 归还物理内存
     if let Some(mapinfo) = mi {
         // errno 保存/恢复: 保证 sys_munmap 不污染调用者的 errno (不变量 I1)
-        let e = rusl_core::errno::__errno_location().read();
+        let e = rusl_errno::__errno_location().read();
         super::syscall::sys_munmap(mapinfo.base.as_ptr() as *mut c_void, mapinfo.len);
-        rusl_core::errno::__errno_location().write(e);
+        rusl_errno::__errno_location().write(e);
     }
 }
 

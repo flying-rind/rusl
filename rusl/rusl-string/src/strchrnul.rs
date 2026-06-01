@@ -9,7 +9,7 @@ use core::ffi::c_char;
 /// - `s` 非空
 /// - s 以 null 结尾
 #[no_mangle]
-pub unsafe extern "C" fn strchrnul(s: *const core::ffi::c_char, c: core::ffi::c_int) -> *mut core::ffi::c_char {
+pub unsafe extern "C" fn __strchrnul(s: *const core::ffi::c_char, c: core::ffi::c_int) -> *mut core::ffi::c_char {
     let p = s as *const u8;
     let target = c as u8;
     let mut i = 0;
@@ -20,6 +20,11 @@ pub unsafe extern "C" fn strchrnul(s: *const core::ffi::c_char, c: core::ffi::c_
         }
         i += 1;
     }
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn strchrnul(s: *const core::ffi::c_char, c: core::ffi::c_int) -> *mut core::ffi::c_char {
+    unsafe { __strchrnul(s, c) }
 }
 
 /// 安全的 Rust 内部实现。
