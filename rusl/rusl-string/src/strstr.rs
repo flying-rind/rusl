@@ -1,0 +1,54 @@
+//! strstr — 在字符串 h（haystack）中查找子串 n（needle）首次出现的位置。
+
+#![allow(unused_imports, unused_variables)]
+
+use core::ffi::c_char;
+/// strstr — 在字符串 h（haystack）中查找子串 n（needle）首次出现的位置。
+///
+/// # Safety
+/// - `h` 非空、`n` 非空
+/// - h 和 n 以 null 结尾
+#[no_mangle]
+pub unsafe extern "C" fn strstr(h: *const core::ffi::c_char, n: *const core::ffi::c_char) -> *mut core::ffi::c_char {
+    let haystack = h as *const u8;
+    let needle = n as *const u8;
+    // 空 needle 返回 haystack
+    if unsafe { *needle } == 0 {
+        return h as *mut core::ffi::c_char;
+    }
+    let first = unsafe { *needle };
+    let mut i = 0;
+    loop {
+        let hc = unsafe { *haystack.add(i) };
+        if hc == 0 {
+            return core::ptr::null_mut();
+        }
+        if hc == first {
+            // 比较剩余部分
+            let mut j = 1;
+            loop {
+                let nc = unsafe { *needle.add(j) };
+                if nc == 0 {
+                    return haystack.add(i) as *mut core::ffi::c_char;
+                }
+                let hc2 = unsafe { *haystack.add(i + j) };
+                if hc2 != nc {
+                    break;
+                }
+                j += 1;
+            }
+        }
+        i += 1;
+    }
+}
+
+/// 安全的 Rust 内部实现。
+pub(crate) fn strstr_impl(haystack: &[u8], needle: &[u8]) -> Option<*const u8> {
+    if needle.is_empty() {
+        return Some(haystack.as_ptr());
+    }
+    haystack
+        .windows(needle.len())
+        .position(|w| w == needle)
+        .map(|i| unsafe { haystack.as_ptr().add(i) })
+}

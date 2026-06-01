@@ -1,0 +1,1654 @@
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/musl/rusl/rusl-core/Cargo.toml
+workspace: /home/mangp/桌面/OS/musl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/musl/rusl/rusl-internal/Cargo.toml
+workspace: /home/mangp/桌面/OS/musl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/musl/rusl/rusl-ctype/Cargo.toml
+workspace: /home/mangp/桌面/OS/musl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/musl/rusl/rusl-string/Cargo.toml
+workspace: /home/mangp/桌面/OS/musl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/musl/rusl/rusl-stdlib/Cargo.toml
+workspace: /home/mangp/桌面/OS/musl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/musl/rusl/rusl-prng/Cargo.toml
+workspace: /home/mangp/桌面/OS/musl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/musl/rusl/rusl-search/Cargo.toml
+workspace: /home/mangp/桌面/OS/musl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/musl/rusl/rusl-malloc/Cargo.toml
+workspace: /home/mangp/桌面/OS/musl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/musl/rusl/rusl-regex/Cargo.toml
+workspace: /home/mangp/桌面/OS/musl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/musl/rusl/rusl-env/Cargo.toml
+workspace: /home/mangp/桌面/OS/musl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/musl/rusl/rusl-unistd/Cargo.toml
+workspace: /home/mangp/桌面/OS/musl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/musl/rusl/rusl-stdio/Cargo.toml
+workspace: /home/mangp/桌面/OS/musl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/musl/rusl/rusl-exit/Cargo.toml
+workspace: /home/mangp/桌面/OS/musl/rusl/Cargo.toml
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/mangp/桌面/OS/musl/rusl/rusl-main/Cargo.toml
+workspace: /home/mangp/桌面/OS/musl/rusl/Cargo.toml
+warning: /home/mangp/桌面/OS/musl/rusl/rusl-exit/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/musl/rusl/rusl-ctype/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/musl/rusl/rusl-env/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/musl/rusl/rusl-stdio/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/musl/rusl/rusl-main/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/musl/rusl/rusl-core/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/musl/rusl/rusl-unistd/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/musl/rusl/rusl-internal/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/musl/rusl/rusl-malloc/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/musl/rusl/rusl-search/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/musl/rusl/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/musl/rusl/rusl-string/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/musl/rusl/rusl-prng/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/musl/rusl/rusl-stdlib/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: /home/mangp/桌面/OS/musl/rusl/rusl-regex/Cargo.toml: `panic` setting is ignored for `test` profile
+warning: unexpected `cfg` condition name: `TLS_ABOVE_TP`
+   --> rusl-internal/src/pthread_impl.rs:133:15
+    |
+133 |     #[cfg(not(TLS_ABOVE_TP))]
+    |               ^^^^^^^^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, and `test` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(TLS_ABOVE_TP)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(TLS_ABOVE_TP)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: `#[warn(unexpected_cfgs)]` on by default
+
+warning: unexpected `cfg` condition name: `TLS_ABOVE_TP`
+   --> rusl-internal/src/pthread_impl.rs:151:15
+    |
+151 |     #[cfg(not(TLS_ABOVE_TP))]
+    |               ^^^^^^^^^^^^
+    |
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(TLS_ABOVE_TP)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(TLS_ABOVE_TP)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `TLS_ABOVE_TP`
+   --> rusl-internal/src/pthread_impl.rs:228:11
+    |
+228 |     #[cfg(TLS_ABOVE_TP)]
+    |           ^^^^^^^^^^^^
+    |
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(TLS_ABOVE_TP)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(TLS_ABOVE_TP)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `TLS_ABOVE_TP`
+   --> rusl-internal/src/pthread_impl.rs:232:11
+    |
+232 |     #[cfg(TLS_ABOVE_TP)]
+    |           ^^^^^^^^^^^^
+    |
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(TLS_ABOVE_TP)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(TLS_ABOVE_TP)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unused variable: `status`
+   --> rusl-internal/src/emulate_wait4.rs:198:5
+    |
+198 |     status: *mut c_int,
+    |     ^^^^^^ help: if this is intentional, prefix it with an underscore: `_status`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: `rusl-internal` (lib) generated 5 warnings (run `cargo fix --lib -p rusl-internal` to apply 1 suggestion)
+warning: _start changed binding to STB_WEAK
+  |
+note: instantiated into assembly here
+ --> <inline asm>:4:1
+  |
+4 | .weak _start
+  | ^
+
+warning: `rusl-env` (lib) generated 1 warning
+warning: creating a shared reference to mutable static
+   --> rusl-regex/src/glob.rs:218:25
+    |
+218 |         let entry_ptr = DIR_BUF_DATA.as_ptr().add(DIR_BUF_POS_INTERNAL);
+    |                         ^^^^^^^^^^^^^^^^^^^^^ shared reference to mutable static
+    |
+    = note: shared references to mutable statics are dangerous; it's undefined behavior if the static is mutated or if a mutable reference is created for it while the shared reference lives
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/static-mut-references.html>
+    = note: `#[warn(static_mut_refs)]` (part of `#[warn(rust_2024_compatibility)]`) on by default
+
+warning: creating a mutable reference to mutable static
+   --> rusl-regex/src/glob.rs:228:49
+    |
+228 |     let nread = do_syscall!(SYS_GETDENTS64, fd, DIR_BUF_DATA.as_mut_ptr(), 4096usize);
+    |                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^ mutable reference to mutable static
+    |
+    = note: mutable references to mutable statics are dangerous; it's undefined behavior if any other pointer to the static is used or if any other reference is created for the static while the mutable reference lives
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/static-mut-references.html>
+
+warning: creating a shared reference to mutable static
+   --> rusl-regex/src/glob.rs:236:21
+    |
+236 |     let entry_ptr = DIR_BUF_DATA.as_ptr();
+    |                     ^^^^^^^^^^^^^^^^^^^^^ shared reference to mutable static
+    |
+    = note: shared references to mutable statics are dangerous; it's undefined behavior if the static is mutated or if a mutable reference is created for it while the shared reference lives
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/static-mut-references.html>
+
+warning: `rusl-regex` (lib) generated 3 warnings
+warning: unused doc comment
+  --> rusl-main/tests/env/reset_tls_test.rs:59:1
+   |
+59 | / /// 测试: 调用 __reset_tls 不应导致崩溃。
+60 | | ///
+61 | | /// 根据 spec,此函数始终成功 — memcpy/memset 在有效内存范围内不会失败。
+   | |_----------------------------------------------------------------------^
+   |   |
+   |   rustdoc does not generate documentation for macro invocations
+   |
+   = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+   = note: `#[warn(unused_doc_comments)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused doc comment
+  --> rusl-main/tests/env/reset_tls_test.rs:69:1
+   |
+69 | / /// 测试: 在设置 errno 后调用 __reset_tls 不应崩溃。
+70 | | ///
+   | |_--^
+   |   |
+   |   rustdoc does not generate documentation for macro invocations
+   |
+   = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+  --> rusl-main/tests/env/reset_tls_test.rs:83:1
+   |
+83 | / /// 测试: 多次连续调用 __reset_tls 不应崩溃。
+84 | | ///
+   | |_--^
+   |   |
+   |   rustdoc does not generate documentation for macro invocations
+   |
+   = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+  --> rusl-main/tests/env/reset_tls_test.rs:94:1
+   |
+94 | / /// 测试: 交替设置 errno 和调用 __reset_tls 的循环操作。
+95 | | ///
+   | |_--^
+   |   |
+   |   rustdoc does not generate documentation for macro invocations
+   |
+   = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/env/reset_tls_test.rs:110:1
+    |
+110 | / /// 测试: __reset_tls 将 errno 恢复到初始值 (0)。
+111 | | ///
+112 | | /// errno 是线程局部变量 (位于 TLS 中)。
+113 | | /// 根据 spec 后置条件: "所有 TLS 变量的值等同于程序刚加载时的初始值"。
+    | |_----------------------------------------------------------------------^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/env/reset_tls_test.rs:129:1
+    |
+129 | / /// 测试: 多种 errno 值在 __reset_tls 后均恢复为 0。
+130 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/env/reset_tls_test.rs:176:1
+    |
+176 | / /// 测试: __reset_tls 的幂等性 — 在已重置状态下再次调用不应改变结果。
+177 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/env/reset_tls_test.rs:201:1
+    |
+201 | / /// 测试: 设置 errno 为 0 后调用 __reset_tls (边界情况)。
+202 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/env/reset_tls_test.rs:213:1
+    |
+213 | / /// 测试: 设置负值 errno 后调用 __reset_tls。
+214 | | ///
+215 | | /// 虽然实际 errno 不应为负,但验证 TLS 重置对此类异常值的处理。
+    | |_--------------------------------------------------------------^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/env/reset_tls_test.rs:231:1
+    |
+231 | / /// 测试: 在循环中快速连续交替设置 errno 和调用 __reset_tls。
+232 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/env/reset_tls_test.rs:245:1
+    |
+245 | / /// 测试: 零间隔连续重置 (无中间操作)。
+246 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused import: `core::ffi::c_int`
+  --> rusl-main/tests/env/reset_tls_test.rs:23:5
+   |
+23 | use core::ffi::c_int;
+   |     ^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused doc comment
+  --> rusl-main/tests/env/stack_chk_fail_test.rs:54:1
+   |
+54 | / /// 验证 `__stack_chk_fail` 可被赋值为函数指针（链接期存在性检查）。
+55 | | ///
+   | |_--^
+   |   |
+   |   rustdoc does not generate documentation for macro invocations
+   |
+   = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+  --> rusl-main/tests/env/stack_chk_fail_test.rs:93:1
+   |
+93 | / /// 验证 `__stack_chk_guard` 的 `uintptr_t` 类型大小符合平台预期。
+94 | | ///
+95 | | /// `uintptr_t` 应足够容纳一个指针:
+96 | | /// - 32 位平台: 4 字节
+   | |_----------------------^
+   |   |
+   |   rustdoc does not generate documentation for macro invocations
+   |
+   = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/env/stack_chk_fail_test.rs:121:1
+    |
+121 | / /// 验证 `__stack_chk_guard` 初始化后为非零值。
+122 | | ///
+123 | | /// Spec 后置条件: `__init_ssp()` 调用后始终非零。
+124 | | /// 在 musl libc 环境下，`__libc_start_main` 已调用 `__init_ssp`，
+    | |_-----------------------------------------------------------------^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/env/stack_chk_fail_test.rs:134:1
+    |
+134 | / /// 验证多次读取 `__stack_chk_guard` 返回值一致。
+135 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/env/stack_chk_fail_test.rs:164:1
+    |
+164 | / /// 验证 64 位平台上 `((char *)&__stack_chk_guard)[1] == 0` 不变量。
+165 | | ///
+166 | | /// Spec 明确要求: 在 `UINTPTR_MAX >= 0xffffffffffffffff` 的平台上，
+167 | | /// canary 的第二字节被刻意置零，以防御通过 `strcpy`/`sprintf` 等
+...   |
+170 | | /// NULL 字节位于第二字节（而非第一字节），使得 off-by-one 错误仍能被检测。
+171 | | /// 端序由编译器自动处理。
+    | |_-------------------------^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/env/stack_chk_fail_test.rs:192:1
+    |
+192 | /// 验证 64 位平台上 canary 的其余字节不因第二字节清零而全为零。
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/env/stack_chk_fail_test.rs:215:1
+    |
+215 | / /// 验证 `__stack_chk_fail` 的函数签名类型。
+216 | | ///
+217 | | /// Spec 声明签名为 `void __stack_chk_fail(void)`。
+    | |_--------------------------------------------------^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/env/stack_chk_fail_test.rs:252:1
+    |
+252 | / /// 验证 `__stack_chk_guard` 的地址与其值不相等。
+253 | | ///
+254 | | /// 在无随机熵的回退路径中, canary = &__stack_chk_guard * 1103515245,
+255 | | /// 因此 canary 值不等于其地址本身（由于乘了一个常数）。
+    | |_-------------------------------------------------------^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/env/stack_chk_fail_test.rs:272:1
+    |
+272 | / /// 验证在多个测试之间 `__stack_chk_guard` 值保持不变。
+273 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/env/stack_chk_fail_test.rs:297:1
+    |
+297 | / /// **文档测试**: 标记 `__stack_chk_fail` 的实际调用会导致 SIGSEGV 终止进程。
+298 | | ///
+299 | | /// 此测试不执行任何代码，仅作为文档化提醒：
+300 | | /// `__stack_chk_fail` 调用 `a_crash()` → `*(volatile char *)0 = 0` → SIGSEGV。
+...   |
+304 | | /// 这也是 musl 的设计意图：在栈已被破坏的情况下，
+305 | | /// 不信任调用栈完整性，不使用 `abort()`（避免信号处理/atexit 回调被利用），
+    | |_---------------------------------------------------------------------------^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused import: `core::ffi::c_void`
+  --> rusl-main/tests/env/stack_chk_fail_test.rs:26:5
+   |
+26 | use core::ffi::c_void;
+   |     ^^^^^^^^^^^^^^^^^
+
+warning: unused doc comment
+  --> rusl-main/tests/ctype/ctype_b_loc_test.rs:35:1
+   |
+35 | / /// 验证 `__ctype_b_loc` 返回值的指针宽度。
+36 | | ///
+   | |_--^
+   |   |
+   |   rustdoc does not generate documentation for macro invocations
+   |
+   = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+  --> rusl-main/tests/ctype/ctype_b_loc_test.rs:84:1
+   |
+84 | / /// 验证实现完成后返回值非空。
+85 | | ///
+   | |_--^
+   |   |
+   |   rustdoc does not generate documentation for macro invocations
+   |
+   = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused import: `c_void`
+  --> rusl-main/tests/ctype/isalpha_test.rs:17:24
+   |
+17 | use core::ffi::{c_int, c_void};
+   |                        ^^^^^^
+
+warning: unused import: `core::ffi::c_int`
+  --> rusl-main/tests/ctype/iswalnum_test.rs:16:5
+   |
+16 | use core::ffi::c_int;
+   |     ^^^^^^^^^^^^^^^^
+
+warning: unused import: `core::ffi::c_int`
+  --> rusl-main/tests/ctype/iswalpha_test.rs:17:5
+   |
+17 | use core::ffi::c_int;
+   |     ^^^^^^^^^^^^^^^^
+
+warning: unused import: `core::ffi::c_int`
+  --> rusl-main/tests/ctype/iswblank_test.rs:15:5
+   |
+15 | use core::ffi::c_int;
+   |     ^^^^^^^^^^^^^^^^
+
+warning: unused doc comment
+  --> rusl-main/tests/ctype/iswcntrl_test.rs:85:1
+   |
+85 | / /// `iswcntrl_l` 传入非法 locale 指针应 panic (尚未实现)。
+86 | | ///
+   | |_--^
+   |   |
+   |   rustdoc does not generate documentation for macro invocations
+   |
+   = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/iswcntrl_test.rs:161:1
+    |
+161 | / /// 验证 `iswcntrl_l(NULL)` 与 `iswcntrl` 行为一致 (C locale)。
+162 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+  --> rusl-main/tests/ctype/iswpunct_test.rs:87:1
+   |
+87 | / /// `iswpunct_l` 传入非法 locale 指针应 panic (尚未实现)。
+88 | | ///
+   | |_--^
+   |   |
+   |   rustdoc does not generate documentation for macro invocations
+   |
+   = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+  --> rusl-main/tests/ctype/iswupper_test.rs:88:1
+   |
+88 | / /// `iswupper_l` 传入非法 locale 指针应 panic (尚未实现)。
+89 | | ///
+   | |_--^
+   |   |
+   |   rustdoc does not generate documentation for macro invocations
+   |
+   = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/toascii_test.rs:119:1
+    |
+119 | / /// 推测: toascii(0xC1) = 0x41 = 65 ('A')。
+120 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/toascii_test.rs:145:1
+    |
+145 | / /// 推测: toascii(-1) = 127。
+146 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/toascii_test.rs:157:1
+    |
+157 | / /// 推测: toascii(-128) = 0。
+158 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/toascii_test.rs:164:1
+    |
+164 | / /// 推测: toascii(-127) = 1。
+165 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/toascii_test.rs:171:1
+    |
+171 | / /// 推测: toascii(-129) = 127。
+172 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/toascii_test.rs:192:1
+    |
+192 | / /// 推测: toascii(0x1FF) = 0x7F = 127。
+193 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+  --> rusl-main/tests/ctype/towctrans_test.rs:73:1
+   |
+73 | /// 测试: Unicode Latin 扩展大写字母转换
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+   |
+   = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/towctrans_test.rs:134:1
+    |
+134 | /// 测试: Unicode Latin 扩展小写字母转换
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/wcswidth_test.rs:121:1
+    |
+121 | / /// 推测: 空字符串 (仅 null 终止符) 返回 0。
+122 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/wcswidth_test.rs:212:1
+    |
+212 | / /// 推测: C0 控制字符 (U+0001 SOH) 导致返回 -1。
+213 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+  --> rusl-main/tests/ctype/wctrans_test.rs:67:1
+   |
+67 | / /// 验证 `wctrans` 返回值类型 `wctrans_t` 的大小 (unsigned long)。
+68 | | ///
+69 | | /// spec: musl 中 `wctrans_t` 定义为 `unsigned long`。
+   | |_-----------------------------------------------------^
+   |   |
+   |   rustdoc does not generate documentation for macro invocations
+   |
+   = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+  --> rusl-main/tests/ctype/wctrans_test.rs:80:1
+   |
+80 | / /// 验证 `towctrans` 参数/返回值类型 `wint_t` 的大小 (unsigned int)。
+81 | | ///
+   | |_--^
+   |   |
+   |   rustdoc does not generate documentation for macro invocations
+   |
+   = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/wctrans_test.rs:189:1
+    |
+189 | / /// 推测: `wctrans("toupper")` 返回 1。
+190 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/wctrans_test.rs:200:1
+    |
+200 | / /// 推测: `wctrans("tolower")` 返回 2。
+201 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/wctrans_test.rs:283:1
+    |
+283 | / /// 推测: `towctrans('a', 1)` (toupper) 返回 'A'。
+284 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/wctrans_test.rs:293:1
+    |
+293 | / /// 推测: `towctrans('A', 2)` (tolower) 返回 'a'。
+294 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/wctrans_test.rs:321:1
+    |
+321 | / /// 推测: `towctrans(wc, 0)` 返回 wc 原值 (0 为无效描述符)。
+322 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/wctrans_test.rs:403:1
+    |
+403 | / /// 推测: 无效 trans 下 `towctrans(WEOF, 0)` 返回 WEOF。
+404 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/wctrans_test.rs:419:1
+    |
+419 | / /// 推测: `wctrans_l` 忽略 locale 参数, 与 `wctrans` 行为一致。
+420 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/wctrans_test.rs:447:1
+    |
+447 | / /// 推测: `wctrans_l` 忽略 locale — 不同 locale 值返回相同结果。
+448 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/wctrans_test.rs:472:1
+    |
+472 | / /// 推测: `towctrans_l` 忽略 locale 参数, 与 `towctrans` 行为一致。
+473 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused imports: `c_int` and `c_void`
+  --> rusl-main/tests/ctype/wctrans_test.rs:25:25
+   |
+25 | use core::ffi::{c_char, c_int, c_void};
+   |                         ^^^^^  ^^^^^^
+
+warning: unused doc comment
+  --> rusl-main/tests/ctype/wcwidth_test.rs:53:1
+   |
+53 | / /// 验证 `wcwidth` 参数类型 `wchar_t` 的大小 (Linux 上为 int)。
+54 | | ///
+   | |_--^
+   |   |
+   |   rustdoc does not generate documentation for macro invocations
+   |
+   = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/wcwidth_test.rs:117:1
+    |
+117 | / /// 推测: `wcwidth(0)` (null 字符 L'\0') 返回 0。
+118 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/wcwidth_test.rs:130:1
+    |
+130 | / /// 推测: ASCII 空格 (U+0020) 返回 1。
+131 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/wcwidth_test.rs:139:1
+    |
+139 | / /// 推测: ASCII 打印范围 0x21-0x7E 内所有字符返回 1。
+140 | | ///
+141 | | /// 注意: 此测试遍历 94 个 ASCII 可打印字符, spec 对此范围的
+142 | | /// 约束为: wc < 0xff 且 (wc+1 & 0x7f) >= 0x21 -> 返回 1。
+    | |_---------------------------------------------------------^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/wcwidth_test.rs:357:1
+    |
+357 | / /// 推测: CJK Extension B (U+20000) 高位平面宽字符返回 2。
+358 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/wcwidth_test.rs:377:1
+    |
+377 | / /// 推测: 组合重音符 U+0300 (COMBINING GRAVE ACCENT) 返回 0。
+378 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/wcwidth_test.rs:434:1
+    |
+434 | / /// 推测: C0 控制字符范围 0x01-0x1F 全部返回 -1。
+435 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/wcwidth_test.rs:471:1
+    |
+471 | / /// 推测: U+0000 (NUL) 虽然也是 C0 范围, 但 spec 明确 null 返回 0 (Case 1 特殊覆盖)。
+472 | | ///
+473 | | /// 注意: spec 中 null 字符被 Case 1 特殊处理返回 0，但 spec 的 Case 4 描述
+474 | | /// 说 "0x01-0x1F" -> -1。这里 0x00 被排除在 -1 范围外，
+    | |_-------------------------------------------------------^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/wcwidth_test.rs:488:1
+    |
+488 | / /// 推测: U+FFFE (非字符码点) 返回 -1。
+489 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/wcwidth_test.rs:548:1
+    |
+548 | / /// 推测: U+E0001 (LANGUAGE TAG) 返回 0。
+549 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/wcwidth_test.rs:582:1
+    |
+582 | / /// 推测: U+E0080 (标记范围之后) 不在标记范围内，按普通规则判断。
+583 | | ///
+584 | | /// 注意: spec 只提到 U+E0020-U+E00EF 范围返回 0，U+E0080 的
+    | |_-----------------------------------------------------------^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/wcwidth_test.rs:610:1
+    |
+610 | / /// 推测: wcwidth 返回值仅可能为 -1、0、1、2。
+611 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/wcwidth_test.rs:665:1
+    |
+665 | / /// 推测: BMP 末尾边界附近 (如 U+FFFD REPLACEMENT CHARACTER) 行为正确。
+666 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> rusl-main/tests/ctype/wcwidth_test.rs:688:1
+    |
+688 | / /// 验证负值 wchar_t 可传入函数 (用于可能的错误处理)。
+689 | | ///
+    | |_--^
+    |   |
+    |   rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/env/stack_chk_fail_test.rs:58:5
+   |
+58 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+   |
+   = note: `#[warn(unused_unsafe)]` (part of `#[warn(unused)]`) on by default
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/env/stack_chk_fail_test.rs:84:5
+   |
+84 |     unsafe {
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/env/stack_chk_fail_test.rs:108:5
+    |
+108 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/env/stack_chk_fail_test.rs:220:5
+    |
+220 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/env/stack_chk_fail_test.rs:228:5
+    |
+228 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/env/stack_chk_fail_test.rs:239:5
+    |
+239 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unused variable: `guard_val`
+   --> rusl-main/tests/env/stack_chk_fail_test.rs:260:13
+    |
+260 |         let guard_val = core::ptr::read_volatile(core::ptr::addr_of!(__stack_chk_guard));
+    |             ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_guard_val`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/env/stack_chk_fail_test.rs:288:27
+    |
+288 |     let p: *const usize = unsafe { core::ptr::addr_of!(__stack_chk_guard) };
+    |                           ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> rusl-main/tests/env/stack_chk_fail_test.rs:310:5
+    |
+310 |     unsafe {
+    |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/ctype_common_tests.rs:53:20
+   |
+53 |         assert_ne!(unsafe {
+   |                    ^^^^^^ unnecessary `unsafe` block
+
+warning: unused variable: `c`
+  --> rusl-main/tests/ctype/isascii_test.rs:36:9
+   |
+36 |     for c in 0i32..128 {
+   |         ^ help: if this is intentional, prefix it with an underscore: `_c`
+
+warning: unused variable: `lock`
+ --> rusl-main/tests/internal/lock_test.rs:8:9
+  |
+8 |     let lock = SpinLock::new();
+  |         ^^^^
+  |
+help: you might have meant to pattern match on the similarly named constant `LOCK`
+  |
+8 -     let lock = SpinLock::new();
+8 +     let internal::lock_test::_test::{closure#0}::LOCK = SpinLock::new();
+  |
+help: if this is intentional, prefix it with an underscore
+  |
+8 |     let _lock = SpinLock::new();
+  |         +
+
+warning: constant `LOCK` is never used
+  --> rusl-main/tests/internal/lock_test.rs:15:11
+   |
+15 |     const LOCK: SpinLock = SpinLock::new();
+   |           ^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function pointers are not nullable, so checking them for null will always return false
+   --> rusl-main/tests/env/clearenv_test.rs:384:18
+    |
+384 |         assert!(!(clearenv as *const ()).is_null(),
+    |                  ^--------^^^^^^^^^^^^^^^^^^^^^^^^
+    |                   |
+    |                   expression has type `unsafe extern "C" fn() -> i32 {clearenv_test::clearenv}`
+    |
+    = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+    = note: `#[warn(useless_ptr_null_checks)]` on by default
+
+warning: creating a shared reference to mutable static
+   --> rusl-main/tests/env/environ_test.rs:413:20
+    |
+413 |         assert_eq!(environ, mini_env.as_ptr() as *mut *mut c_char,
+    |                    ^^^^^^^ shared reference to mutable static
+    |
+    = note: shared references to mutable statics are dangerous; it's undefined behavior if the static is mutated or if a mutable reference is created for it while the shared reference lives
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/static-mut-references.html>
+    = note: `#[warn(static_mut_refs)]` (part of `#[warn(rust_2024_compatibility)]`) on by default
+
+warning: creating a shared reference to mutable static
+   --> rusl-main/tests/env/environ_test.rs:422:20
+    |
+422 |         assert_eq!(environ, saved,
+    |                    ^^^^^^^ shared reference to mutable static
+    |
+    = note: shared references to mutable statics are dangerous; it's undefined behavior if the static is mutated or if a mutable reference is created for it while the shared reference lives
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/static-mut-references.html>
+
+warning: creating a shared reference to mutable static
+   --> rusl-main/tests/env/environ_test.rs:443:20
+    |
+443 |         assert_eq!(environ, orig,
+    |                    ^^^^^^^ shared reference to mutable static
+    |
+    = note: shared references to mutable statics are dangerous; it's undefined behavior if the static is mutated or if a mutable reference is created for it while the shared reference lives
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/static-mut-references.html>
+
+warning: creating a shared reference to mutable static
+   --> rusl-main/tests/env/environ_test.rs:459:20
+    |
+459 |         assert_eq!(environ, orig);
+    |                    ^^^^^^^ shared reference to mutable static
+    |
+    = note: shared references to mutable statics are dangerous; it's undefined behavior if the static is mutated or if a mutable reference is created for it while the shared reference lives
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/static-mut-references.html>
+
+warning: creating a shared reference to mutable static
+   --> rusl-main/tests/env/environ_test.rs:467:20
+    |
+467 |         assert_eq!(environ, orig);
+    |                    ^^^^^^^ shared reference to mutable static
+    |
+    = note: shared references to mutable statics are dangerous; it's undefined behavior if the static is mutated or if a mutable reference is created for it while the shared reference lives
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/static-mut-references.html>
+
+warning: creating a shared reference to mutable static
+   --> rusl-main/tests/env/environ_test.rs:574:20
+    |
+574 |         assert_eq!(__environ, environ,
+    |                    ^^^^^^^^^ shared reference to mutable static
+    |
+    = note: shared references to mutable statics are dangerous; it's undefined behavior if the static is mutated or if a mutable reference is created for it while the shared reference lives
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/static-mut-references.html>
+
+warning: creating a shared reference to mutable static
+   --> rusl-main/tests/env/environ_test.rs:574:31
+    |
+574 |         assert_eq!(__environ, environ,
+    |                               ^^^^^^^ shared reference to mutable static
+    |
+    = note: shared references to mutable statics are dangerous; it's undefined behavior if the static is mutated or if a mutable reference is created for it while the shared reference lives
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/static-mut-references.html>
+
+warning: creating a shared reference to mutable static
+   --> rusl-main/tests/env/environ_test.rs:576:20
+    |
+576 |         assert_eq!(__environ, mini_env.as_ptr() as *mut *mut c_char,
+    |                    ^^^^^^^^^ shared reference to mutable static
+    |
+    = note: shared references to mutable statics are dangerous; it's undefined behavior if the static is mutated or if a mutable reference is created for it while the shared reference lives
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/static-mut-references.html>
+
+warning: creating a shared reference to mutable static
+   --> rusl-main/tests/env/environ_test.rs:604:20
+    |
+604 |         assert_eq!(environ, __environ,
+    |                    ^^^^^^^ shared reference to mutable static
+    |
+    = note: shared references to mutable statics are dangerous; it's undefined behavior if the static is mutated or if a mutable reference is created for it while the shared reference lives
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/static-mut-references.html>
+
+warning: creating a shared reference to mutable static
+   --> rusl-main/tests/env/environ_test.rs:604:29
+    |
+604 |         assert_eq!(environ, __environ,
+    |                             ^^^^^^^^^ shared reference to mutable static
+    |
+    = note: shared references to mutable statics are dangerous; it's undefined behavior if the static is mutated or if a mutable reference is created for it while the shared reference lives
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/static-mut-references.html>
+
+warning: creating a shared reference to mutable static
+   --> rusl-main/tests/env/environ_test.rs:606:20
+    |
+606 |         assert_eq!(environ, mini_env.as_ptr() as *mut *mut c_char,
+    |                    ^^^^^^^ shared reference to mutable static
+    |
+    = note: shared references to mutable statics are dangerous; it's undefined behavior if the static is mutated or if a mutable reference is created for it while the shared reference lives
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/static-mut-references.html>
+
+warning: creating a shared reference to mutable static
+   --> rusl-main/tests/env/environ_test.rs:686:20
+    |
+686 |         assert_eq!(environ, __environ,
+    |                    ^^^^^^^ shared reference to mutable static
+    |
+    = note: shared references to mutable statics are dangerous; it's undefined behavior if the static is mutated or if a mutable reference is created for it while the shared reference lives
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/static-mut-references.html>
+
+warning: creating a shared reference to mutable static
+   --> rusl-main/tests/env/environ_test.rs:686:29
+    |
+686 |         assert_eq!(environ, __environ,
+    |                             ^^^^^^^^^ shared reference to mutable static
+    |
+    = note: shared references to mutable statics are dangerous; it's undefined behavior if the static is mutated or if a mutable reference is created for it while the shared reference lives
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/static-mut-references.html>
+
+warning: creating a shared reference to mutable static
+   --> rusl-main/tests/env/environ_test.rs:688:13
+    |
+688 |             environ, __environ);
+    |             ^^^^^^^ shared reference to mutable static
+    |
+    = note: shared references to mutable statics are dangerous; it's undefined behavior if the static is mutated or if a mutable reference is created for it while the shared reference lives
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/static-mut-references.html>
+
+warning: creating a shared reference to mutable static
+   --> rusl-main/tests/env/environ_test.rs:688:22
+    |
+688 |             environ, __environ);
+    |                      ^^^^^^^^^ shared reference to mutable static
+    |
+    = note: shared references to mutable statics are dangerous; it's undefined behavior if the static is mutated or if a mutable reference is created for it while the shared reference lives
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/static-mut-references.html>
+
+warning: static variable `__thread_list_lock` should have an upper case name
+  --> rusl-main/tests/env/init_tls_test.rs:62:12
+   |
+62 | static mut __thread_list_lock: c_int = 0;
+   |            ^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(non_upper_case_globals)]` (part of `#[warn(nonstandard_style)]`) on by default
+help: convert the identifier to upper case
+   |
+62 - static mut __thread_list_lock: c_int = 0;
+62 + static mut __THREAD_LIST_LOCK: c_int = 0;
+   |
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/env/stack_chk_fail_test.rs:61:18
+   |
+61 |         assert!(!(f as *const ()).is_null(),
+   |                  ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |                   |
+   |                   expression has type `unsafe extern "C" fn()`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/ctype_b_loc_test.rs:30:10
+   |
+30 |         !(f as *const ()).is_null(),
+   |          ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |           |
+   |           expression has type `unsafe extern "C" fn() -> *const *const u16`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/ctype_common_tests.rs:15:14
+   |
+15 |     assert!(!(f as *const ()).is_null());
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(i32) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/ctype_common_tests.rs:48:14
+   |
+48 |     assert!(!(f as *const ()).is_null());
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(i32) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/ctype_get_mb_cur_max_test.rs:29:10
+   |
+29 |         !(f as *const ()).is_null(),
+   |          ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |           |
+   |           expression has type `unsafe extern "C" fn() -> usize`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/ctype_tolower_loc_test.rs:29:14
+   |
+29 |     assert!(!(f as *const ()).is_null(), "__ctype_tolower_loc 函数指针不应为 NULL");
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn() -> *const *const i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/ctype_toupper_loc_test.rs:21:14
+   |
+21 |     assert!(!(f as *const ()).is_null(), "__ctype_toupper_loc 函数指针不应为 NULL");
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn() -> *const *const i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/isalpha_test.rs:27:14
+   |
+27 |     assert!(!(f as *const ()).is_null());
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(i32) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/isalpha_test.rs:32:14
+   |
+32 |     assert!(!(f as *const ()).is_null());
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(i32, *mut c_void) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/isalpha_test.rs:37:14
+   |
+37 |     assert!(!(f as *const ()).is_null());
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(i32, *mut c_void) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/isascii_test.rs:21:14
+   |
+21 |     assert!(!(f as *const ()).is_null());
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(i32) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/iswcntrl_test.rs:32:14
+   |
+32 |     assert!(!(f as *const ()).is_null(),
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(u32) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/iswcntrl_test.rs:39:14
+   |
+39 |     assert!(!(f as *const ()).is_null(),
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(u32, *mut c_void) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/iswctype_test.rs:84:11
+   |
+84 |     assert!(!(f as *const ()).is_null());
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(u32, u64) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/iswctype_test.rs:90:11
+   |
+90 |     assert!(!(f as *const ()).is_null());
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(*const i8) -> u64`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/iswctype_test.rs:96:11
+   |
+96 |     assert!(!(f as *const ()).is_null());
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(u32, u64, *mut c_void) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+   --> rusl-main/tests/ctype/iswctype_test.rs:102:11
+    |
+102 |     assert!(!(f as *const ()).is_null());
+    |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+    |               |
+    |               expression has type `unsafe extern "C" fn(*const i8, *mut c_void) -> u64`
+    |
+    = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/iswdigit_test.rs:27:14
+   |
+27 |     assert!(!(f as *const ()).is_null());
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(u32) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/iswdigit_test.rs:33:14
+   |
+33 |     assert!(!(f as *const ()).is_null());
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(u32, *mut c_void) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/iswgraph_test.rs:29:14
+   |
+29 |     assert!(!(f as *const ()).is_null());
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(u32) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/iswgraph_test.rs:35:14
+   |
+35 |     assert!(!(f as *const ()).is_null());
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(u32, *mut c_void) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/iswlower_test.rs:28:14
+   |
+28 |     assert!(!(f as *const ()).is_null());
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(u32) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/iswlower_test.rs:34:14
+   |
+34 |     assert!(!(f as *const ()).is_null());
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(u32, *mut c_void) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/iswprint_test.rs:28:14
+   |
+28 |     assert!(!(f as *const ()).is_null());
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(u32) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/iswprint_test.rs:34:14
+   |
+34 |     assert!(!(f as *const ()).is_null());
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(u32, *mut c_void) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/iswpunct_test.rs:34:14
+   |
+34 |     assert!(!(f as *const ()).is_null(),
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(u32) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/iswpunct_test.rs:41:14
+   |
+41 |     assert!(!(f as *const ()).is_null(),
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(u32, *mut c_void) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/iswspace_test.rs:65:14
+   |
+65 |     assert!(!(f as *const ()).is_null(),
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(u32) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/iswspace_test.rs:72:14
+   |
+72 |     assert!(!(f as *const ()).is_null(),
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(u32, *mut c_void) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/iswupper_test.rs:35:14
+   |
+35 |     assert!(!(f as *const ()).is_null(),
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(u32) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/iswupper_test.rs:42:14
+   |
+42 |     assert!(!(f as *const ()).is_null(),
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(u32, *mut c_void) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/iswxdigit_test.rs:35:14
+   |
+35 |     assert!(!(f as *const ()).is_null(),
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(u32) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/iswxdigit_test.rs:42:14
+   |
+42 |     assert!(!(f as *const ()).is_null(),
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(u32, *mut c_void) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/isxdigit_test.rs:43:14
+   |
+43 |     assert!(!(f as *const ()).is_null(),
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(i32) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/isxdigit_test.rs:50:14
+   |
+50 |     assert!(!(f as *const ()).is_null(),
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(i32, *mut c_void) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/toascii_test.rs:43:14
+   |
+43 |     assert!(!(f as *const ()).is_null(),
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(i32) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/wcswidth_test.rs:38:14
+   |
+38 |     assert!(!(f as *const ()).is_null(), "wcswidth 函数指针不应为 NULL");
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(*const i32, usize) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/wctrans_test.rs:39:14
+   |
+39 |     assert!(!(f as *const ()).is_null(), "wctrans 函数指针不应为 NULL");
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(*const i8) -> u64`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/wctrans_test.rs:45:14
+   |
+45 |     assert!(!(f as *const ()).is_null(), "towctrans 函数指针不应为 NULL");
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(u32, u64) -> u32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/wctrans_test.rs:51:14
+   |
+51 |     assert!(!(f as *const ()).is_null(), "wctrans_l 函数指针不应为 NULL");
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(*const i8, *mut c_void) -> u64`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/wctrans_test.rs:58:10
+   |
+58 |         !(f as *const ()).is_null(),
+   |          ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |           |
+   |           expression has type `unsafe extern "C" fn(u32, u64, *mut c_void) -> u32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: function pointers are not nullable, so checking them for null will always return false
+  --> rusl-main/tests/ctype/wcwidth_test.rs:41:14
+   |
+41 |     assert!(!(f as *const ()).is_null(), "wcwidth 函数指针不应为 NULL");
+   |              ^-^^^^^^^^^^^^^^^^^^^^^^^^
+   |               |
+   |               expression has type `unsafe extern "C" fn(i32) -> i32`
+   |
+   = help: wrap the function pointer inside an `Option` and use `Option::is_none` to check for null pointer value
+
+warning: linker stderr: rust-lld: cannot find entry symbol _start; not setting start address
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+   Compiling rusl v0.1.0 (/home/mangp/桌面/OS/musl/rusl/rusl-main)
+warning: unused variable: `lock`
+ --> rusl-main/tests/internal/lock_test.rs:8:9
+  |
+8 |     let lock = SpinLock::new();
+  |         ^^^^
+  |
+  = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+help: you might have meant to pattern match on the similarly named constant `LOCK`
+  |
+8 -     let lock = SpinLock::new();
+8 +     let internal::lock_test::_test::{closure#0}::LOCK = SpinLock::new();
+  |
+help: if this is intentional, prefix it with an underscore
+  |
+8 |     let _lock = SpinLock::new();
+  |         +
+
+warning: `rusl` (test "integration") generated 141 warnings (run `cargo fix --test "integration" -p rusl` to apply 11 suggestions)
+warning: `rusl` (test "regex_integration") generated 1 warning
+warning: `rusl` (test "stdio_integration") generated 1 warning (1 duplicate)
+warning: `rusl` (test "string_integration") generated 1 warning (1 duplicate)
+warning: `rusl` (test "unistd_integration") generated 1 warning (1 duplicate)
+warning: `rusl` (test "exit_integration") generated 1 warning (1 duplicate)
+warning: `rusl` (test "prng_integration") generated 1 warning (1 duplicate)
+warning: `rusl` (test "internal_integration") generated 3 warnings (2 duplicates) (run `cargo fix --test "internal_integration" -p rusl` to apply 1 suggestion)
+warning: `rusl` (test "search_integration") generated 1 warning (1 duplicate)
+error: no global memory allocator found but one is required; link to std or add `#[global_allocator]` to a static item that implements the GlobalAlloc trait
+
+error: the `#[global_allocator]` in this crate conflicts with global allocator in: rusl_malloc
+
+warning: unused doc comment
+  --> rusl-main/tests/ctype/ctype_b_loc_test.rs:35:1
+   |
+35 | / /// 验证 `__ctype_b_loc` 返回值的指针宽度。
+36 | | ///
+   | |_--^
+   |   |
+   |   rustdoc does not generate documentation for macro invocations
+   |
+   = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+   = note: `#[warn(unused_doc_comments)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `c_void`
+  --> rusl-main/tests/ctype/isalpha_test.rs:17:24
+   |
+17 | use core::ffi::{c_int, c_void};
+   |                        ^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unnecessary `unsafe` block
+  --> rusl-main/tests/ctype/ctype_common_tests.rs:53:20
+   |
+53 |         assert_ne!(unsafe {
+   |                    ^^^^^^ unnecessary `unsafe` block
+   |
+   = note: `#[warn(unused_unsafe)]` (part of `#[warn(unused)]`) on by default
+
+error: could not compile `rusl` (test "stdlib_integration") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+warning: unused variable: `c`
+  --> rusl-main/tests/ctype/isascii_test.rs:36:9
+   |
+36 |     for c in 0i32..128 {
+   |         ^ help: if this is intentional, prefix it with an underscore: `_c`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: `rusl` (test "ctype_integration") generated 48 warnings (44 duplicates)
+error: could not compile `rusl` (test "ctype_integration") due to 1 previous error; 48 warnings emitted
+warning: `rusl` (test "env_integration") generated 32 warnings (32 duplicates)
+error: could not compile `rusl` (test "env_integration") due to 1 previous error; 32 warnings emitted

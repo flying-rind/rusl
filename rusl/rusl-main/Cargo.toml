@@ -1,0 +1,112 @@
+[package]
+name = "rusl"
+version = "0.1.0"
+edition = "2021"
+description = "#![no_std] Rust 实现的 musl libc 兼容库 — 聚合 crate"
+
+[features]
+default = ["rusl"]
+rusl = [
+    "dep:rusl-internal",
+    "dep:rusl-ctype",
+    "dep:rusl-string",
+    "dep:rusl-stdlib",
+    "dep:rusl-prng",
+    "dep:rusl-search",
+    "dep:rusl-regex",
+    "dep:rusl-malloc",
+    "dep:rusl-env",
+    "dep:rusl-unistd",
+    "dep:rusl-stdio",
+    "dep:rusl-exit",
+    "rusl-core/rusl"
+]
+
+[dependencies]
+rusl-core = { path = "../rusl-core" }
+rusl-internal = { path = "../rusl-internal", optional = true }
+rusl-ctype = { path = "../rusl-ctype", optional = true }
+rusl-string = { path = "../rusl-string", optional = true }
+rusl-stdlib = { path = "../rusl-stdlib", optional = true }
+rusl-prng = { path = "../rusl-prng", optional = true }
+rusl-search = { path = "../rusl-search", optional = true }
+rusl-regex = { path = "../rusl-regex", optional = true }
+rusl-malloc = { path = "../rusl-malloc", default-features = false, optional = true }
+rusl-env = { path = "../rusl-env", optional = true }
+rusl-unistd = { path = "../rusl-unistd", optional = true }
+rusl-stdio = { path = "../rusl-stdio", optional = true }
+rusl-exit = { path = "../rusl-exit", optional = true }
+test-framework = {path = "../test-framework"}
+
+[lib]
+crate-type = ["lib", "staticlib"]
+doctest = false
+test = true
+
+[[test]]
+name = "integration"
+harness = true
+test = true
+
+[[test]]
+name = "string_integration"
+harness = true
+test = true
+
+[[test]]
+name = "env_integration"
+harness = true
+test = true
+
+[[test]]
+name = "ctype_integration"
+harness = true
+test = true
+
+[[test]]
+name = "stdlib_integration"
+harness = true
+test = true
+
+[[test]]
+name = "prng_integration"
+harness = true
+test = true
+
+[[test]]
+name = "search_integration"
+harness = true
+test = true
+
+[[test]]
+name = "regex_integration"
+harness = true
+test = true
+
+[[test]]
+name = "exit_integration"
+harness = true
+test = true
+
+[[test]]
+name = "unistd_integration"
+harness = true
+test = true
+
+[[test]]
+name = "stdio_integration"
+harness = true
+test = true
+
+
+
+[profile.dev]
+panic = "abort"
+
+[profile.test]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+opt-level = "s"
+lto = true

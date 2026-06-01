@@ -1,0 +1,29 @@
+[package]
+name = "rusl-unistd"
+version = "0.1.0"
+edition = "2021"
+description = "rusl unistd module"
+
+[lib]
+crate-type = ["lib", "staticlib"]
+doctest = false
+test = true
+
+[features]
+default = []
+c-test = []
+
+[dependencies]
+rusl-core = { path = "../rusl-core",features = ["rusl"] }
+
+[profile.dev]
+panic = "abort"
+
+[profile.test]
+# no_std 测试：由自定义 test framework (setjmp/longjmp) 处理 panic 捕获
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+opt-level = "s"
+lto = true

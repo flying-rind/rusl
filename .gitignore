@@ -1,0 +1,5 @@
+musl-*
+libc-test
+target
+.claude/agent-memory
+agent-memory

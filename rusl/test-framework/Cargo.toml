@@ -1,0 +1,23 @@
+[package]
+name = "test-framework"
+version = "0.1.0"
+edition = "2021"
+description = "rusl 测试框架: test!/print!/println! 宏, runner, setjmp/longjmp, panic hook"
+
+[lib]
+crate-type = ["lib"]
+doctest = false
+test = false
+
+[dependencies]
+
+[profile.dev]
+panic = "abort"
+
+[profile.test]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+opt-level = "s"
+lto = true

@@ -1,0 +1,30 @@
+[package]
+name = "rusl-core"
+version = "0.1.0"
+edition = "2021"
+description = "rusl 共享基础设施: C 类型定义, 测试框架, 系统调用, errno"
+
+[lib]
+crate-type = ["lib"]
+doctest = false
+test = true
+
+[features]
+default = []
+rusl = []
+
+[dependencies]
+test-framework = { path = "../test-framework" }
+# compiler_builtins = { version = "0.1", features = ["mem"] }
+
+[profile.dev]
+panic = "abort"
+
+[profile.test]
+# no_std 测试：由自定义 test framework (setjmp/longjmp) 处理 panic 捕获
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+opt-level = "s"
+lto = true

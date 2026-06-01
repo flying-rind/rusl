@@ -1,0 +1,10 @@
+# .cargo/config.toml — rusl 构建与测试配置
+#
+# 链接标志通过 build.rs 的 cargo:rustc-link-arg 输出,
+# 避免 target 级 rustflags 泄漏到 build script 编译
+
+[unstable]
+build-std = ["core", "alloc"]
+
+[build]
+rustflags = ["-C", "panic=abort"]

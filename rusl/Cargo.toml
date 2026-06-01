@@ -1,0 +1,30 @@
+[workspace]
+members = [
+    "test-framework",
+    "rusl-core",
+    "rusl-internal",
+    "rusl-ctype",
+    "rusl-string",
+    "rusl-stdlib",
+    "rusl-prng",
+    "rusl-search",
+    "rusl-regex",
+    "rusl-malloc",
+    "rusl-env",
+    "rusl-unistd",
+    "rusl-stdio",
+    "rusl-exit",
+    "rusl-main",
+]
+resolver = "2"
+
+[profile.dev]
+panic = "abort"
+
+[profile.test]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+opt-level = "s"
+lto = true
