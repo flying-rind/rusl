@@ -11,8 +11,9 @@
 
 extern crate rusl_core;
 
+
 #[path = "prng_inner.rs"]
-mod prng_inner;
+pub(crate) mod prng_inner;
 
 pub use prng_inner::*;
 

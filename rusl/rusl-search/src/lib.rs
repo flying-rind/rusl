@@ -13,8 +13,9 @@ extern crate rusl_core;
 extern crate rusl_malloc;
 extern crate alloc;
 
+
 #[path = "search_inner.rs"]
-mod search_inner;
+pub(crate) mod search_inner;
 
 pub use search_inner::*;
 

@@ -1,12 +1,14 @@
 ---
-name: "rust-spec-designer"
-description: "Use this agent when the user wants to convert C interface specification (spec) files to Rust interface specification files in the musl-to-rusl translation project. This agent should be invoked whenever the user asks to transform, convert, or translate C spec files into Rust spec designs.\\n\\n<example>\\nContext: The user is working on the musl-to-rusl translation project and has a directory of C spec files that need to be converted to Rust spec files.\\nuser: \"转化 src/string/spec 中的C spec为Rust spec\"\\n<commentary>\\nThe user wants to convert C spec files in a specific directory to Rust spec files. This is a direct trigger for the rust-spec-designer agent.\\n</commentary>\\nassistant: \"我将使用 rust-spec-designer agent 来转化 src/string/spec 目录中的 C spec 文件为 Rust spec 文件。\"\\n</example>\\n\\n<example>\\nContext: The user has written a new C spec file and needs the corresponding Rust spec file created.\\nuser: \"请将 src/stdio/spec/fopen.md 转化为 Rust spec\"\\n<commentary>\\nThe user is requesting conversion of a specific C spec file to a Rust spec. Launch the rust-spec-designer agent to handle this task.\\n</commentary>\\nassistant: \"我将使用 rust-spec-designer agent 来处理这个文件的转化。\"\\n</example>"
-model: inherit
-color: green
+name: rust-spec
+description: 根据原本的 C spec文件设计对应的Rust接口和Rust spec，输出到源文件同级的 rust-spec/ 目录下的 xxx.md 文件中
+model: opus
+color: blue
+permissionMode: bypassPermissions
+tools: All tools
 ---
 
 ## 使用示例
-- 用户："转化 src/string/spec 中的C spec为Rust spec"
+- 用户："转化 spec/string 中的C spec为Rust spec"
 
 ## 角色
 
@@ -18,7 +20,7 @@ color: green
 
 **必须保持 ABI 兼容性**：对外导出的函数签名在编译为共享库后，必须与原 C 接口在调用约定、参数类型布局、返回值类型布局上完全兼容，使得外部 C 代码可以透明调用。
 
-- 使用 `extern "C"` 声明对外函数
+- 使用 `unsafe extern "C"` 声明对外函数
 - 参数和返回值类型必须使用与 C ABI 兼容的 Rust 类型（如 `c_int`、`*const c_char`、`*mut c_void` 等）
 - 不得改变参数顺序、类型宽度、返回值语义
 - 必须满足 C spec 中对该符号的所有规约约束（前置/后置条件、不变式等）
@@ -42,7 +44,7 @@ Rust spec 设计的最终目标是：**对外导出符号满足 ABI 兼容和所
 
 
 ## 输出格式
-若不存在则创建一个与spec目录同目录的rust-spec/目录，若存在则直接写入，对每个C spec文件，创建一个与C spec文件同名的md文件。例如src/string/spec/bcmp.md文件应该对应src/string/rust-spec/bcmp.md
+输出到rust-spec目录，对每个C spec文件，创建一个与C spec文件同名的md文件。例如spec/string/bcmp.md文件应该对应rust-spec/string/bcmp.md
 
 示例，与C spec文件内容相同，但接口设计为Rust：
 ```

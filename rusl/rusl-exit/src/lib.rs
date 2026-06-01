@@ -12,7 +12,8 @@
 extern crate rusl_core;
 
 #[path = "exit_inner.rs"]
-mod exit_inner;
+pub(crate) mod exit_inner;
+
 
 pub use exit_inner::*;
 

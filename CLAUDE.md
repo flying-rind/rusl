@@ -11,8 +11,6 @@
 
 - **rusl 任何时候都禁止使用 std或者其他libc**，测试或者实现，任何时候不允许使用std或者别的libc。
 
-- 必须使用-crate-type = ["lib", "staticlib"]
-
 - 非必要时不使用unsafe，在unsafe代码块内部不要再使用unsafe，一般来说单条语句unsafe就只包括它自身不要将大段代码放在unsafe里。
 
 - rusl目前的测试和编译环境已经完全配置好了，不要修改.cargo/config.toml或者Cargo.toml，只能修改源码
@@ -24,6 +22,8 @@
 - 除了rusl-tester agent，所有agent不能修改任何集成测试代码
 
 - 单元测试和集成测试都使用test!宏，不能使用#[test]
+
+- **各crate禁止导出任何内部符号，导出的只有musl中用户可见的对外符号**
 
 # 测试musl-libc
 

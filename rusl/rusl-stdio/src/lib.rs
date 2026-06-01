@@ -14,7 +14,8 @@ extern crate rusl_malloc;
 extern crate alloc;
 
 #[path = "stdio_inner.rs"]
-mod stdio_inner;
+pub(crate) mod stdio_inner;
+
 
 pub use stdio_inner::*;
 

@@ -14,7 +14,8 @@ extern crate rusl_malloc;
 extern crate alloc;
 
 #[path = "regex_inner.rs"]
-mod regex_inner;
+pub(crate) mod regex_inner;
+
 
 pub use regex_inner::*;
 

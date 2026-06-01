@@ -13,8 +13,9 @@ extern crate rusl_core;
 
 pub mod allocator;
 
+
 #[path = "malloc_inner.rs"]
-mod malloc_inner;
+pub(crate) mod malloc_inner;
 
 pub use malloc_inner::*;
 

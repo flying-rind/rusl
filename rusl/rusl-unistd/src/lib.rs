@@ -12,7 +12,8 @@
 extern crate rusl_core;
 
 #[path = "unistd_inner.rs"]
-mod unistd_inner;
+pub(crate) mod unistd_inner;
+
 
 pub use unistd_inner::*;
 

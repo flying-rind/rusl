@@ -11,8 +11,9 @@
 
 extern crate rusl_core;
 
+
 #[path = "string_inner.rs"]
-mod string_inner;
+pub(crate) mod string_inner;
 
 pub use string_inner::*;
 

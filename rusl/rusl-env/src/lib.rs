@@ -14,8 +14,9 @@ extern crate rusl_core;
 extern crate rusl_malloc;
 extern crate alloc;
 
+
 #[path = "env_inner.rs"]
-mod env_inner;
+pub(crate) mod env_inner;
 
 pub use env_inner::*;
 
