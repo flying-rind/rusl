@@ -11,7 +11,7 @@ pub unsafe extern "C" fn write(
     buf: *const c_void,
     count: usize,
 ) -> isize {
-    use rusl_core::do_syscall;
+    use rusl_internal::do_syscall;
     do_syscall!(rusl_core::syscall::SYS_write, fd, buf, count) as isize
 }
 

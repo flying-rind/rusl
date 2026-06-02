@@ -96,6 +96,7 @@ dependencies = [
  "rusl-ctype",
  "rusl-env",
  "rusl-errno",
+ "rusl-internal",
  "rusl-malloc",
  "rusl-stdlib",
  "rusl-string",
@@ -143,6 +144,7 @@ name = "rusl-unistd"
 version = "0.1.0"
 dependencies = [
  "rusl-core",
+ "rusl-internal",
 ]
 
 [[package]]

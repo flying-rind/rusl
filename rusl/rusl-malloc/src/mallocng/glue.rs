@@ -144,7 +144,7 @@ pub(crate) unsafe fn mmap(
     fd: c_int,
     offset: i64,
 ) -> *mut c_void {
-    rusl_core::do_syscall!(SYS_MMAP, addr, length, prot, flags, fd, offset) as *mut c_void
+    rusl_internal::do_syscall!(SYS_MMAP, addr, length, prot, flags, fd, offset) as *mut c_void
 }
 
 /// 内存建议系统调用封装。
@@ -169,7 +169,7 @@ pub(crate) unsafe fn mmap(
 /// - `length` 必须 > 0
 /// - 参数语义与 POSIX `madvise` 一致
 pub(crate) unsafe fn madvise(addr: *mut c_void, length: usize, advice: c_int) -> c_int {
-    rusl_core::do_syscall!(SYS_MADVISE, addr, length, advice) as c_int
+    rusl_internal::do_syscall!(SYS_MADVISE, addr, length, advice) as c_int
 }
 
 /// 内存重映射系统调用封装（Linux 特定）。
@@ -203,7 +203,7 @@ pub(crate) unsafe fn mremap(
     flags: c_int,
     new_addr: *mut c_void,
 ) -> *mut c_void {
-    rusl_core::do_syscall!(SYS_MREMAP, old_addr, old_len, new_len, flags, new_addr) as *mut c_void
+    rusl_internal::do_syscall!(SYS_MREMAP, old_addr, old_len, new_len, flags, new_addr) as *mut c_void
 }
 
 /// 解除内存映射系统调用封装。
@@ -227,7 +227,7 @@ pub(crate) unsafe fn mremap(
 /// - 调用后不得再访问已解除映射的区域（否则触发 SIGSEGV）
 /// - 参数语义与 POSIX `munmap` 一致
 pub(crate) unsafe fn munmap(addr: *mut c_void, length: usize) -> c_int {
-    rusl_core::do_syscall!(SYS_MUNMAP, addr, length) as c_int
+    rusl_internal::do_syscall!(SYS_MUNMAP, addr, length) as c_int
 }
 
 /// 内存保护系统调用封装。
@@ -253,7 +253,7 @@ pub(crate) unsafe fn munmap(addr: *mut c_void, length: usize) -> c_int {
 /// - 设置 PROT_NONE 后访问该区域将触发 SIGSEGV（这是预期行为，用于守卫页）
 /// - 参数语义与 POSIX `mprotect` 一致
 pub(crate) unsafe fn mprotect(addr: *mut c_void, length: usize, prot: c_int) -> c_int {
-    rusl_core::do_syscall!(SYS_MPROTECT, addr, length, prot) as c_int
+    rusl_internal::do_syscall!(SYS_MPROTECT, addr, length, prot) as c_int
 }
 
 // ============================================================================

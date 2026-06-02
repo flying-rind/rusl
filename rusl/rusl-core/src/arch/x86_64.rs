@@ -7,7 +7,7 @@
 //   Clobbered: rcx, r11 (the syscall instruction itself clobbers these)
 //
 // Each function returns the raw kernel return value.
-// Negative values in [-4095, -1] represent errno; __syscall_ret handles the conversion.
+// Negative values in [-4095, -1] represent errno; rusl-internal::__syscall_ret handles the conversion.
 
 use core::arch::asm;
 

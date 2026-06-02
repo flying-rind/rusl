@@ -191,13 +191,13 @@ unsafe fn glob_realloc(ptr: *mut c_void, size: usize) -> *mut c_void {
 
 /// stat() 的纯 Rust 实现，通过 `newfstatat` syscall。
 unsafe fn glob_stat(path: *const c_char, buf: *mut c_void) -> c_int {
-    use rusl_core::do_syscall;
+    use rusl_internal::do_syscall;
     do_syscall!(SYS_NEWFSTATAT, AT_FDCWD, path, buf, 0i32) as c_int
 }
 
 /// opendir() 的纯 Rust 实现：打开目录并返回文件描述符。
 unsafe fn glob_opendir(path: *const c_char) -> i32 {
-    use rusl_core::do_syscall;
+    use rusl_internal::do_syscall;
     let fd = do_syscall!(SYS_OPENAT, AT_FDCWD, path, O_RDONLY | O_DIRECTORY, 0u32);
     if fd < 0 {
         -1
@@ -213,7 +213,7 @@ static mut DIR_BUF_DATA: [u8; 4096] = [0u8; 4096];
 
 // 重新实现 glob_readdir 使用独立的 static
 unsafe fn read_dir_entry(fd: i32) -> *const u8 {
-    use rusl_core::do_syscall;
+    use rusl_internal::do_syscall;
 
     if DIR_BUF_POS_INTERNAL < DIR_BUF_END_INTERNAL {
         let entry_ptr = DIR_BUF_DATA.as_ptr().add(DIR_BUF_POS_INTERNAL);
@@ -245,7 +245,7 @@ unsafe fn read_dir_entry(fd: i32) -> *const u8 {
 unsafe fn close_dir(fd: i32) {
     DIR_BUF_POS_INTERNAL = 0;
     DIR_BUF_END_INTERNAL = 0;
-    use rusl_core::do_syscall;
+    use rusl_internal::do_syscall;
     do_syscall!(SYS_CLOSE, fd);
 }
 

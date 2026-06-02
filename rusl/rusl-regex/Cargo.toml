@@ -19,6 +19,7 @@ rusl-errno = { path = "../rusl-errno" }
 rusl-string = { path = "../rusl-string" }
 rusl-stdlib = { path = "../rusl-stdlib" }
 rusl-ctype = { path = "../rusl-ctype" }
+rusl-internal = { path = "../rusl-internal" }
 rusl-malloc = { path = "../rusl-malloc" }
 rusl-env = { path = "../rusl-env" }
 
