@@ -10,6 +10,7 @@
 #![no_main]
 
 extern crate rusl_core;
+#[cfg(feature = "rusl")]
 extern crate rusl_malloc;
 extern crate alloc;
 
@@ -18,6 +19,10 @@ extern crate alloc;
 pub(crate) mod search_inner;
 
 pub use search_inner::*;
+
+// 不开启rusl时与musl libc链接，需要提供global allocator
+#[cfg(not(feature = "rusl"))]
+mod allocator;
 
 #[cfg(test)]
 #[no_mangle]

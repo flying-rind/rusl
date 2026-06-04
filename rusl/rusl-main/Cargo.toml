@@ -13,12 +13,16 @@ rusl = [
     "dep:rusl-stdlib",
     "dep:rusl-prng",
     "dep:rusl-search",
+    "rusl-search/rusl",
     "dep:rusl-regex",
+    "rusl-regex/rusl",
     "dep:rusl-malloc",
     "dep:rusl-env",
+    "rusl-env/rusl",
     "dep:rusl-errno",
     "dep:rusl-unistd",
     "dep:rusl-stdio",
+    "rusl-stdio/rusl",
     "dep:rusl-exit",
     "rusl-core/rusl"
 ]
@@ -30,13 +34,13 @@ rusl-ctype = { path = "../rusl-ctype", optional = true }
 rusl-string = { path = "../rusl-string", optional = true }
 rusl-stdlib = { path = "../rusl-stdlib", optional = true }
 rusl-prng = { path = "../rusl-prng", optional = true }
-rusl-search = { path = "../rusl-search", optional = true }
-rusl-regex = { path = "../rusl-regex", optional = true }
+rusl-search = { path = "../rusl-search", optional = true, default-features = false }
+rusl-regex = { path = "../rusl-regex", optional = true, default-features = false }
 rusl-malloc = { path = "../rusl-malloc", default-features = false, optional = true }
-rusl-env = { path = "../rusl-env", optional = true }
+rusl-env = { path = "../rusl-env", optional = true, default-features = false }
 rusl-errno = { path = "../rusl-errno", optional = true }
 rusl-unistd = { path = "../rusl-unistd", optional = true }
-rusl-stdio = { path = "../rusl-stdio", optional = true }
+rusl-stdio = { path = "../rusl-stdio", optional = true, default-features = false }
 rusl-exit = { path = "../rusl-exit", optional = true }
 test-framework = {path = "../test-framework"}
 

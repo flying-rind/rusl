@@ -237,7 +237,7 @@ mod tests {
 
     test!("reset_tls_core_single_module_with_tbss" {
         // 目标缓冲区：8 字节已初始化数据 + 8 字节 .tbss
-        let mut tls_buf: [u8; 16] = [0xABu8; 16];
+        let tls_buf: [u8; 16] = [0xABu8; 16];
 
         // 初始映像：8 字节的已知模式
         let image_data: [u8; 8] = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08];
@@ -277,7 +277,7 @@ mod tests {
 
     test!("reset_tls_core_single_module_no_tbss" {
         // 当 len == size 时，没有 .tbss 区域
-        let mut tls_buf: [u8; 8] = [0xFFu8; 8];
+        let tls_buf: [u8; 8] = [0xFFu8; 8];
         let image_data: [u8; 8] = [0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF, 0x11, 0x22];
 
         let mut dtv_buf: [usize; 2] = [1, tls_buf.as_ptr() as usize];
@@ -304,7 +304,7 @@ mod tests {
 
     test!("reset_tls_core_single_module_only_tbss" {
         // 当 len == 0 时，只有 .tbss（全部清零）
-        let mut tls_buf: [u8; 8] = [0xFFu8; 8];
+        let tls_buf: [u8; 8] = [0xFFu8; 8];
 
         let mut dtv_buf: [usize; 2] = [1, tls_buf.as_ptr() as usize];
 
@@ -334,11 +334,11 @@ mod tests {
 
     test!("reset_tls_core_two_modules" {
         // 模块 1：4 字节 .tdata + 4 字节 .tbss
-        let mut tls1: [u8; 8] = [0xFFu8; 8];
+        let tls1: [u8; 8] = [0xFFu8; 8];
         let img1: [u8; 4] = [0x10, 0x20, 0x30, 0x40];
 
         // 模块 2：6 字节 .tdata + 2 字节 .tbss
-        let mut tls2: [u8; 8] = [0xFFu8; 8];
+        let tls2: [u8; 8] = [0xFFu8; 8];
         let img2: [u8; 6] = [0xA1, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6];
 
         // DTV: [2, tls1_addr, tls2_addr]
@@ -387,9 +387,9 @@ mod tests {
 
     test!("reset_tls_core_n_exceeds_chain_length" {
         // n=3 但链表只有 2 个模块 —— 应在遇到 null 时安全退出
-        let mut tls1: [u8; 4] = [0xFFu8; 4];
+        let tls1: [u8; 4] = [0xFFu8; 4];
         let img1: [u8; 4] = [0x01, 0x02, 0x03, 0x04];
-        let mut tls2: [u8; 4] = [0xFFu8; 4];
+        let tls2: [u8; 4] = [0xFFu8; 4];
         let img2: [u8; 4] = [0x05, 0x06, 0x07, 0x08];
 
         // DTV: [3, tls1, tls2, unused_addr]
@@ -434,7 +434,7 @@ mod tests {
 
     test!("reset_tls_core_nonzero_dtp_offset" {
         // 模拟 DTP_OFFSET = 0x1000 的场景
-        let mut tls_buf: [u8; 8] = [0xFFu8; 8];
+        let tls_buf: [u8; 8] = [0xFFu8; 8];
         let image_data: [u8; 4] = [0xCA, 0xFE, 0xBA, 0xBE];
 
         // DTV 中存储偏置后的地址
@@ -463,7 +463,7 @@ mod tests {
     });
 
     test!("reset_tls_core_zero_dtp_offset" {
-        let mut tls_buf: [u8; 4] = [0xFFu8; 4];
+        let tls_buf: [u8; 4] = [0xFFu8; 4];
         let image_data: [u8; 4] = [0xDE, 0xAD, 0xBE, 0xEF];
 
         let mut dtv_buf: [usize; 2] = [1, tls_buf.as_ptr() as usize];
@@ -493,7 +493,7 @@ mod tests {
         // 当 len > size 时（违反不变量），tbss 的 wrapping_sub 会回绕
         // 但 write_bytes 的大小为 0 时会跳过，而 copy 仍执行 len 字节
         // 此测试验证不会崩溃
-        let mut tls_buf: [u8; 16] = [0xFFu8; 16];
+        let tls_buf: [u8; 16] = [0xFFu8; 16];
         let image_data: [u8; 8] = [0x01; 8];
 
         let mut dtv_buf: [usize; 2] = [1, tls_buf.as_ptr() as usize];

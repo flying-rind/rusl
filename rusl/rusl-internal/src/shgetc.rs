@@ -296,7 +296,7 @@ mod tests {
         let s = b"test\0";
         let mut sh = ScanHelper::from_string(&s[..s.len() - 1]);
         sh.shlim(0);
-        let c1 = sh.getc();
+        let _c1 = sh.getc();
         // 手动设置 shlim = -1 模拟非扫描模式
         sh.shlim = -1;
         let rpos_before = sh.rpos;

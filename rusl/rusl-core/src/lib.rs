@@ -11,16 +11,9 @@
 #![no_std]
 #![allow(non_camel_case_types)]
 #![feature(custom_test_frameworks)]
-#![feature(lang_items)]
 #![test_runner(runner)]
 #![reexport_test_harness_main = "test_main"]
 #![no_main]
-
-// ---------------------------------------------------------------------------
-// 即使 panic = "abort", 编译器仍会在 DWARF 中生成 rust_eh_personality 弱引用
-// ---------------------------------------------------------------------------
-#[lang = "eh_personality"]
-extern "C" fn rust_eh_personality() {}
 
 // ---------------------------------------------------------------------------
 // panic_handler
