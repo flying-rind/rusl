@@ -67,6 +67,7 @@ use core::sync::atomic::{AtomicI32, Ordering};
 /// ## 不变量
 /// 一旦动态链接器完成所有共享库的加载和重定位，`MALLOC_REPLACED` 的值不再改变。
 /// 任何后续代码仅读取此值。
+#[export_name = "__malloc_replaced"]
 pub static MALLOC_REPLACED: AtomicI32 = AtomicI32::new(0);
 
 /// 指示标准 `aligned_alloc` 函数是否已被外部 ELF 符号插替覆盖。
@@ -93,6 +94,7 @@ pub static MALLOC_REPLACED: AtomicI32 = AtomicI32::new(0);
 ///
 /// ## 不变量
 /// 与 `MALLOC_REPLACED` 相同：在动态链接器进入运行时模式后不可变。
+#[export_name = "__aligned_alloc_replaced"]
 pub static ALIGNED_ALLOC_REPLACED: AtomicI32 = AtomicI32::new(0);
 
 // ============================================================================

@@ -22,6 +22,10 @@ pub const WCTYPE_XDIGIT: wctype_t = 12;
 
 // -- byte classification --
 extern "C" {
+    #[link_name = "isalnum"]
+    fn musl_isalnum(c: c_int) -> c_int;
+    #[link_name = "isalnum_l"]
+    fn musl_isalnum_l(c: c_int, loc: locale_t) -> c_int;
     #[link_name = "isalpha"]
     fn musl_isalpha(c: c_int) -> c_int;
     #[link_name = "isalpha_l"]
@@ -181,6 +185,8 @@ extern "C" {
 // ---------- safe public wrappers ----------
 
 // -- byte classification --
+pub extern "C" fn isalnum(c: c_int) -> c_int              { unsafe { musl_isalnum(c) } }
+pub extern "C" fn isalnum_l(c: c_int, loc: locale_t) -> c_int { unsafe { musl_isalnum_l(c, loc) } }
 pub extern "C" fn isalpha(c: c_int) -> c_int              { unsafe { musl_isalpha(c) } }
 pub extern "C" fn isalpha_l(c: c_int, loc: locale_t) -> c_int { unsafe { musl_isalpha_l(c, loc) } }
 pub extern "C" fn isascii(c: c_int) -> c_int              { unsafe { musl_isascii(c) } }

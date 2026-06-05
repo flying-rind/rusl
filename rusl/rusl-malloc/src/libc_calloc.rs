@@ -145,7 +145,8 @@ pub unsafe extern "C" fn calloc(m: usize, n: usize) -> *mut c_void {
 ///
 /// - 始终返回零初始化内存（或 NULL）
 /// - 仅调用 `__libc_malloc`（内部版本），不依赖可替换的公共 `malloc`
-pub(crate) fn __libc_calloc(m: usize, n: usize) -> *mut c_void {
+#[no_mangle]
+pub extern "C" fn __libc_calloc(m: usize, n: usize) -> *mut c_void {
     unsafe { calloc_impl(m, n, super::lite_malloc::__libc_malloc) }
 }
 

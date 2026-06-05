@@ -15,6 +15,7 @@ mod __ctype_toupper_loc;
 // 字节字符分类
 mod isalpha;
 mod isascii;
+mod isalnum;
 mod isblank;
 mod iscntrl;
 mod isdigit;
@@ -75,6 +76,7 @@ pub(crate) use __ctype_toupper_loc::__ctype_toupper_loc;
 // 字节字符分类公开导出
 pub use isalpha::{isalpha, isalpha_l};
 pub(crate) use isalpha::__isalpha_l;
+pub use isalnum::{isalnum, isalnum_l};
 pub use isascii::isascii;
 pub use isblank::{isblank, isblank_l};
 pub use iscntrl::{iscntrl, iscntrl_l};

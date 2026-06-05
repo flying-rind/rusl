@@ -64,3 +64,12 @@ pub unsafe extern "C" fn realloc(p: *mut c_void, n: usize) -> *mut c_void {
     // 参数语义 (p=NULL → 等价 malloc, n 溢出 → 返回 null+ENOMEM, 原地/移动/回退) 由 realloc_impl 处理。
     super::mallocng::realloc::realloc_impl(p, n)
 }
+
+/// 内部 `realloc` —— 始终使用内部分配器，不可被用户替换。
+///
+/// musl 其他模块（aio, dlerror 等）通过 `#define realloc __libc_realloc`
+/// 使用此内部版本，确保内部分配不受用户 LD_PRELOAD 替换影响。
+#[no_mangle]
+pub unsafe extern "C" fn __libc_realloc(p: *mut c_void, n: usize) -> *mut c_void {
+    super::mallocng::realloc::realloc_impl(p, n)
+}

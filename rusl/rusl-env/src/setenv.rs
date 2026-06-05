@@ -23,6 +23,16 @@ use core::ffi::{c_char, c_int};
 use core::sync::atomic::{AtomicBool, Ordering};
 use rusl_errno::__errno_location;
 
+#[cfg(feature = "rusl")]
+use rusl_malloc::free::free;
+
+#[cfg(not(feature = "rusl"))]
+extern "C" {
+    fn free(ptr: *mut c_void);
+}
+#[cfg(not(feature = "rusl"))]
+use core::ffi::c_void;
+
 // ---------------------------------------------------------------------------
 // 常量
 // ---------------------------------------------------------------------------
@@ -126,7 +136,7 @@ unsafe extern "C" fn env_rm_add_impl(old: *mut c_char, new: *mut c_char) {
             // Case 1 或 2: 找到要替换/删除的条目
             *ENV_ALLOCED.add(i) = new;
             // 释放旧的堆分配字符串
-            rusl_malloc::free::free(old as *mut core::ffi::c_void);
+            free(old as *mut core::ffi::c_void);
             // old 已在表中 → new 已放置（可能为 null），直接返回
             return;
         } else if slot.is_null() && !new_to_place.is_null() {
