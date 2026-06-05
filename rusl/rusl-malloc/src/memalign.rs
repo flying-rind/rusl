@@ -134,7 +134,7 @@ pub(crate) fn memalign_safe(align: usize, len: usize) -> Option<&'static mut [u8
 #[cfg(test)]
 mod tests {
     use rusl_core::test;
-    use rusl_errno::__errno_location;
+    use crate::import::__errno_location;
     use super::*;
 
     // ---- 辅助函数 ----

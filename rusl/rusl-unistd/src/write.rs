@@ -2,6 +2,7 @@
 //! 对应 musl src/unistd/write.c
 
 use core::ffi::{c_int, c_void};
+use rusl_core::do_syscall;
 
 /// write(fd, buf, count) — 将 `buf` 中最多 `count` 字节写入文件描述符 `fd`。
 #[cfg(not(test))]
@@ -11,7 +12,6 @@ pub unsafe extern "C" fn write(
     buf: *const c_void,
     count: usize,
 ) -> isize {
-    use rusl_internal::do_syscall;
     do_syscall!(rusl_core::syscall::SYS_write, fd, buf, count) as isize
 }
 

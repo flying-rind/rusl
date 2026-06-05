@@ -16,7 +16,7 @@
 //! 未来 Stage 将集成 `LCTRANS` 进行 locale 消息翻译。
 
 use core::ffi::{c_char, c_int};
-use rusl_core::c_types::locale_t;
+use crate::locale_t;
 
 // ===========================================================================
 // 错误消息数据 (从 musl __strerror.h 提取)
@@ -158,7 +158,7 @@ pub extern "C" fn strerror_l(e: c_int, _loc: locale_t) -> *mut c_char {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use rusl_core::test;
+    use crate::test;
 
     test!("test_errmsg_data_accessible" {
         let ptr = ERRMSG_DATA.as_ptr();

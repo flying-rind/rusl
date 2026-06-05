@@ -6,7 +6,7 @@
 
 use core::ffi::c_char;
 use core::str::FromStr;
-use rusl_errno::__errno_location;
+use rusl_core::errno::__errno_location;
 
 /// Linux ERANGE 值
 const ERANGE: i32 = 34;

@@ -29,6 +29,7 @@
 use core::ffi::c_void;
 use core::ptr;
 use core::sync::atomic::Ordering;
+use crate::import::memset;
 
 // ============================================================================
 // 常量定义
@@ -237,7 +238,7 @@ pub(crate) unsafe fn calloc_impl(
 
     let remaining = mal0_clear(p as *mut u8, total);
     if remaining > 0 {
-        rusl_string::memset(p, 0, remaining);
+        memset(p, 0, remaining);
     }
 
     p
@@ -336,7 +337,7 @@ pub(crate) fn mal0_clear(p: *mut u8, n: usize) -> usize {
             // Step A — clear the unaligned tail of the current page.
             // memset returns the destination pointer, so pp moves backward
             // to the page-aligned boundary.
-            pp = rusl_string::memset(
+            pp = memset(
                 pp.sub(i) as *mut core::ffi::c_void,
                 0,
                 i,

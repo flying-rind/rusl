@@ -144,7 +144,7 @@ pub(crate) unsafe fn mmap(
     fd: c_int,
     offset: i64,
 ) -> *mut c_void {
-    rusl_internal::do_syscall!(SYS_MMAP, addr, length, prot, flags, fd, offset) as *mut c_void
+    rusl_core::do_syscall!(SYS_MMAP, addr, length, prot, flags, fd, offset) as *mut c_void
 }
 
 /// 内存建议系统调用封装。
@@ -169,7 +169,7 @@ pub(crate) unsafe fn mmap(
 /// - `length` 必须 > 0
 /// - 参数语义与 POSIX `madvise` 一致
 pub(crate) unsafe fn madvise(addr: *mut c_void, length: usize, advice: c_int) -> c_int {
-    rusl_internal::do_syscall!(SYS_MADVISE, addr, length, advice) as c_int
+    rusl_core::do_syscall!(SYS_MADVISE, addr, length, advice) as c_int
 }
 
 /// 内存重映射系统调用封装（Linux 特定）。
@@ -203,7 +203,7 @@ pub(crate) unsafe fn mremap(
     flags: c_int,
     new_addr: *mut c_void,
 ) -> *mut c_void {
-    rusl_internal::do_syscall!(SYS_MREMAP, old_addr, old_len, new_len, flags, new_addr) as *mut c_void
+    rusl_core::do_syscall!(SYS_MREMAP, old_addr, old_len, new_len, flags, new_addr) as *mut c_void
 }
 
 /// 解除内存映射系统调用封装。
@@ -227,7 +227,7 @@ pub(crate) unsafe fn mremap(
 /// - 调用后不得再访问已解除映射的区域（否则触发 SIGSEGV）
 /// - 参数语义与 POSIX `munmap` 一致
 pub(crate) unsafe fn munmap(addr: *mut c_void, length: usize) -> c_int {
-    rusl_internal::do_syscall!(SYS_MUNMAP, addr, length) as c_int
+    rusl_core::do_syscall!(SYS_MUNMAP, addr, length) as c_int
 }
 
 /// 内存保护系统调用封装。
@@ -253,7 +253,7 @@ pub(crate) unsafe fn munmap(addr: *mut c_void, length: usize) -> c_int {
 /// - 设置 PROT_NONE 后访问该区域将触发 SIGSEGV（这是预期行为，用于守卫页）
 /// - 参数语义与 POSIX `mprotect` 一致
 pub(crate) unsafe fn mprotect(addr: *mut c_void, length: usize, prot: c_int) -> c_int {
-    rusl_internal::do_syscall!(SYS_MPROTECT, addr, length, prot) as c_int
+    rusl_core::do_syscall!(SYS_MPROTECT, addr, length, prot) as c_int
 }
 
 // ============================================================================
@@ -476,14 +476,15 @@ pub(crate) fn is_mt() -> bool {
 
 /// is_mt 的内部实现，通过 cfg 处理测试/生产模式的差异。
 /// 在测试模式或集成测试模式下，始终返回 false（假定单线程）。
-#[cfg(not(any(test, feature = "c-test")))]
+#[cfg(not(test))]
 fn is_mt_inner() -> bool {
     // Safety: __libc 为 static mut，但 need_locks 仅在启动阶段写入，
     // 之后为只读访问，且 i8 读取在支持的平台上是原子操作。
-    unsafe { rusl_internal::libc::__libc.need_locks != 0 }
+    use crate::import::__libc;
+    unsafe { __libc.need_locks != 0 }
 }
 
-#[cfg(any(test, feature = "c-test"))]
+#[cfg(test)]
 fn is_mt_inner() -> bool {
     // 在单元测试或集成测试环境中，假设单线程模式，跳过所有锁操作。
     false
@@ -916,8 +917,9 @@ const AT_RANDOM: usize = 25;
 /// 若未找到 AT_RANDOM（例如 auxv 未初始化），回退到栈地址熵源。
 #[cfg(not(any(test, feature = "c-test")))]
 fn get_kernel_random_secret(stack_secret: u64) -> u64 {
+    use crate::import::__libc;
     // Safety: __libc.auxv 在进程启动时由 crt 初始化，之后只读。
-    let auxv = unsafe { rusl_internal::libc::__libc.auxv };
+    let auxv = unsafe { __libc.auxv };
     if auxv.is_null() {
         return stack_secret;
     }

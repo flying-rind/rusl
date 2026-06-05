@@ -19,7 +19,6 @@ rusl = [
     "dep:rusl-malloc",
     "dep:rusl-env",
     "rusl-env/rusl",
-    "dep:rusl-errno",
     "dep:rusl-unistd",
     "dep:rusl-stdio",
     "rusl-stdio/rusl",
@@ -38,7 +37,6 @@ rusl-search = { path = "../rusl-search", optional = true, default-features = fal
 rusl-regex = { path = "../rusl-regex", optional = true, default-features = false }
 rusl-malloc = { path = "../rusl-malloc", default-features = false, optional = true }
 rusl-env = { path = "../rusl-env", optional = true, default-features = false }
-rusl-errno = { path = "../rusl-errno", optional = true }
 rusl-unistd = { path = "../rusl-unistd", optional = true }
 rusl-stdio = { path = "../rusl-stdio", optional = true, default-features = false }
 rusl-exit = { path = "../rusl-exit", optional = true }

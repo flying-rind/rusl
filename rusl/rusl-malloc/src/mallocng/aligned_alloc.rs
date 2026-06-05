@@ -23,7 +23,7 @@
 
 use core::ffi::c_void;
 use core::sync::atomic::Ordering;
-use rusl_errno::__errno_location;
+use crate::import::__errno_location;
 
 // ---------------------------------------------------------------------------
 // 外部符号依赖 (由同 crate 内其他模块提供)

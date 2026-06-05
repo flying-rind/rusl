@@ -40,6 +40,7 @@ use super::context::CTX;
 // ============================================================================
 
 use super::meta::{IB, MMAP_THRESHOLD, UNIT};
+use crate::import::__errno_location;
 
 // ============================================================================
 // 全局数据: 大小类别查找表
@@ -155,7 +156,7 @@ pub unsafe extern "C" fn malloc(n: usize) -> *mut c_void {
     // 1) 溢出检查
     if meta::size_overflows(n) {
         unsafe {
-            rusl_errno::__errno_location().write(super::super::ENOMEM);
+            __errno_location().write(super::super::ENOMEM);
         }
         return core::ptr::null_mut();
     }
@@ -173,7 +174,7 @@ pub unsafe extern "C" fn malloc(n: usize) -> *mut c_void {
         );
         if p == super::syscall::MAP_FAILED {
             unsafe {
-                rusl_errno::__errno_location().write(super::super::ENOMEM);
+                __errno_location().write(super::super::ENOMEM);
             }
             return core::ptr::null_mut();
         }
@@ -263,7 +264,7 @@ pub unsafe extern "C" fn malloc(n: usize) -> *mut c_void {
         None => {
             glue::unlock();
             unsafe {
-                rusl_errno::__errno_location().write(super::super::ENOMEM);
+                __errno_location().write(super::super::ENOMEM);
             }
             return core::ptr::null_mut();
         }

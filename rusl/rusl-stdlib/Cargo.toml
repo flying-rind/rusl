@@ -15,7 +15,6 @@ c-test = []
 
 [dependencies]
 rusl-core = { path = "../rusl-core" }
-rusl-errno = { path = "../rusl-errno" }
 rusl-internal = { path = "../rusl-internal" }
 rusl-string = { path = "../rusl-string" }
 

@@ -9,7 +9,7 @@ use super::*;
 use super::syscalls::*;
 use super::stack_check::*;
 use core::sync::atomic::Ordering;
-use rusl_errno::__errno_location;
+use crate::import::__errno_location;
 
 /// bump 分配器的核心实现。
 ///

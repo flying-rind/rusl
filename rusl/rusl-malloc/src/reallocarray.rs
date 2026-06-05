@@ -11,7 +11,7 @@
 //! 对应 musl 源码: `src/malloc/reallocarray.c`
 
 use core::ffi::c_void;
-use rusl_errno::__errno_location;
+use crate::import::__errno_location;
 
 /// 带整数溢出检查的安全数组内存重分配。
 ///

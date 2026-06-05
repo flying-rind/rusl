@@ -18,7 +18,7 @@
 use core::ffi::{c_int, c_ulong, c_void};
 use core::mem;
 use core::ptr::NonNull;
-use rusl_errno::__errno_location;
+use crate::import::__errno_location;
 
 // ===========================================================================
 // 错误码常量 — 引用父模块的统一定义

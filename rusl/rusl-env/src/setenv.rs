@@ -21,7 +21,7 @@
 
 use core::ffi::{c_char, c_int};
 use core::sync::atomic::{AtomicBool, Ordering};
-use rusl_errno::__errno_location;
+use rusl_core::errno::__errno_location;
 
 #[cfg(feature = "rusl")]
 use rusl_malloc::free::free;

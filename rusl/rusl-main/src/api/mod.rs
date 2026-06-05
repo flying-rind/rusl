@@ -104,7 +104,7 @@ pub mod env;
 
 #[cfg(feature = "rusl")]
 pub mod errno {
-    pub use rusl_errno::*;
+    pub use rusl_core::errno::*;
 }
 #[cfg(not(feature = "rusl"))]
 #[path = "errno.rs"]

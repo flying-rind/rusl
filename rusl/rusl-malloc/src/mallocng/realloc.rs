@@ -37,6 +37,8 @@ use core::ptr;
 
 use super::meta::{self, Meta, IB, MMAP_THRESHOLD, UNIT};
 use super::syscall::{self, MAP_FAILED, MREMAP_MAYMOVE};
+use crate::import::__errno_location;
+
 
 // ============================================================================
 // 前向依赖: malloc_impl / free_impl
@@ -230,7 +232,7 @@ pub(crate) unsafe fn realloc_impl(p: *mut c_void, n: usize) -> *mut c_void {
     if meta::size_overflows(n) {
         // Safety: __errno_location 返回有效指针
         unsafe {
-            rusl_errno::__errno_location().write(super::super::ENOMEM);
+            __errno_location().write(super::super::ENOMEM);
         }
         return core::ptr::null_mut();
     }

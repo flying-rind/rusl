@@ -17,8 +17,10 @@
 
 use core::ffi::{c_char, c_int, CStr};
 use core::ptr::null_mut;
-use rusl_errno::__errno_location;
+use rusl_core::errno::__errno_location;
 use crate::__environ::environ;
+use rusl_core::errno::set_errno;
+use rusl_core::errno::EINVAL;
 
 // ---------------------------------------------------------------------------
 // 回调机制 — 替代 C 的 weak_alias 弱符号
@@ -96,7 +98,7 @@ pub(crate) unsafe fn unsetenv_impl(name: &CStr) -> c_int {
     // l == 0: 空字符串
     // name_bytes[l] != 0: 包含 '=', 即 name_bytes[l] == b'='
     if l == 0 || name_bytes[l] != 0 {
-        rusl_errno::set_errno(rusl_errno::EINVAL);
+        set_errno(EINVAL);
         return -1;
     }
 
@@ -182,7 +184,7 @@ pub extern "C" fn unsetenv(name: *const c_char) -> c_int {
     // NULL 指针检查：等价于空 name 的 EINVAL 处理
     if name.is_null() {
         // SAFETY: set_errno 在单线程环境下安全
-        unsafe { rusl_errno::set_errno(rusl_errno::EINVAL); }
+        unsafe { set_errno(EINVAL); }
         return -1;
     }
 
@@ -299,7 +301,7 @@ mod tests {
             let name_cstr = CStr::from_ptr(b"\0".as_ptr() as *const c_char);
             let result = unsetenv_impl(name_cstr);
             assert_eq!(result, -1, "空字符串应返回 -1");
-            assert_eq!(*__errno_location(), rusl_errno::EINVAL,
+            assert_eq!(*__errno_location(), EINVAL,
                 "errno 应设为 EINVAL");
         }
     });
@@ -315,7 +317,7 @@ mod tests {
             let name_cstr = CStr::from_ptr(b"FOO=BAR\0".as_ptr() as *const c_char);
             let result = unsetenv_impl(name_cstr);
             assert_eq!(result, -1, "含 '=' 的名称应返回 -1");
-            assert_eq!(*__errno_location(), rusl_errno::EINVAL,
+            assert_eq!(*__errno_location(), EINVAL,
                 "errno 应设为 EINVAL");
         }
     });
@@ -602,7 +604,7 @@ mod tests {
             reset_state();
             let result = unsetenv(null_mut());
             assert_eq!(result, -1, "NULL 参数应返回 -1");
-            assert_eq!(*__errno_location(), rusl_errno::EINVAL,
+            assert_eq!(*__errno_location(), EINVAL,
                 "errno 应设为 EINVAL");
         }
     });

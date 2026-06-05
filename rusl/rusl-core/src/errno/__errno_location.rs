@@ -81,8 +81,11 @@ pub extern "C" fn ___errno_location() -> *mut c_int {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use rusl_core::test;
+    use crate::test;
+    use crate::errno::__errno_location;
+    use crate::errno::___errno_location;
+    use crate::errno::set_errno;
+    use crate::errno::EINVAL;
 
     test!("test_errno_location_non_null" {
         let p = __errno_location();

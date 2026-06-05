@@ -10,15 +10,14 @@ doctest = false
 test = true
 
 [features]
-default = []
+default = ["rusl"]
 c-test = []
-# allocator = []
+rusl = ["dep:rusl-internal", "dep:rusl-string"]
 
 [dependencies]
 rusl-core = { path = "../rusl-core" ,features = ["rusl"]}
-rusl-errno = { path = "../rusl-errno" }
-rusl-string = { path = "../rusl-string" }
-rusl-internal = { path = "../rusl-internal" }
+rusl-string = { path = "../rusl-string", optional = true }
+rusl-internal = { path = "../rusl-internal", optional = true }
 
 [profile.dev]
 panic = "abort"

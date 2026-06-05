@@ -17,7 +17,6 @@ rusl = ["dep:rusl-malloc"]
 
 [dependencies]
 rusl-core = { path = "../rusl-core" }
-rusl-errno = { path = "../rusl-errno" }
 rusl-string = { path = "../rusl-string" }
 rusl-stdlib = { path = "../rusl-stdlib" }
 rusl-ctype = { path = "../rusl-ctype" }
