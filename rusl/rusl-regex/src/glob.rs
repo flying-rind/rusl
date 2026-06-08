@@ -280,10 +280,8 @@ pub(crate) extern "C" fn ignore_err(_path: *const c_char, _err: c_int) -> c_int 
 // ============================================================================
 
 pub(crate) fn compare_path_ptrs(a: &*const c_char, b: &*const c_char) -> Ordering {
-    unsafe {
-        let cmp = rusl_string::strcmp(*a, *b);
-        cmp.cmp(&0)
-    }
+    let cmp = crate::import::string::strcmp(*a, *b);
+    cmp.cmp(&0)
 }
 
 // ============================================================================
@@ -314,10 +312,8 @@ pub(crate) fn expand_tilde(
     };
 
     // 使用 rusl 内部的 getenv 实现
-    let home = unsafe {
-        let home_name = b"HOME\0".as_ptr() as *const c_char;
-        rusl_env::getenv(home_name)
-    };
+    let home_name = b"HOME\0".as_ptr() as *const c_char;
+    let home = crate::import::env::getenv(home_name);
 
     if home.is_null() {
         return Err(GlobError::NoMatch);

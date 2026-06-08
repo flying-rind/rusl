@@ -8,7 +8,7 @@
 
 use core::ffi::c_int;
 use rusl_core::c_types::{wint_t, locale_t, WEOF};
-use rusl_internal::libc::__locale_struct;
+use crate::import::__locale_struct;
 
 /// C 标准 iswalnum —— 判断宽字符是否为字母或数字。
 ///

@@ -11,6 +11,7 @@
 
 extern crate rusl_core;
 
+pub(crate) mod import;
 
 #[path = "stdlib_inner.rs"]
 pub(crate) mod stdlib_inner;

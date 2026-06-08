@@ -15,6 +15,7 @@ extern crate rusl_core;
 extern crate rusl_malloc;
 extern crate alloc;
 
+pub(crate) mod import;
 
 #[path = "env_inner.rs"]
 pub(crate) mod env_inner;

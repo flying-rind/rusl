@@ -46,10 +46,10 @@ use core::ptr;
 use core::sync::atomic::Ordering;
 
 use rusl_core::c_types::size_t;
-use rusl_internal::pthread_impl::{
+use crate::import::pthread_impl::{
     DetachState, Pthread, DEFAULT_STACKSIZE, DEFAULT_STACK_MAX,
 };
-use rusl_internal::libc::{__hwcap, __libc, tls_module};
+use crate::import::libc::{__hwcap, __libc, tls_module};
 
 // ============================================================================
 // ELF 常量
@@ -330,7 +330,7 @@ unsafe fn arch_prctl_set_fs(addr: *mut c_void) -> c_int {
 /// 对于非 x86_64 架构，当前使用 pthread_impl 中的通用占位实现。
 #[cfg(not(target_arch = "x86_64"))]
 unsafe fn set_thread_area_impl(p: *mut c_void) -> c_int {
-    rusl_internal::pthread_impl::set_thread_area(p)
+    crate::import::pthread_impl::set_thread_area(p)
 }
 
 /// 调用 `SYS_set_tid_address` 系统调用。
@@ -415,7 +415,7 @@ pub(crate) fn init_tp(p: *mut c_void) -> c_int {
 
         // 注册 TID 清除地址 — 使用 THREAD_LIST_LOCK 的地址
         // 内核在线程退出时将 &THREAD_LIST_LOCK 清零并 futex-wake
-        let lock_ref = &rusl_internal::pthread_impl::THREAD_LIST_LOCK;
+        let lock_ref = &crate::import::pthread_impl::THREAD_LIST_LOCK;
         let lock_ptr = lock_ref as *const _ as *const c_int;
         (*td).tid = syscall_set_tid_address(lock_ptr) as c_int;
 
@@ -764,7 +764,7 @@ mod tests {
     use rusl_core::test;
     use super::*;
     use core::mem::{align_of, offset_of, size_of};
-    use rusl_internal::pthread_impl::Pthread;
+    use crate::import::pthread_impl::Pthread;
 
     // =========================================================================
     // 常量测试

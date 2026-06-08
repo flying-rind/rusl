@@ -11,12 +11,13 @@ test = true
 
 [features]
 default = ["rusl"]
+c-test = []
 # 开启时依赖rusl-malloc的global allocator,否则自己提供allocator
-rusl = ["dep:rusl-malloc"]
+rusl = ["dep:rusl-malloc", "dep:rusl-stdlib"]
 
 [dependencies]
 rusl-core = { path = "../rusl-core" }
-rusl-stdlib = { path = "../rusl-stdlib" }
+rusl-stdlib = { path = "../rusl-stdlib", optional = true }
 rusl-malloc = { path = "../rusl-malloc", optional = true}
 
 [profile.dev]

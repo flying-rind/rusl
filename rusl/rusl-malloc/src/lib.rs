@@ -12,7 +12,7 @@
 extern crate rusl_core;
 
 pub mod allocator;
-pub mod import;
+pub(crate) mod import;
 
 #[path = "malloc_inner.rs"]
 pub(crate) mod malloc_inner;

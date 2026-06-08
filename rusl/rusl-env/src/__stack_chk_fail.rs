@@ -22,7 +22,7 @@
 //!
 //! ## 依赖
 //!
-//! - `__pthread_self()` — 从 `rusl_internal::pthread_impl` 获取当前线程控制块，
+//! - `__pthread_self()` — 从 `crate::import::pthread_impl` 获取当前线程控制块，
 //!   用于将 canary 值同步到线程 TLS 头部。
 
 use core::ffi::c_void;
@@ -115,7 +115,7 @@ fn apply_canary_mask(canary: usize) -> usize {
 /// 单线程调用，不需要同步原语。
 #[no_mangle]
 pub extern "C" fn __init_ssp(entropy: *mut c_void) {
-    use rusl_internal::pthread_impl::__pthread_self;
+    use crate::import::pthread_impl::__pthread_self;
 
     // 步骤 1-2：获取初始 canary 值
     let mut canary: usize = if !entropy.is_null() {

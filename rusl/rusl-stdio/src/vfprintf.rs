@@ -490,7 +490,7 @@ unsafe fn printf_core(f: *mut FILE, fmt: *const u8, ap: *mut VaList) -> i32 {
                     arg.p as *const u8
                 };
                 let max_len = if p < 0 { i32::MAX as usize } else { p as usize };
-                let len = rusl_string::strnlen(s_ptr as *const c_char, max_len);
+                let len = crate::import::strnlen(s_ptr as *const c_char, max_len);
                 if p < 0 && *s_ptr.add(len) != 0 {
                     return -1;
                 }

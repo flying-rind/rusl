@@ -197,7 +197,7 @@ pub(crate) fn tre_isalnum_l1(c: TreCint) -> bool {
     if c < 0 || c > TRE_CHAR_MAX {
         return false;
     }
-    rusl_ctype::iswalnum(c as u32) != 0
+    crate::import::ctype::iswalnum(c as u32) != 0
 }
 
 /// 宽字符是否为字母。
@@ -206,7 +206,7 @@ pub(crate) fn tre_isalpha_l1(c: TreCint) -> bool {
     if c < 0 || c > TRE_CHAR_MAX {
         return false;
     }
-    rusl_ctype::iswalpha(c as u32) != 0
+    crate::import::ctype::iswalpha(c as u32) != 0
 }
 
 /// 宽字符是否为空白（空格或制表符）。
@@ -215,7 +215,7 @@ pub(crate) fn tre_isblank_l1(c: TreCint) -> bool {
     if c < 0 || c > TRE_CHAR_MAX {
         return false;
     }
-    rusl_ctype::iswblank(c as u32) != 0
+    crate::import::ctype::iswblank(c as u32) != 0
 }
 
 /// 宽字符是否为控制字符。
@@ -224,7 +224,7 @@ pub(crate) fn tre_iscntrl_l1(c: TreCint) -> bool {
     if c < 0 || c > TRE_CHAR_MAX {
         return false;
     }
-    unsafe { rusl_ctype::iswcntrl(c as u32) != 0 }
+    crate::import::ctype::iswcntrl(c as u32) != 0
 }
 
 /// 宽字符是否为十进制数字。
@@ -233,7 +233,7 @@ pub(crate) fn tre_isdigit_l1(c: TreCint) -> bool {
     if c < 0 || c > TRE_CHAR_MAX {
         return false;
     }
-    unsafe { rusl_ctype::iswdigit(c as u32) != 0 }
+    crate::import::ctype::iswdigit(c as u32) != 0
 }
 
 /// 宽字符是否为可打印且有图形表示的字符。
@@ -242,7 +242,7 @@ pub(crate) fn tre_isgraph_l1(c: TreCint) -> bool {
     if c < 0 || c > TRE_CHAR_MAX {
         return false;
     }
-    unsafe { rusl_ctype::iswgraph(c as u32) != 0 }
+    crate::import::ctype::iswgraph(c as u32) != 0
 }
 
 /// 宽字符是否为小写字母。
@@ -251,7 +251,7 @@ pub(crate) fn tre_islower_l1(c: TreCint) -> bool {
     if c < 0 || c > TRE_CHAR_MAX {
         return false;
     }
-    unsafe { rusl_ctype::iswlower(c as u32) != 0 }
+    crate::import::ctype::iswlower(c as u32) != 0
 }
 
 /// 宽字符是否为可打印字符。
@@ -260,7 +260,7 @@ pub(crate) fn tre_isprint_l1(c: TreCint) -> bool {
     if c < 0 || c > TRE_CHAR_MAX {
         return false;
     }
-    unsafe { rusl_ctype::iswprint(c as u32) != 0 }
+    crate::import::ctype::iswprint(c as u32) != 0
 }
 
 /// 宽字符是否为标点符号。
@@ -269,7 +269,7 @@ pub(crate) fn tre_ispunct_l1(c: TreCint) -> bool {
     if c < 0 || c > TRE_CHAR_MAX {
         return false;
     }
-    unsafe { rusl_ctype::iswpunct(c as u32) != 0 }
+    crate::import::ctype::iswpunct(c as u32) != 0
 }
 
 /// 宽字符是否为空白字符。
@@ -278,7 +278,7 @@ pub(crate) fn tre_isspace_l1(c: TreCint) -> bool {
     if c < 0 || c > TRE_CHAR_MAX {
         return false;
     }
-    unsafe { rusl_ctype::iswspace(c as u32) != 0 }
+    crate::import::ctype::iswspace(c as u32) != 0
 }
 
 /// 宽字符是否为大写字母。
@@ -287,7 +287,7 @@ pub(crate) fn tre_isupper_l1(c: TreCint) -> bool {
     if c < 0 || c > TRE_CHAR_MAX {
         return false;
     }
-    unsafe { rusl_ctype::iswupper(c as u32) != 0 }
+    crate::import::ctype::iswupper(c as u32) != 0
 }
 
 /// 宽字符是否为十六进制数字。
@@ -296,7 +296,7 @@ pub(crate) fn tre_isxdigit_l1(c: TreCint) -> bool {
     if c < 0 || c > TRE_CHAR_MAX {
         return false;
     }
-    unsafe { rusl_ctype::iswxdigit(c as u32) != 0 }
+    crate::import::ctype::iswxdigit(c as u32) != 0
 }
 
 /// 宽字符转小写。通过 rusl 内部的 `towlower` Rust 实现完成转换。
@@ -305,7 +305,7 @@ pub(crate) fn tre_tolower_l1(c: TreCint) -> TreCint {
     if c < 0 || c > TRE_CHAR_MAX {
         return c;
     }
-    unsafe { rusl_ctype::towlower(c as u32) as TreCint }
+    crate::import::ctype::towlower(c as u32) as TreCint
 }
 
 /// 宽字符转大写。通过 rusl 内部的 `towupper` Rust 实现完成转换。
@@ -314,7 +314,7 @@ pub(crate) fn tre_toupper_l1(c: TreCint) -> TreCint {
     if c < 0 || c > TRE_CHAR_MAX {
         return c;
     }
-    unsafe { rusl_ctype::towupper(c as u32) as TreCint }
+    crate::import::ctype::towupper(c as u32) as TreCint
 }
 
 /// 检查宽字符是否属于指定字符类别。通过 rusl 内部的 `iswctype` 完成。
@@ -323,75 +323,75 @@ pub(crate) fn tre_isctype_l1(wc: TreCint, desc: TreCtype) -> bool {
     if wc < 0 || wc > TRE_CHAR_MAX {
         return false;
     }
-    unsafe { rusl_ctype::iswctype(wc as u32, desc as u64) != 0 }
+    crate::import::ctype::iswctype(wc as u32, desc as u64) != 0
 }
 
 /// 通过名称获取宽字符类别句柄。通过 rusl 内部的 `wctype` 完成。
 #[inline]
 pub(crate) unsafe fn tre_ctype_l1(name: *const c_char) -> TreCtype {
-    rusl_ctype::wctype(name) as TreCtype
+    crate::import::ctype::wctype(name) as TreCtype
 }
 
 // ---- 别名：保持向后兼容（旧名称） ----
 
 #[inline]
-pub(crate) unsafe fn tre_isalnum(c: TreCint) -> bool {
+pub(crate) fn tre_isalnum(c: TreCint) -> bool {
     tre_isalnum_l1(c)
 }
 #[inline]
-pub(crate) unsafe fn tre_isalpha(c: TreCint) -> bool {
+pub(crate) fn tre_isalpha(c: TreCint) -> bool {
     tre_isalpha_l1(c)
 }
 #[inline]
-pub(crate) unsafe fn tre_isblank(c: TreCint) -> bool {
+pub(crate) fn tre_isblank(c: TreCint) -> bool {
     tre_isblank_l1(c)
 }
 #[inline]
-pub(crate) unsafe fn tre_iscntrl(c: TreCint) -> bool {
+pub(crate) fn tre_iscntrl(c: TreCint) -> bool {
     tre_iscntrl_l1(c)
 }
 #[inline]
-pub(crate) unsafe fn tre_isdigit(c: TreCint) -> bool {
+pub(crate) fn tre_isdigit(c: TreCint) -> bool {
     tre_isdigit_l1(c)
 }
 #[inline]
-pub(crate) unsafe fn tre_isgraph(c: TreCint) -> bool {
+pub(crate) fn tre_isgraph(c: TreCint) -> bool {
     tre_isgraph_l1(c)
 }
 #[inline]
-pub(crate) unsafe fn tre_islower(c: TreCint) -> bool {
+pub(crate) fn tre_islower(c: TreCint) -> bool {
     tre_islower_l1(c)
 }
 #[inline]
-pub(crate) unsafe fn tre_isprint(c: TreCint) -> bool {
+pub(crate) fn tre_isprint(c: TreCint) -> bool {
     tre_isprint_l1(c)
 }
 #[inline]
-pub(crate) unsafe fn tre_ispunct(c: TreCint) -> bool {
+pub(crate) fn tre_ispunct(c: TreCint) -> bool {
     tre_ispunct_l1(c)
 }
 #[inline]
-pub(crate) unsafe fn tre_isspace(c: TreCint) -> bool {
+pub(crate) fn tre_isspace(c: TreCint) -> bool {
     tre_isspace_l1(c)
 }
 #[inline]
-pub(crate) unsafe fn tre_isupper(c: TreCint) -> bool {
+pub(crate) fn tre_isupper(c: TreCint) -> bool {
     tre_isupper_l1(c)
 }
 #[inline]
-pub(crate) unsafe fn tre_isxdigit(c: TreCint) -> bool {
+pub(crate) fn tre_isxdigit(c: TreCint) -> bool {
     tre_isxdigit_l1(c)
 }
 #[inline]
-pub(crate) unsafe fn tre_tolower(c: TreCint) -> TreCint {
+pub(crate) fn tre_tolower(c: TreCint) -> TreCint {
     tre_tolower_l1(c)
 }
 #[inline]
-pub(crate) unsafe fn tre_toupper(c: TreCint) -> TreCint {
+pub(crate) fn tre_toupper(c: TreCint) -> TreCint {
     tre_toupper_l1(c)
 }
 #[inline]
-pub(crate) unsafe fn tre_isctype(wc: TreCint, desc: TreCtype) -> bool {
+pub(crate) fn tre_isctype(wc: TreCint, desc: TreCtype) -> bool {
     tre_isctype_l1(wc, desc)
 }
 #[inline]
@@ -781,99 +781,99 @@ mod tests {
     // ---- 宽字符分类函数测试 ----
 
     test!("test_tre_isalpha_ascii" {
-        assert!(unsafe { tre_isalpha(b'A' as TreCint) });
-        assert!(unsafe { tre_isalpha(b'z' as TreCint) });
-        assert!(!unsafe { tre_isalpha(b'0' as TreCint) });
-        assert!(!unsafe { tre_isalpha(b' ' as TreCint) });
+        assert!(tre_isalpha(b'A' as TreCint));
+        assert!(tre_isalpha(b'z' as TreCint));
+        assert!(!tre_isalpha(b'0' as TreCint));
+        assert!(!tre_isalpha(b' ' as TreCint));
     });
 
     test!("test_tre_isdigit" {
-        assert!(unsafe { tre_isdigit(b'0' as TreCint) });
-        assert!(unsafe { tre_isdigit(b'9' as TreCint) });
-        assert!(!unsafe { tre_isdigit(b'A' as TreCint) });
+        assert!(tre_isdigit(b'0' as TreCint));
+        assert!(tre_isdigit(b'9' as TreCint));
+        assert!(!tre_isdigit(b'A' as TreCint));
     });
 
     test!("test_tre_isspace" {
-        assert!(unsafe { tre_isspace(b' ' as TreCint) });
-        assert!(unsafe { tre_isspace(b'\t' as TreCint) });
-        assert!(unsafe { tre_isspace(b'\n' as TreCint) });
-        assert!(!unsafe { tre_isspace(b'A' as TreCint) });
+        assert!(tre_isspace(b' ' as TreCint));
+        assert!(tre_isspace(b'\t' as TreCint));
+        assert!(tre_isspace(b'\n' as TreCint));
+        assert!(!tre_isspace(b'A' as TreCint));
     });
 
     test!("test_tre_islower" {
-        assert!(unsafe { tre_islower(b'a' as TreCint) });
-        assert!(!unsafe { tre_islower(b'A' as TreCint) });
-        assert!(!unsafe { tre_islower(b'0' as TreCint) });
+        assert!(tre_islower(b'a' as TreCint));
+        assert!(!tre_islower(b'A' as TreCint));
+        assert!(!tre_islower(b'0' as TreCint));
     });
 
     test!("test_tre_isupper" {
-        assert!(unsafe { tre_isupper(b'A' as TreCint) });
-        assert!(!unsafe { tre_isupper(b'a' as TreCint) });
+        assert!(tre_isupper(b'A' as TreCint));
+        assert!(!tre_isupper(b'a' as TreCint));
     });
 
     test!("test_tre_isalnum" {
-        assert!(unsafe { tre_isalnum(b'A' as TreCint) });
-        assert!(unsafe { tre_isalnum(b'z' as TreCint) });
-        assert!(unsafe { tre_isalnum(b'0' as TreCint) });
-        assert!(!unsafe { tre_isalnum(b' ' as TreCint) });
+        assert!(tre_isalnum(b'A' as TreCint));
+        assert!(tre_isalnum(b'z' as TreCint));
+        assert!(tre_isalnum(b'0' as TreCint));
+        assert!(!tre_isalnum(b' ' as TreCint));
     });
 
     test!("test_tre_isblank" {
-        assert!(unsafe { tre_isblank(b' ' as TreCint) });
-        assert!(unsafe { tre_isblank(b'\t' as TreCint) });
-        assert!(!unsafe { tre_isblank(b'\n' as TreCint) });
+        assert!(tre_isblank(b' ' as TreCint));
+        assert!(tre_isblank(b'\t' as TreCint));
+        assert!(!tre_isblank(b'\n' as TreCint));
     });
 
     test!("test_tre_iscntrl" {
-        assert!(unsafe { tre_iscntrl(0x00) });
-        assert!(unsafe { tre_iscntrl(0x1F) });
-        assert!(!unsafe { tre_iscntrl(b'A' as TreCint) });
+        assert!(tre_iscntrl(0x00));
+        assert!(tre_iscntrl(0x1F));
+        assert!(!tre_iscntrl(b'A' as TreCint));
     });
 
     test!("test_tre_isgraph" {
-        assert!(unsafe { tre_isgraph(b'A' as TreCint) });
-        assert!(!unsafe { tre_isgraph(b' ' as TreCint) });
+        assert!(tre_isgraph(b'A' as TreCint));
+        assert!(!tre_isgraph(b' ' as TreCint));
     });
 
     test!("test_tre_isprint" {
-        assert!(unsafe { tre_isprint(b'A' as TreCint) });
-        assert!(!unsafe { tre_isprint(0x00) });
+        assert!(tre_isprint(b'A' as TreCint));
+        assert!(!tre_isprint(0x00));
     });
 
     test!("test_tre_ispunct" {
-        assert!(unsafe { tre_ispunct(b'.' as TreCint) });
-        assert!(!unsafe { tre_ispunct(b'A' as TreCint) });
+        assert!(tre_ispunct(b'.' as TreCint));
+        assert!(!tre_ispunct(b'A' as TreCint));
     });
 
     test!("test_tre_isxdigit" {
-        assert!(unsafe { tre_isxdigit(b'A' as TreCint) });
-        assert!(unsafe { tre_isxdigit(b'f' as TreCint) });
-        assert!(unsafe { tre_isxdigit(b'0' as TreCint) });
-        assert!(!unsafe { tre_isxdigit(b'G' as TreCint) });
+        assert!(tre_isxdigit(b'A' as TreCint));
+        assert!(tre_isxdigit(b'f' as TreCint));
+        assert!(tre_isxdigit(b'0' as TreCint));
+        assert!(!tre_isxdigit(b'G' as TreCint));
     });
 
     // ---- 大小写转换测试 ----
 
     test!("test_tre_tolower" {
-        assert_eq!(unsafe { tre_tolower(b'A' as TreCint) }, b'a' as TreCint);
-        assert_eq!(unsafe { tre_tolower(b'Z' as TreCint) }, b'z' as TreCint);
-        assert_eq!(unsafe { tre_tolower(b'a' as TreCint) }, b'a' as TreCint);
-        assert_eq!(unsafe { tre_tolower(b'0' as TreCint) }, b'0' as TreCint);
+        assert_eq!(tre_tolower(b'A' as TreCint), b'a' as TreCint);
+        assert_eq!(tre_tolower(b'Z' as TreCint), b'z' as TreCint);
+        assert_eq!(tre_tolower(b'a' as TreCint), b'a' as TreCint);
+        assert_eq!(tre_tolower(b'0' as TreCint), b'0' as TreCint);
     });
 
     test!("test_tre_toupper" {
-        assert_eq!(unsafe { tre_toupper(b'a' as TreCint) }, b'A' as TreCint);
-        assert_eq!(unsafe { tre_toupper(b'z' as TreCint) }, b'Z' as TreCint);
-        assert_eq!(unsafe { tre_toupper(b'A' as TreCint) }, b'A' as TreCint);
-        assert_eq!(unsafe { tre_toupper(b'0' as TreCint) }, b'0' as TreCint);
+        assert_eq!(tre_toupper(b'a' as TreCint), b'A' as TreCint);
+        assert_eq!(tre_toupper(b'z' as TreCint), b'Z' as TreCint);
+        assert_eq!(tre_toupper(b'A' as TreCint), b'A' as TreCint);
+        assert_eq!(tre_toupper(b'0' as TreCint), b'0' as TreCint);
     });
 
     // ---- iswctype / wctype 测试 ----
 
     test!("test_tre_isctype_alpha" {
-        let alpha_desc = rusl_ctype::WCTYPE_ALPHA as TreCtype;
-        assert!(unsafe { tre_isctype(b'A' as TreCint, alpha_desc) });
-        assert!(!unsafe { tre_isctype(b'0' as TreCint, alpha_desc) });
+        let alpha_desc = crate::import::ctype::WCTYPE_ALPHA as TreCtype;
+        assert!(tre_isctype(b'A' as TreCint, alpha_desc));
+        assert!(!tre_isctype(b'0' as TreCint, alpha_desc));
     });
 
     test!("test_tre_ctype_alpha" {

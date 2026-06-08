@@ -1,7 +1,8 @@
 //! Stdlib — 标准库工具函数 (数值转换、排序、搜索、算术)
 
 use core::ffi::{c_char, c_int, c_void};
-pub use rusl_core::c_types::wchar_t;
+
+pub type wchar_t = i32;
 
 // ---------- types ----------
 

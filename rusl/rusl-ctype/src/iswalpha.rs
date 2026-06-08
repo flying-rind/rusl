@@ -12,7 +12,7 @@
 
 use core::ffi::c_int;
 use rusl_core::c_types::{wint_t, locale_t, WEOF};
-use rusl_internal::libc::__locale_struct;
+use crate::import::__locale_struct;
 
 // ---------------------------------------------------------------------------
 // 内部静态数据（编译时常量化）

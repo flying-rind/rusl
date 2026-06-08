@@ -129,23 +129,23 @@ fn check_assertions(
         }
     }
     if (assertions & super::tre::ASSERT_AT_BOW) != 0 {
-        let prev_word = prev_c == '_' as TreCint || unsafe { super::tre::tre_isalnum(prev_c) };
-        let next_word = next_c == '_' as TreCint || unsafe { super::tre::tre_isalnum(next_c) };
+        let prev_word = prev_c == '_' as TreCint || super::tre::tre_isalnum(prev_c);
+        let next_word = next_c == '_' as TreCint || super::tre::tre_isalnum(next_c);
         if prev_word || !next_word {
             return true; // 断言失败
         }
     }
     if (assertions & super::tre::ASSERT_AT_EOW) != 0 {
-        let prev_word = prev_c == '_' as TreCint || unsafe { super::tre::tre_isalnum(prev_c) };
-        let next_word = next_c == '_' as TreCint || unsafe { super::tre::tre_isalnum(next_c) };
+        let prev_word = prev_c == '_' as TreCint || super::tre::tre_isalnum(prev_c);
+        let next_word = next_c == '_' as TreCint || super::tre::tre_isalnum(next_c);
         if !prev_word || next_word {
             return true; // 断言失败
         }
     }
     if (assertions & super::tre::ASSERT_AT_WB) != 0 {
         if pos != 0 && next_c != 0 {
-            let prev_word = prev_c == '_' as TreCint || unsafe { super::tre::tre_isalnum(prev_c) };
-            let next_word = next_c == '_' as TreCint || unsafe { super::tre::tre_isalnum(next_c) };
+            let prev_word = prev_c == '_' as TreCint || super::tre::tre_isalnum(prev_c);
+            let next_word = next_c == '_' as TreCint || super::tre::tre_isalnum(next_c);
             if prev_word == next_word {
                 return true; // 断言失败
             }
@@ -155,8 +155,8 @@ fn check_assertions(
         if pos == 0 || next_c == 0 {
             return true; // 断言失败
         }
-        let prev_word = prev_c == '_' as TreCint || unsafe { super::tre::tre_isalnum(prev_c) };
-        let next_word = next_c == '_' as TreCint || unsafe { super::tre::tre_isalnum(next_c) };
+        let prev_word = prev_c == '_' as TreCint || super::tre::tre_isalnum(prev_c);
+        let next_word = next_c == '_' as TreCint || super::tre::tre_isalnum(next_c);
         if prev_word != next_word {
             return true; // 断言失败
         }
@@ -170,15 +170,15 @@ fn check_char_classes(trans: &TnfaTransition, prev_c: TreCint, tnfa: &Tnfa) -> b
         let icase = (tnfa.cflags & REG_ICASE) != 0;
         if !icase {
             if let Some(cls) = trans.u_class {
-                if unsafe { !super::tre::tre_isctype(prev_c, cls) } {
+                if !super::tre::tre_isctype(prev_c, cls) {
                     return true; // 不匹配
                 }
             }
         } else {
             if let Some(cls) = trans.u_class {
-                let lc = unsafe { super::tre::tre_tolower(prev_c) };
-                let uc = unsafe { super::tre::tre_toupper(prev_c) };
-                if unsafe { !super::tre::tre_isctype(lc, cls) && !super::tre::tre_isctype(uc, cls) } {
+                let lc = super::tre::tre_tolower(prev_c);
+                let uc = super::tre::tre_toupper(prev_c);
+                if !super::tre::tre_isctype(lc, cls) && !super::tre::tre_isctype(uc, cls) {
                     return true; // 不匹配
                 }
             }

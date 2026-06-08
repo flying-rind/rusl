@@ -35,6 +35,7 @@ use core::panic::PanicInfo;
 #[cfg(not(feature = "rusl"))]
 use core::alloc::{GlobalAlloc, Layout};
 
+#[cfg(feature = "rusl")]
 extern crate rusl_core;
 #[cfg(feature = "rusl")]
 extern crate rusl_malloc;

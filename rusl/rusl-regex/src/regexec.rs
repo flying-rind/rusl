@@ -56,17 +56,15 @@ pub(crate) fn tre_neg_char_classes_match(
         if cls == 0 {
             break; // 0 终止标记
         }
-        unsafe {
-            if super::tre::tre_isctype(wc, cls) {
+        if super::tre::tre_isctype(wc, cls) {
+            return true;
+        }
+        if icase {
+            if super::tre::tre_isctype(super::tre::tre_tolower(wc), cls) {
                 return true;
             }
-            if icase {
-                if super::tre::tre_isctype(super::tre::tre_tolower(wc), cls) {
-                    return true;
-                }
-                if super::tre::tre_isctype(super::tre::tre_toupper(wc), cls) {
-                    return true;
-                }
+            if super::tre::tre_isctype(super::tre::tre_toupper(wc), cls) {
+                return true;
             }
         }
     }

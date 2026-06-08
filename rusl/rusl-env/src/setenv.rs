@@ -23,15 +23,7 @@ use core::ffi::{c_char, c_int};
 use core::sync::atomic::{AtomicBool, Ordering};
 use rusl_core::errno::__errno_location;
 
-#[cfg(feature = "rusl")]
-use rusl_malloc::free::free;
-
-#[cfg(not(feature = "rusl"))]
-extern "C" {
-    fn free(ptr: *mut c_void);
-}
-#[cfg(not(feature = "rusl"))]
-use core::ffi::c_void;
+use crate::import::free;
 
 // ---------------------------------------------------------------------------
 // 常量

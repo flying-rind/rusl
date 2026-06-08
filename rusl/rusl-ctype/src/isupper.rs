@@ -7,7 +7,7 @@
 #![allow(unused_imports, unused_variables)]
 
 use core::ffi::{c_int, c_uint};
-use rusl_internal::libc::__locale_struct;
+use crate::import::__locale_struct;
 
 /// C 标准 isupper —— 判断字符是否为大写字母。
 ///

@@ -28,7 +28,7 @@
 //!    d. p = p.next → 前进到下一模块
 //! ```
 
-use rusl_internal::libc::tls_module;
+use crate::import::libc::tls_module;
 
 // ---------------------------------------------------------------------------
 // 常量
@@ -77,7 +77,7 @@ pub(crate) const DTP_OFFSET: usize = 0;
 /// [Visibility]: pub(crate) — 仅供 rusl 内部使用，POSIX/C 标准未定义
 pub(crate) fn __reset_tls() {
     // Step 1: 获取当前线程控制块指针
-    let self_ = rusl_internal::pthread_impl::__pthread_self();
+    let self_ = crate::import::pthread_impl::__pthread_self();
     if self_.is_null() {
         // 线程尚未初始化，无法执行 TLS 重置
         return;
@@ -91,7 +91,7 @@ pub(crate) fn __reset_tls() {
     }
 
     // Step 3: 获取全局 TLS 模块链表头
-    let tls_head = unsafe { rusl_internal::libc::__libc.tls_head };
+    let tls_head = unsafe { crate::import::libc::__libc.tls_head };
 
     // Step 4: 执行核心重置算法
     reset_tls_core(dtv, tls_head, DTP_OFFSET);
@@ -180,7 +180,7 @@ fn reset_tls_core(dtv: *mut usize, tls_head: *mut tls_module, dtp_offset: usize)
 mod tests {
     use rusl_core::test;
     use super::*;
-    use rusl_internal::pthread_impl::Pthread;
+    use crate::import::pthread_impl::Pthread;
     use core::ffi::c_void;
 
     // =========================================================================

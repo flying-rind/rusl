@@ -65,7 +65,7 @@ pub use iswctype::{
 };
 
 // 重导出依赖类型，供 crate 内部使用
-pub(crate) use rusl_internal::libc::__locale_struct;
+pub(crate) use crate::import::__locale_struct;
 
 // 底层 locale 辅助函数公开导出
 pub(crate) use __ctype_b_loc::__ctype_b_loc;

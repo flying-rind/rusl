@@ -7,6 +7,7 @@ description = "#![no_std] Rust 实现的 musl libc 兼容库 — 聚合 crate"
 [features]
 default = ["rusl"]
 rusl = [
+    "dep:rusl-core",
     "dep:rusl-internal",
     "dep:rusl-ctype",
     "dep:rusl-string",
@@ -27,7 +28,7 @@ rusl = [
 ]
 
 [dependencies]
-rusl-core = { path = "../rusl-core" }
+rusl-core = { path = "../rusl-core", optional = true}
 rusl-internal = { path = "../rusl-internal", optional = true }
 rusl-ctype = { path = "../rusl-ctype", optional = true }
 rusl-string = { path = "../rusl-string", optional = true }

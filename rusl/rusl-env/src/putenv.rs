@@ -35,7 +35,7 @@ use crate::clearenv::{EnvRmAddFn, RM_ADD_FN};
 //
 // 由 `rusl_string::strchrnul` 模块提供。
 // 对应 C 的 `char *__strchrnul(const char *s, int c)`。
-use rusl_string::strchrnul;
+use crate::import::strchrnul;
 
 // `unsetenv` — 从进程环境中移除指定名称的环境变量。
 //

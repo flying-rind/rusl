@@ -14,6 +14,7 @@ extern crate rusl_core;
 extern crate rusl_malloc;
 extern crate alloc;
 
+pub(crate) mod import;
 
 #[path = "search_inner.rs"]
 pub(crate) mod search_inner;

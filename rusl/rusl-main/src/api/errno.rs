@@ -1,7 +1,8 @@
 //! errno模块对外api
 
-use core::ffi::{c_char, c_int};
-use rusl_core::c_types::locale_t;
+use core::ffi::{c_char, c_int, c_void};
+
+pub type locale_t = *mut c_void;
 
 // ---------- internal FFI declarations ----------
 

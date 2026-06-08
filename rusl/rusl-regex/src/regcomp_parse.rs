@@ -195,7 +195,7 @@ pub(crate) fn add_icase_literals(
     // 若为大写则取其对应小写范围，并合并连续的大小写字符。
     let mut c = min;
     while c <= max {
-        let (b, e) = unsafe {
+        let (b, e) = {
             let wc = c as super::tre::TreCint;
             if super::tre::tre_islower(wc) {
                 let lower_to = super::tre::tre_toupper(wc);
@@ -1106,10 +1106,10 @@ pub(crate) fn parse_atom(ctx: &mut ParseContext) -> Result<Box<AstNode>, RegErro
 
             // REG_ICASE 处理
             if (ctx.cflags & super::regcomp::REG_ICASE) != 0
-                && (unsafe { super::tre::tre_isupper(wc) } || unsafe { super::tre::tre_islower(wc) })
+                && (super::tre::tre_isupper(wc) || super::tre::tre_islower(wc))
             {
-                let upper = unsafe { super::tre::tre_toupper(wc) };
-                let lower = unsafe { super::tre::tre_tolower(wc) };
+                let upper = super::tre::tre_toupper(wc);
+                let lower = super::tre::tre_tolower(wc);
                 let pos = ctx.position;
                 ctx.position += 1;
                 let tmp1 = Box::new(AstNode {

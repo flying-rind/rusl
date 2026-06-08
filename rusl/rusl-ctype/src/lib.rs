@@ -11,6 +11,8 @@
 
 extern crate rusl_core;
 
+pub(crate) mod import;
+
 #[path = "ctype_inner.rs"]
 mod ctype_inner;
 

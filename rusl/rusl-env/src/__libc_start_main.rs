@@ -158,7 +158,7 @@ pub unsafe extern "C" fn _start_c(sp: *const i64) -> ! {
         core::ptr::null(),
     );
     // 不可达：libc_start_main_stage2 → exit → _Exit 永不返回
-    rusl_internal::atomic::a_crash();
+    crate::import::atomic::a_crash();
 }
 
 // ============================================================================
@@ -214,7 +214,7 @@ pub unsafe extern "C" fn __init_libc(envp: *mut *mut c_char, pn: *const c_char) 
         i += 1; // 跳过 envp 的 NULL 终止符
     }
     let auxv = envp.offset(i) as *mut size_t;
-    rusl_internal::libc::__libc.auxv = auxv;
+    crate::import::libc::__libc.auxv = auxv;
 
     // ---- 3. 解析 auxv 到本地数组 ----
     let mut aux: [usize; AUX_CNT] = [0; AUX_CNT];
@@ -231,11 +231,11 @@ pub unsafe extern "C" fn __init_libc(envp: *mut *mut c_char, pn: *const c_char) 
     }
 
     // ---- 4. 提取全局系统参数 ----
-    rusl_internal::libc::__hwcap = aux[AT_HWCAP];
+    crate::import::libc::__hwcap = aux[AT_HWCAP];
     if aux[AT_SYSINFO] != 0 {
-        rusl_internal::defsysinfo::__SYSINFO.store(aux[AT_SYSINFO], Ordering::Release);
+        crate::import::defsysinfo::__SYSINFO.store(aux[AT_SYSINFO], Ordering::Release);
     }
-    rusl_internal::libc::__libc.page_size = aux[AT_PAGESZ];
+    crate::import::libc::__libc.page_size = aux[AT_PAGESZ];
 
     // ---- 5. 设置程序名 ----
     let mut progname = pn;
@@ -245,13 +245,13 @@ pub unsafe extern "C" fn __init_libc(envp: *mut *mut c_char, pn: *const c_char) 
     if progname.is_null() {
         progname = c"".as_ptr();
     }
-    rusl_internal::libc::__progname_full = progname;
-    rusl_internal::libc::__progname = progname;
+    crate::import::libc::__progname_full = progname;
+    crate::import::libc::__progname = progname;
     // 查找 basename: 从后向前扫描最后一个 '/'
     let mut s: isize = 0;
     while *progname.offset(s) != 0 {
         if *progname.offset(s) as u8 == b'/' {
-            rusl_internal::libc::__progname = progname.offset(s + 1);
+            crate::import::libc::__progname = progname.offset(s + 1);
         }
         s += 1;
     }
@@ -310,7 +310,7 @@ pub unsafe extern "C" fn __init_libc(envp: *mut *mut c_char, pn: *const c_char) 
     };
 
     if r < 0 {
-        rusl_internal::atomic::a_crash();
+        crate::import::atomic::a_crash();
     }
 
     let dev_null = c"/dev/null".as_ptr();
@@ -318,12 +318,12 @@ pub unsafe extern "C" fn __init_libc(envp: *mut *mut c_char, pn: *const c_char) 
         if pfd[i].revents & POLLNVAL != 0 {
             // open /dev/null with O_RDWR — 返回最低可用 fd
             if raw_syscall3(SYS_open, dev_null as i64, O_RDWR, 0) < 0 {
-                rusl_internal::atomic::a_crash();
+                crate::import::atomic::a_crash();
             }
         }
     }
 
-    rusl_internal::libc::__libc.secure = 1;
+    crate::import::libc::__libc.secure = 1;
 }
 
 // ============================================================================
