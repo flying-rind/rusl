@@ -9,7 +9,7 @@
 //! ## 架构说明
 //!
 //! 系统调用采用 musl 风格的 `syscallN()` 宏模式：
-//! 1. 由 `rusl_core::syscall::raw_syscallN()` 发起原始系统调用
+//! 1. 由 `rusl_internal::syscall::raw_syscallN()` 发起原始系统调用
 //! 2. 通过 `rusl_internal::__syscall_ret()` 转换返回值为 libc 约定
 //!
 //! ## 支持的架构
@@ -99,9 +99,9 @@ pub(crate) const MAP_ANONYMOUS: c_int = 32;
 ///
 /// # 实现说明
 ///
-/// 在 rusl 中，此函数通过 `rusl_core::do_syscall!` 宏发起系统调用：
+/// 在 rusl 中，此函数通过 `crate::do_syscall!` 宏发起系统调用：
 /// ```ignore
-/// rusl_core::do_syscall!(SYS_MREMAP, old, old_len, new_len, flags)
+/// crate::do_syscall!(SYS_MREMAP, old, old_len, new_len, flags)
 /// ```
 /// 返回值经 `__syscall_ret` 转换：成功返回指针，失败设置 `errno`。
 pub(crate) unsafe fn sys_mremap(
@@ -110,7 +110,7 @@ pub(crate) unsafe fn sys_mremap(
     new_len: usize,
     flags: c_int,
 ) -> *mut c_void {
-    rusl_core::do_syscall!(SYS_MREMAP, old, old_len, new_len, flags, 0usize) as *mut c_void
+    crate::do_syscall!(SYS_MREMAP, old, old_len, new_len, flags, 0usize) as *mut c_void
 }
 
 /// 通过 `SYS_mmap` 创建新的虚拟内存映射。
@@ -144,7 +144,7 @@ pub(crate) unsafe fn sys_mmap(
     fd: c_int,
     off: i64,
 ) -> *mut c_void {
-    rusl_core::do_syscall!(SYS_MMAP, addr, len, prot, flags, fd, off) as *mut c_void
+    crate::do_syscall!(SYS_MMAP, addr, len, prot, flags, fd, off) as *mut c_void
 }
 
 /// 通过 `SYS_munmap` 解除虚拟内存映射。
@@ -167,7 +167,7 @@ pub(crate) unsafe fn sys_mmap(
 /// - **成功**: 返回 `0`
 /// - **失败**: 返回 `-1`，`errno` 由 `__syscall_ret` 自动设置
 pub(crate) unsafe fn sys_munmap(addr: *mut c_void, len: usize) -> c_int {
-    rusl_core::do_syscall!(SYS_MUNMAP, addr, len) as c_int
+    crate::do_syscall!(SYS_MUNMAP, addr, len) as c_int
 }
 
 // ---------------------------------------------------------------------------

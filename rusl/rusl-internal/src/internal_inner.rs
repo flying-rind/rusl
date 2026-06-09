@@ -24,9 +24,7 @@ pub mod lock;
 // 全局状态
 pub mod defsysinfo;
 
-// 系统调用返回转换 (对应 musl src/internal/syscall_ret.c)
-pub mod syscall_ret;
-// 系统调用宏 (对应 musl src/internal/syscall.h)
+// 系统调用宏 + 返回转换 (对应 musl src/internal/syscall.h + syscall_ret.c)
 pub mod syscall;
 
 // 辅助函数

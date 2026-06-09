@@ -4,7 +4,7 @@
 
 #![allow(dead_code)]  // infrastructure, used by later stages
 
-use crate::arch;
+use rusl_core::arch;
 
 /// Execute a raw syscall and return the kernel's raw result (no errno conversion).
 

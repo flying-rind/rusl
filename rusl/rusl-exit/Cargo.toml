@@ -10,11 +10,13 @@ doctest = false
 test = true
 
 [features]
-default = []
+default = ["rusl"]
 c-test = []
+rusl = ["dep:rusl-internal"]
 
 [dependencies]
 rusl-core = { path = "../rusl-core", features = ["rusl"] }
+rusl-internal = { path = "../rusl-internal", optional = true }
 
 [profile.dev]
 panic = "abort"

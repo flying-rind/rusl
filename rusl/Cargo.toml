@@ -15,6 +15,7 @@ members = [
     "rusl-stdio",
     "rusl-exit",
     "rusl-errno",
+    "rusl-syscall",
     "rusl-main",
 ]
 resolver = "2"

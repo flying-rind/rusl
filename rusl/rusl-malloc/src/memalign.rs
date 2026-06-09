@@ -186,7 +186,6 @@ mod tests {
 
     test!("test_memalign_returns_distinct_pointers" {
         // 验证多次分配返回不同地址（无重复）
-        unsafe {
             let p1 = memalign(16, 64);
             let p2 = memalign(16, 64);
             let p3 = memalign(16, 64);
@@ -195,7 +194,6 @@ mod tests {
                 assert_ne!(p2, p3, "两次分配应返回不同地址");
                 assert_ne!(p1, p3, "两次分配应返回不同地址");
             }
-        }
     });
 
     // ---- 参数校验: align 不是 2 的幂 ----
@@ -271,12 +269,10 @@ mod tests {
     test!("test_memalign_len_one_minimal_allocation" {
         // 最小的有效分配: len = 1，各种对齐
         for &align in &[1, 2, 4, 8, 16] {
-            unsafe {
                 let ptr = memalign(align, 1);
                 if !ptr.is_null() {
                     assert!(is_aligned_to(ptr, align));
                 }
-            }
         }
     });
 
@@ -285,7 +281,6 @@ mod tests {
     test!("test_memalign_alignment_guarantee_large_alignments" {
         // 测试较大的对齐值（页面对齐等常见场景）
         for &align in &[512, 1024, 2048, 4096, 8192, 16384] {
-            unsafe {
                 let ptr = memalign(align, align); // 分配大小等于对齐
                 if !ptr.is_null() {
                     assert!(
@@ -295,7 +290,6 @@ mod tests {
                         align
                     );
                 }
-            }
         }
     });
 
@@ -303,7 +297,6 @@ mod tests {
         // 对 2^0 到 2^12 的每个对齐值，验证返回地址满足对齐
         for exp in 0..=12usize {
             let align = 1usize << exp;
-            unsafe {
                 let ptr = memalign(align, 128);
                 if !ptr.is_null() {
                     let addr = ptr as usize;
@@ -317,7 +310,6 @@ mod tests {
                         addr % align
                     );
                 }
-            }
         }
     });
 
@@ -393,12 +385,10 @@ mod tests {
             (512, 2048),
         ];
         for &(align, len) in &alloc_params {
-            unsafe {
                 let ptr = memalign(align, len);
                 if !ptr.is_null() {
                     assert!(is_aligned_to(ptr, align));
                 }
-            }
         }
     });
 
@@ -409,12 +399,10 @@ mod tests {
         let align = 64;
         let sizes = [1, 2, 3, 7, 8, 15, 16, 31, 32, 63, 64, 127, 128, 255, 256, 511, 512, 1023, 1024];
         for &len in &sizes {
-            unsafe {
                 let ptr = memalign(align, len);
                 if !ptr.is_null() {
                     assert!(is_aligned_to(ptr, align));
                 }
-            }
         }
     });
 
@@ -482,10 +470,8 @@ mod tests {
     test!("test_memalign_static_linking_scenario" {
         // 在静态链接场景下，替换标志为 0，memalign 应正常工作
         // 此测试验证 memalign 在没有符号替换时的行为
-        unsafe {
             let ptr = memalign(64, 128);
             // 静态链接场景下应成功分配
             let _ = ptr;
-        }
     });
 }

@@ -21,9 +21,9 @@
 
 - 除了rusl-tester agent，所有agent不能修改任何集成测试代码
 
-- 单元测试和集成测试都使用test!宏，不能使用#[test]
+- rusl-*crate导出的接口皆为safe
 
-- **各crate禁止导出任何内部符号，导出的只有musl中用户可见的对外符号**
+- 单元测试和集成测试都使用test!宏，不能使用#[test]
 
 - **musl `__` 前缀符号必须同时导出**：musl 中 `__xxx` 是主实现，`xxx` 是其弱别名（如 `__strchrnul`/`strchrnul`、`__stpcpy`/`stpcpy`、`__memrchr`/`memrchr`）。musl 内部代码直接调用 `__` 版本，rusl 必须同时提供两者。
 

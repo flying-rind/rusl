@@ -15,6 +15,7 @@ use core::ffi::{c_int, c_void};
 use core::sync::atomic::{AtomicI32, Ordering};
 
 use super::dynlink::{__aligned_alloc_replaced, __malloc_replaced};
+// use crate::import::{__syscall1, __syscall4, __syscall3};
 
 // ============================================================================
 // 系统调用号常量 (按架构分派)
@@ -109,7 +110,7 @@ const INT_MIN: i32 = i32::MIN;
 ///
 /// 仅在 `alloc_meta()` 中被调用，用于扩展 meta_area 页面。
 pub(crate) unsafe fn brk(p: usize) -> usize {
-    rusl_core::syscall::raw_syscall1(SYS_BRK, p as i64) as usize
+    do_syscall!(SYS_BRK, p as i64) as usize
 }
 
 /// 内存映射系统调用封装。
@@ -144,7 +145,7 @@ pub(crate) unsafe fn mmap(
     fd: c_int,
     offset: i64,
 ) -> *mut c_void {
-    rusl_core::do_syscall!(SYS_MMAP, addr, length, prot, flags, fd, offset) as *mut c_void
+    crate::do_syscall!(SYS_MMAP, addr, length, prot, flags, fd, offset) as *mut c_void
 }
 
 /// 内存建议系统调用封装。
@@ -169,7 +170,7 @@ pub(crate) unsafe fn mmap(
 /// - `length` 必须 > 0
 /// - 参数语义与 POSIX `madvise` 一致
 pub(crate) unsafe fn madvise(addr: *mut c_void, length: usize, advice: c_int) -> c_int {
-    rusl_core::do_syscall!(SYS_MADVISE, addr, length, advice) as c_int
+    crate::do_syscall!(SYS_MADVISE, addr, length, advice) as c_int
 }
 
 /// 内存重映射系统调用封装（Linux 特定）。
@@ -203,7 +204,7 @@ pub(crate) unsafe fn mremap(
     flags: c_int,
     new_addr: *mut c_void,
 ) -> *mut c_void {
-    rusl_core::do_syscall!(SYS_MREMAP, old_addr, old_len, new_len, flags, new_addr) as *mut c_void
+    crate::do_syscall!(SYS_MREMAP, old_addr, old_len, new_len, flags, new_addr) as *mut c_void
 }
 
 /// 解除内存映射系统调用封装。
@@ -227,7 +228,7 @@ pub(crate) unsafe fn mremap(
 /// - 调用后不得再访问已解除映射的区域（否则触发 SIGSEGV）
 /// - 参数语义与 POSIX `munmap` 一致
 pub(crate) unsafe fn munmap(addr: *mut c_void, length: usize) -> c_int {
-    rusl_core::do_syscall!(SYS_MUNMAP, addr, length) as c_int
+    crate::do_syscall!(SYS_MUNMAP, addr, length) as c_int
 }
 
 /// 内存保护系统调用封装。
@@ -253,7 +254,7 @@ pub(crate) unsafe fn munmap(addr: *mut c_void, length: usize) -> c_int {
 /// - 设置 PROT_NONE 后访问该区域将触发 SIGSEGV（这是预期行为，用于守卫页）
 /// - 参数语义与 POSIX `mprotect` 一致
 pub(crate) unsafe fn mprotect(addr: *mut c_void, length: usize, prot: c_int) -> c_int {
-    rusl_core::do_syscall!(SYS_MPROTECT, addr, length, prot) as c_int
+    crate::do_syscall!(SYS_MPROTECT, addr, length, prot) as c_int
 }
 
 // ============================================================================
@@ -476,18 +477,11 @@ pub(crate) fn is_mt() -> bool {
 
 /// is_mt 的内部实现，通过 cfg 处理测试/生产模式的差异。
 /// 在测试模式或集成测试模式下，始终返回 false（假定单线程）。
-#[cfg(not(test))]
 fn is_mt_inner() -> bool {
     // Safety: __libc 为 static mut，但 need_locks 仅在启动阶段写入，
     // 之后为只读访问，且 i8 读取在支持的平台上是原子操作。
     use crate::import::__libc;
     unsafe { __libc.need_locks != 0 }
-}
-
-#[cfg(test)]
-fn is_mt_inner() -> bool {
-    // 在单元测试或集成测试环境中，假设单线程模式，跳过所有锁操作。
-    false
 }
 
 // ============================================================================
@@ -540,6 +534,7 @@ macro_rules! malloc_assert {
 }
 
 pub(crate) use malloc_assert;
+use rusl_internal::do_syscall;
 
 // ============================================================================
 // futex 辅助函数 (MallocLock 的底层阻塞原语)
@@ -555,12 +550,12 @@ pub(crate) use malloc_assert;
 /// - `addr` 必须指向一个有效的 `AtomicI32`
 /// - 调用环境必须能安全陷入内核（即不在信号处理上下文中持有锁时调用）
 unsafe fn futex_wait(addr: *const AtomicI32, val: i32) {
-    rusl_core::syscall::raw_syscall4(
+    do_syscall!(
         SYS_FUTEX,
         addr as i64,
         (FUTEX_WAIT | FUTEX_PRIVATE) as i64,
         val as i64,
-        0, // timeout = NULL (无限等待)
+        0 // timeout = NULL (无限等待)
     );
 }
 
@@ -570,11 +565,11 @@ unsafe fn futex_wait(addr: *const AtomicI32, val: i32) {
 ///
 /// - `addr` 必须指向一个有效的 `AtomicI32`
 unsafe fn futex_wake(addr: *const AtomicI32, cnt: i32) {
-    rusl_core::syscall::raw_syscall3(
+    do_syscall!(
         SYS_FUTEX,
         addr as i64,
         (FUTEX_WAKE | FUTEX_PRIVATE) as i64,
-        cnt as i64,
+        cnt as i64
     );
 }
 
@@ -915,7 +910,7 @@ const AT_RANDOM: usize = 25;
 ///
 /// 遍历 auxv 查找 AT_RANDOM 条目，读取内核提供的 16 字节随机种子的高 8 字节。
 /// 若未找到 AT_RANDOM（例如 auxv 未初始化），回退到栈地址熵源。
-#[cfg(not(any(test, feature = "c-test")))]
+#[cfg(not(test))]
 fn get_kernel_random_secret(stack_secret: u64) -> u64 {
     use crate::import::__libc;
     // Safety: __libc.auxv 在进程启动时由 crt 初始化，之后只读。
@@ -946,7 +941,7 @@ fn get_kernel_random_secret(stack_secret: u64) -> u64 {
 }
 
 /// 测试模式/集成测试下的随机密钥生成: 仅使用栈地址熵源。
-#[cfg(any(test, feature = "c-test"))]
+#[cfg(test)]
 fn get_kernel_random_secret(stack_secret: u64) -> u64 {
     // 测试模式下 crate::libc 不可用，仅使用栈地址作为熵源。
     stack_secret

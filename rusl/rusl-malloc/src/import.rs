@@ -1,5 +1,5 @@
 //! 声明所有依赖其他模块的接口
-//! 
+//!
 //! 当不开启rusl feature时，使用musl的C接口
 
 
@@ -57,18 +57,35 @@ mod internal {
         pub page_size: size_t,
         pub global_locale: __locale_struct,
     }
-    
+
     extern "C" {
         pub static mut __libc: __libc;
     }
+    pub use rusl_syscall::do_syscall;
+    pub use rusl_syscall::__syscall1;
+    pub use rusl_syscall::__syscall4;
+    pub use rusl_syscall::__syscall3;
 }
 
 #[cfg(not(feature = "rusl"))]
-pub use crate::import::{string::memset, internal::__libc};
+mod errno {
+    use core::ffi::c_int;
+    extern "C" {
+        #[link_name = "__errno_location"]
+        fn musl_errno_location() -> *mut c_int;
+    }
 
-pub use rusl_core::errno::__errno_location;
+    pub extern "C" fn __errno_location() -> *mut c_int { unsafe { musl_errno_location() } }
+}
+
+#[cfg(not(feature = "rusl"))]
+pub use crate::import::{string::memset,  errno::__errno_location, internal::{do_syscall, __syscall1,__syscall3, __syscall4, __libc}};
+
+#[cfg(feature = "rusl")]
+pub use rusl_internal::do_syscall;
+#[cfg(feature = "rusl")]
+pub use rusl_errno::__errno_location;
 #[cfg(feature = "rusl")]
 pub use rusl_string::memset;
 #[cfg(feature = "rusl")]
-#[allow(unused)]
 pub use rusl_internal::libc::__libc;

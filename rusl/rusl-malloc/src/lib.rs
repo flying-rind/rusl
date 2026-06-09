@@ -14,6 +14,9 @@ extern crate rusl_core;
 pub mod allocator;
 pub(crate) mod import;
 
+// do_syscall! 在 crate 根可用 (根据 rusl feature 选择来源)
+pub use crate::import::do_syscall;
+
 #[path = "malloc_inner.rs"]
 pub(crate) mod malloc_inner;
 

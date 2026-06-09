@@ -941,42 +941,33 @@ mod tests {
     test!("test_malloc_zero" {
         // n == 0: musl 选择返回有效指针 (最小尺寸分配) 而非 null，
         //         C 标准规定此行为是实现定义的
-        unsafe {
             let p = malloc(0);
             // musl 实现返回非空指针（最小分配单元）
             // 注: C 标准允许 malloc(0) 返回 null，musl 不采纳该行为
             let _ = p;
-        }
     });
 
     test!("test_malloc_small" {
         // 小分配 (16 字节) 应走快速路径
-        unsafe {
             let p = malloc(16);
             assert!(!p.is_null(), "malloc(16) 应返回非空指针");
             assert_eq!((p as usize) & 15, 0, "malloc 返回的指针必须 16 字节对齐");
-        }
     });
 
     test!("test_malloc_large" {
         // 大分配 (>= MMAP_THRESHOLD) 应走 mmap 路径
-        unsafe {
             let p = malloc(MMAP_THRESHOLD);
             assert!(!p.is_null(), "malloc(MMAP_THRESHOLD) 应返回非空指针");
-        }
     });
 
     test!("test_malloc_huge" {
         // 超大分配应走 mmap 路径
-        unsafe {
             let p = malloc(1024 * 1024); // 1 MiB
             assert!(!p.is_null(), "malloc(1MiB) 应返回非空指针");
-        }
     });
 
     test!("test_malloc_near_overflow" {
         // 接近但未到达溢出边界的分配 — 应返回 null (ENOMEM)
-        unsafe {
             let boundary = usize::MAX / 2 - 4097;
             let p = malloc(boundary);
             // 该分配不可能成功（超过可用地址空间），应返回 null
@@ -984,7 +975,6 @@ mod tests {
                 // 如果内核奇迹般地给了我们内存…（测试环境不会发生）
                 let _ = p;
             }
-        }
     });
 
     test!("test_alloc_slot_with_valid_sc" {
@@ -1025,11 +1015,9 @@ mod tests {
 
     test!("test_malloc_alignment" {
         // malloc 返回的指针必须 16 字节对齐
-        unsafe {
             let p = malloc(1);
             assert!(!p.is_null(), "malloc(1) 应返回非空指针");
             assert_eq!((p as usize) & 15, 0, "malloc 返回的指针必须 16 字节对齐");
-        }
     });
 
     test!("test_malloc_different_sizes" {
@@ -1037,13 +1025,11 @@ mod tests {
         let sizes = [1, 2, 4, 7, 8, 15, 16, 31, 32, 64, 127, 128, 255, 256, 511, 512,
                      1023, 1024, 2047, 2048, 4095, 4096, 8191, 8192, 16383, 16384,
                      65535, 65536, MMAP_THRESHOLD - 1, MMAP_THRESHOLD];
-        unsafe {
             for &n in &sizes {
                 let p = malloc(n);
                 assert!(!p.is_null(), "malloc({}) 应返回非空指针", n);
                 assert_eq!((p as usize) & 15, 0, "malloc({}) 返回的指针必须 16 字节对齐", n);
             }
-        }
     });
 
     // ---------------------------------------------------------------------------

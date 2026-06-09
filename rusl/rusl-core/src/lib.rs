@@ -1,9 +1,6 @@
 //! # rusl-core
 //!
-//! `#![no_std]` 共享基础设施: C 类型定义, 测试框架, 系统调用封装, errno 处理。
-//! 应当包含musl/src/internal/syscall.h, musl/src/errno/
-//!
-//! ```
+//! `#![no_std]` 共享基础设施: C 类型定义, 测试框架, 架构相关原语。
 
 #![no_std]
 #![allow(non_camel_case_types)]
@@ -52,12 +49,9 @@ pub extern "C" fn _start(_argc: i32, _argv: *const *const u8) -> i32 {
 
 pub mod c_types;
 pub mod arch;
-pub mod syscall;
-pub mod errno;
 
 pub use c_types::*;
 pub use arch::*;
-pub use syscall::*;
 
 
 // ---------------------------------------------------------------------------

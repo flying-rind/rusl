@@ -9,7 +9,7 @@
 //! `pub(crate)` — 仅在 rusl crate 内部使用。
 
 use core::ffi::{c_int, c_uint, c_ulonglong};
-use rusl_core::errno::__errno_location;
+use rusl_errno::__errno_location;
 
 /// 内部 FILE 类型的占位符声明。
 ///

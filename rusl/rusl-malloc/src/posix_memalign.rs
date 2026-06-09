@@ -259,7 +259,6 @@ mod tests {
     test!("test_einval_when_align_equals_zero" {
         // posix_memalign 自身检测 align < sizeof(void*)，直接返回 EINVAL。
         // 此路径不依赖 aligned_alloc_inner，可以在骨架阶段测试。
-        unsafe {
             let mut mem: *mut c_void = core::ptr::null_mut();
             let ret = posix_memalign(
                 &mut mem as *mut *mut c_void,
@@ -269,12 +268,10 @@ mod tests {
             assert_eq!(ret, EINVAL, "align=0 应返回 EINVAL");
             // 失败时 *res 保持不变
             assert!(mem.is_null(), "失败时 *res 应保持不变 (保持 null)");
-        }
     });
 
     test!("test_einval_when_align_equals_one" {
         // align=1 远小于指针宽度，应返回 EINVAL。
-        unsafe {
             let mut mem: *mut c_void = core::ptr::null_mut();
             let ret = posix_memalign(
                 &mut mem as *mut *mut c_void,
@@ -283,13 +280,11 @@ mod tests {
             );
             assert_eq!(ret, EINVAL, "align=1 应返回 EINVAL");
             assert!(mem.is_null());
-        }
     });
 
     test!("test_einval_when_align_less_than_ptr_size" {
         // 在 64 位平台上 align=4 < 8，应返回 EINVAL；在 32 位平台上则通过。
         let small_align = (PTR_SIZE / 2) as c_ulong;
-        unsafe {
             let mut mem: *mut c_void = core::ptr::null_mut();
             let ret = posix_memalign(
                 &mut mem as *mut *mut c_void,
@@ -303,14 +298,12 @@ mod tests {
                 assert_eq!(ret, EINVAL);
             }
             assert!(mem.is_null(), "失败时 *res 应保持不变");
-        }
     });
 
     test!("test_passes_when_align_equals_ptr_size" {
         // align 刚好等于 sizeof(void*) 时，快速路径放行，进入 aligned_alloc_inner。
         // 注意：在骨架阶段，aligned_alloc_inner 内部为 todo!()，此测试会 panic。
         // 待 aligned_alloc_inner 实现后启用。
-        unsafe {
             let mut mem: *mut c_void = core::ptr::null_mut();
             let ret = posix_memalign(
                 &mut mem as *mut *mut c_void,
@@ -330,7 +323,6 @@ mod tests {
             );
             // 清理
             // TODO: 调用 free(mem) 释放
-        }
     });
 
     // ===================================================================
@@ -339,18 +331,15 @@ mod tests {
 
     test!("test_success_align_16_len_128" {
         // 正常参数：align = 16, len = 128，期望分配成功。
-        unsafe {
             let mut mem: *mut c_void = core::ptr::null_mut();
             let ret = posix_memalign(&mut mem as *mut *mut c_void, 16, 128);
             assert_eq!(ret, 0);
             assert!(!mem.is_null());
             assert!(is_aligned_to(mem, 16));
-        }
     });
 
     test!("test_success_min_valid_params" {
         // 最小非零对齐 + 最小非零长度的成功分配。
-        unsafe {
             let mut mem: *mut c_void = core::ptr::null_mut();
             let ret = posix_memalign(
                 &mut mem as *mut *mut c_void,
@@ -360,24 +349,20 @@ mod tests {
             assert_eq!(ret, 0);
             assert!(!mem.is_null());
             assert!(is_aligned_to(mem, PTR_SIZE));
-        }
     });
 
     test!("test_success_page_align" {
         // 大对齐（页对齐 4096）成功分配。
-        unsafe {
             let mut mem: *mut c_void = core::ptr::null_mut();
             let ret = posix_memalign(&mut mem as *mut *mut c_void, 4096, 8192);
             assert_eq!(ret, 0);
             assert!(!mem.is_null());
             assert!(is_aligned_to(mem, 4096));
-        }
     });
 
     test!("test_success_huge_align" {
         // 巨大对齐值（2^20 = 1MB），成功分配。
         let huge_align = 1 << 20; // 1048576
-        unsafe {
             let mut mem: *mut c_void = core::ptr::null_mut();
             let ret = posix_memalign(
                 &mut mem as *mut *mut c_void,
@@ -387,12 +372,10 @@ mod tests {
             assert_eq!(ret, 0);
             assert!(!mem.is_null());
             assert!(is_aligned_to(mem, huge_align));
-        }
     });
 
     test!("test_multiple_allocations" {
         // 连续多次分配验证无泄漏和独立性。
-        unsafe {
             let mut ptrs: [*mut c_void; 4] = [core::ptr::null_mut(); 4];
             for i in 0..4 {
                 let mut p: *mut c_void = core::ptr::null_mut();
@@ -407,7 +390,6 @@ mod tests {
                 ptrs[i] = p;
             }
             // TODO: free all
-        }
     });
 
     // ===================================================================
@@ -422,7 +404,6 @@ mod tests {
             if align < PTR_SIZE {
                 continue;
             }
-            unsafe {
                 let mut mem: *mut c_void = core::ptr::null_mut();
                 let ret = posix_memalign(
                     &mut mem as *mut *mut c_void,
@@ -437,7 +418,6 @@ mod tests {
                     mem as usize,
                     align
                 );
-            }
         }
     });
 
@@ -454,7 +434,6 @@ mod tests {
             if align <= PTR_SIZE {
                 continue;
             }
-            unsafe {
                 let mut mem: *mut c_void = core::ptr::null_mut();
                 let ret = posix_memalign(
                     &mut mem as *mut *mut c_void,
@@ -468,7 +447,6 @@ mod tests {
                     align
                 );
                 assert!(mem.is_null(), "失败时 *res 应保持不变");
-            }
         }
     });
 
@@ -478,12 +456,10 @@ mod tests {
         if PTR_SIZE < 4 {
             return; // 32 位平台 PTR_SIZE==4，PS:3<4 被快速路径拦截
         }
-        unsafe {
             let mut mem: *mut c_void = core::ptr::null_mut();
             let ret = posix_memalign(&mut mem as *mut *mut c_void, 3, 64);
             assert_eq!(ret, EINVAL, "align=3 (非 2 的幂且 >= sizeof(void*)) 应返回 EINVAL");
             assert!(mem.is_null());
-        }
     });
 
     // ===================================================================
@@ -492,7 +468,6 @@ mod tests {
 
     test!("test_enomem_len_zero" {
         // len == 0：POSIX 标准规定行为是实现定义的，当前实现遵循 malloc(0) 行为返回有效指针。
-        unsafe {
             let mut mem: *mut c_void = core::ptr::null_mut();
             let ret = posix_memalign(
                 &mut mem as *mut *mut c_void,
@@ -501,14 +476,12 @@ mod tests {
             );
             assert_eq!(ret, ENOMEM, "len=0 应返回 ENOMEM (musl 行为)");
             assert!(mem.is_null(), "失败时 *res 应保持不变");
-        }
     });
 
     test!("test_enomem_huge_allocation" {
         // 请求分配巨大的内存，期望 ENOMEM。
         // 请求接近 usize::MAX 的大小
         let huge_len = usize::MAX - 4096;
-        unsafe {
             let mut mem: *mut c_void = core::ptr::null_mut();
             let ret = posix_memalign(
                 &mut mem as *mut *mut c_void,
@@ -517,14 +490,12 @@ mod tests {
             );
             assert_eq!(ret, ENOMEM, "巨大分配应返回 ENOMEM");
             assert!(mem.is_null());
-        }
     });
 
     test!("test_enomem_len_overflow" {
         // len 溢出：len > SIZE_MAX - align 时内部检测溢出。
         // 这里构造 (align + len) 溢出的情况。
         // align=16, len=usize::MAX 应触发溢出检查
-        unsafe {
             let mut mem: *mut c_void = core::ptr::null_mut();
             let ret = posix_memalign(
                 &mut mem as *mut *mut c_void,
@@ -533,12 +504,10 @@ mod tests {
             );
             assert_eq!(ret, ENOMEM, "溢出 len 应返回 ENOMEM");
             assert!(mem.is_null());
-        }
     });
 
     test!("test_enomem_memory_exhaustion" {
         // 尝试耗尽虚拟地址空间 — 请求远超实际可用内存的大小触发 ENOMEM。
-        unsafe {
             let mut mem: *mut c_void = core::ptr::null_mut();
             // 请求 1 TiB 的分配, 反复泄漏直到 mmap 无法满足
             let mut found_enomem = false;
@@ -556,7 +525,6 @@ mod tests {
                 assert_eq!(ret, 0);
             }
             assert!(found_enomem, "应最终返回 ENOMEM");
-        }
     });
 
     // ===================================================================
@@ -567,7 +535,6 @@ mod tests {
         // 失败时 *res 不应被修改。此测试将 *res 置为一个哨兵值，
         // 验证失败返回后值不变。
         let sentinel = 0xDEAD_BEEF_usize as *mut c_void;
-        unsafe {
             let mut mem: *mut c_void = sentinel;
             let ret = posix_memalign(&mut mem as *mut *mut c_void, 0, 64);
             assert_eq!(ret, EINVAL);
@@ -576,14 +543,12 @@ mod tests {
                 "失败时 *res 应保持调用前的值 {:#x}，实际 {:#x}",
                 sentinel as usize, mem as usize
             );
-        }
     });
 
     test!("test_res_unchanged_on_enomem_len_zero" {
         // 传入有效 align 但 len == 0 时，失败后 *res 不变。
         // 注意：当前实现中 len=0 返回成功，不触发 ENOMEM 路径。
         let sentinel = 0xBEEF_0001_usize as *mut c_void;
-        unsafe {
             let mut mem: *mut c_void = sentinel;
             let ret = posix_memalign(
                 &mut mem as *mut *mut c_void,
@@ -592,19 +557,16 @@ mod tests {
             );
             assert_eq!(ret, ENOMEM);
             assert_eq!(mem, sentinel, "ENOMEM 时 *res 应保持调用前的值");
-        }
     });
 
     test!("test_res_unchanged_on_einval_bad_align" {
         // align 为非 2 的幂时失败后 *res 保持不变。
         let sentinel = 0xCAFE_F00D_usize as *mut c_void;
-        unsafe {
             let mut mem: *mut c_void = sentinel;
             // align=12（>= sizeof(void*) 但非 2 的幂）
             let ret = posix_memalign(&mut mem as *mut *mut c_void, 12, 64);
             assert_eq!(ret, EINVAL);
             assert_eq!(mem, sentinel, "EINVAL 时 *res 应保持调用前的值");
-        }
     });
 
     // ===================================================================
@@ -614,7 +576,6 @@ mod tests {
     test!("test_return_value_is_valid_error_code" {
         // 返回值只能是 0、EINVAL、ENOMEM 之一。
         let valid_codes: [c_int; 3] = [0, EINVAL, ENOMEM];
-        unsafe {
             // Case: align=0 → EINVAL
             {
                 let mut mem: *mut c_void = core::ptr::null_mut();
@@ -633,7 +594,6 @@ mod tests {
                 let ret = posix_memalign(&mut mem as *mut *mut c_void, 1, 1);
                 assert!(valid_codes.contains(&ret));
             }
-        }
     });
 
     // ===================================================================
@@ -752,7 +712,6 @@ mod tests {
     test!("test_success_align_power_of_two_large" {
         // align 恰好为 2 的很大幂（如 2^30），成功分配。
         let align = 1usize << 25; // 32 MB alignment
-        unsafe {
             // 注意：这样的大对齐通常需要 mmap，仅在支持 hugepage 的系统上
             // 或通过 musl 的 mmap 分配路径处理
             let mut mem: *mut c_void = core::ptr::null_mut();
@@ -772,7 +731,6 @@ mod tests {
                     "返回值应为 EINVAL 或 ENOMEM"
                 );
             }
-        }
     });
 
     test!("test_align_max_value" {
@@ -790,7 +748,6 @@ mod tests {
 
     test!("test_len_max_value" {
         // len 为 c_ulong::MAX 时的行为。
-        unsafe {
             let mut mem: *mut c_void = core::ptr::null_mut();
             let ret = posix_memalign(
                 &mut mem as *mut *mut c_void,
@@ -799,7 +756,6 @@ mod tests {
             );
             assert_eq!(ret, ENOMEM, "c_ulong::MAX 长度应返回 ENOMEM");
             assert!(mem.is_null());
-        }
     });
 
     // ===================================================================
@@ -841,7 +797,6 @@ mod tests {
         // 快速路径: align < PTR_SIZE → EINVAL
         // PTR_SIZE 可能是 4 或 8
         let just_below = (PTR_SIZE - 1) as c_ulong;
-        unsafe {
             let mut mem: *mut c_void = core::ptr::null_mut();
             let ret = posix_memalign(
                 &mut mem as *mut *mut c_void,
@@ -850,35 +805,30 @@ mod tests {
             );
             // 由于 just_below < PTR_SIZE，快速路径应返回 EINVAL
             assert_eq!(ret, EINVAL, "align < sizeof(void*) 应返回 EINVAL");
-        }
     });
 
-    
+
     #[cfg(target_pointer_width = "64")]
     test!("test_64bit_specific_align_4_is_einval" {
         // 在 64 位平台上 align=4 < 8 应返回 EINVAL。
         // 在 32 位平台上 align=4 == sizeof(void*) 应通过快速路径。
         // 64 位: sizeof(void*) = 8
         assert_eq!(PTR_SIZE, 8);
-        unsafe {
             let mut mem: *mut c_void = core::ptr::null_mut();
             let ret = posix_memalign(&mut mem as *mut *mut c_void, 4, 64);
             assert_eq!(ret, EINVAL, "64-bit: align=4 < sizeof(void*)=8 → EINVAL");
             assert!(mem.is_null());
-        }
     });
 
     /// 在 32 位平台上 align=4 == sizeof(void*) 应通过。
     #[cfg(target_pointer_width = "32")]
     test!("test_32bit_specific_align_4_is_valid" {
         assert_eq!(PTR_SIZE, 4);
-        unsafe {
             let mut mem: *mut c_void = core::ptr::null_mut();
             let ret = posix_memalign(&mut mem as *mut *mut c_void, 4, 64);
             // 32-bit: align=4 == sizeof(void*) 应通过快速路径
             assert_eq!(ret, 0);
             assert!(!mem.is_null());
             assert!(is_aligned_to(mem, 4));
-        }
     });
 }

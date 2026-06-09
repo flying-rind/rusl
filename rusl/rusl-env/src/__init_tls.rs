@@ -320,8 +320,8 @@ const fn align_down(val: usize, align: usize) -> usize {
 #[cfg(target_arch = "x86_64")]
 unsafe fn arch_prctl_set_fs(addr: *mut c_void) -> c_int {
     const ARCH_SET_FS: i64 = 0x1002;
-    use rusl_core::syscall::raw_syscall2;
-    use rusl_core::syscall::SYS_arch_prctl;
+    use rusl_internal::syscall::raw_syscall2;
+    use rusl_internal::syscall::SYS_arch_prctl;
     raw_syscall2(SYS_arch_prctl, ARCH_SET_FS, addr as i64) as c_int
 }
 
@@ -338,8 +338,8 @@ unsafe fn set_thread_area_impl(p: *mut c_void) -> c_int {
 /// 向内核注册一个地址，当线程退出时内核将原子性地
 /// 将该地址清零并执行 `futex(FUTEX_WAKE)`。
 unsafe fn syscall_set_tid_address(ptr: *const c_int) -> i64 {
-    use rusl_core::syscall::raw_syscall1;
-    use rusl_core::syscall::SYS_set_tid_address;
+    use rusl_internal::syscall::raw_syscall1;
+    use rusl_internal::syscall::SYS_set_tid_address;
     raw_syscall1(SYS_set_tid_address, ptr as i64)
 }
 
@@ -348,8 +348,8 @@ unsafe fn syscall_set_tid_address(ptr: *const c_int) -> i64 {
 /// 等同于 C 的 `mmap(0, len, PROT_READ|PROT_WRITE, MAP_ANONYMOUS|MAP_PRIVATE, -1, 0)`。
 /// 返回映射区域的起始地址；失败时返回负值的 `errno`。
 unsafe fn mmap_anon(len: usize) -> *mut c_void {
-    use rusl_core::syscall::raw_syscall6;
-    use rusl_core::syscall::SYS_mmap;
+    use rusl_internal::syscall::raw_syscall6;
+    use rusl_internal::syscall::SYS_mmap;
     let ret = raw_syscall6(
         SYS_mmap,
         0,
@@ -746,7 +746,7 @@ pub(crate) fn init_tls(aux: *mut usize) {
         // 通过 SYS_exit_group(127) 立即终止进程，避免在 TLS 未初始化时
         // 进入可能依赖 TLS 的 panic 路径。
         unsafe {
-            rusl_core::syscall::raw_syscall1(rusl_core::syscall::SYS_exit_group, 127);
+            rusl_internal::syscall::raw_syscall1(rusl_internal::syscall::SYS_exit_group, 127);
             // 若 exit_group 失败，进入无限自旋作为最后兜底
             loop {
                 core::hint::spin_loop();

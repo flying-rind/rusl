@@ -13,7 +13,7 @@ test = true
 default = ["rusl"]
 c-test = []
 # 开启时依赖各rusl crate,否则使用musl C接口
-rusl = ["dep:rusl-malloc", "dep:rusl-string", "dep:rusl-stdlib", "dep:rusl-ctype", "dep:rusl-internal", "dep:rusl-env"]
+rusl = ["dep:rusl-malloc", "dep:rusl-string", "dep:rusl-stdlib", "dep:rusl-ctype", "dep:rusl-internal", "dep:rusl-env", "dep:rusl-errno"]
 
 [dependencies]
 rusl-core = { path = "../rusl-core", features = ["rusl"] }
@@ -23,6 +23,7 @@ rusl-ctype = { path = "../rusl-ctype", optional = true }
 rusl-internal = { path = "../rusl-internal", optional = true }
 rusl-malloc = { path = "../rusl-malloc", optional = true}
 rusl-env = { path = "../rusl-env", optional = true }
+rusl-errno = { path = "../rusl-errno", optional = true }
 
 [profile.dev]
 panic = "abort"

@@ -25,7 +25,7 @@ use core::sync::atomic::Ordering;
 /// - `addr` 是有效/合理的地址（内核会校验但不是所有内核版本都会妥善处理不合理的值）
 #[inline]
 pub(crate) unsafe fn sys_brk(addr: usize) -> usize {
-    rusl_core::do_syscall!(SYS_BRK as i64, addr) as usize
+    crate::do_syscall!(SYS_BRK as i64, addr) as usize
 }
 
 /// 发起 mmap 系统调用，创建内存映射。
@@ -59,13 +59,13 @@ pub(crate) unsafe fn sys_mmap(
     fd: c_int,
     offset: isize,
 ) -> *mut c_void {
-    rusl_core::do_syscall!(SYS_MMAP as i64, addr, len, prot, flags, fd, offset) as *mut c_void
+    crate::do_syscall!(SYS_MMAP as i64, addr, len, prot, flags, fd, offset) as *mut c_void
 }
 
 /// 发起 munmap 系统调用，解除内存映射。
 #[inline]
 pub(crate) unsafe fn sys_munmap(addr: *mut c_void, len: usize) -> c_int {
-    rusl_core::do_syscall!(SYS_MUNMAP as i64, addr, len) as c_int
+    crate::do_syscall!(SYS_MUNMAP as i64, addr, len) as c_int
 }
 
 // ===========================================================================

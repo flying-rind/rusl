@@ -14,12 +14,12 @@ use core::ffi::c_int;
 pub extern "C" fn abort() -> ! {
     // SAFETY: 系统调用不涉及内存安全
     unsafe {
-        let pid = rusl_core::syscall::raw_syscall0(rusl_core::syscall::SYS_getpid);
+        let pid = rusl_internal::syscall::raw_syscall0(rusl_internal::syscall::SYS_getpid);
         // SYS_kill(pid, SIGABRT=6): 向当前进程发送 SIGABRT
-        rusl_core::syscall::raw_syscall2(rusl_core::syscall::SYS_kill, pid, 6);
+        rusl_internal::syscall::raw_syscall2(rusl_internal::syscall::SYS_kill, pid, 6);
 
         // 若 SIGABRT 被用户处理器捕获且返回，或被忽略，强制终止
-        rusl_core::syscall::raw_syscall1(rusl_core::syscall::SYS_exit_group, 127);
+        rusl_internal::syscall::raw_syscall1(rusl_internal::syscall::SYS_exit_group, 127);
     }
 
     // 保险: 死循环 + 段错误确保绝不返回

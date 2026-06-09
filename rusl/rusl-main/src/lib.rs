@@ -47,7 +47,7 @@ extern crate alloc;
 pub use rusl_errno::{__errno_location, ___errno_location, set_errno, EINVAL};
 // syscall
 #[cfg(feature = "rusl")]
-pub use rusl_core::syscall::*;
+pub use rusl_internal::syscall::*;
 
 #[cfg(feature = "rusl")]
 pub use rusl_string::*;

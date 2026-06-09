@@ -987,121 +987,97 @@ mod tests {
 
         test!("test_basic_calloc" {
         // 测试 1: 基本分配 —— 分配 10 个 u32 元素。
-            unsafe {
-                let p = calloc(10, core::mem::size_of::<u32>());
-                // assert!(!p.is_null(), "公共 calloc 应成功分配");
-                let _ = p;
-            }
+            let p = calloc(10, core::mem::size_of::<u32>());
+            // assert!(!p.is_null(), "公共 calloc 应成功分配");
+            let _ = p;
         });
 
         test!("test_single_byte" {
         // 测试 2: 单字节分配 —— calloc(1, 1)。
-            unsafe {
-                let p = calloc(1, 1);
-                // assert!(!p.is_null());
-                // assert_eq!(*(p as *const u8), 0, "单字节应为零");
-                let _ = p;
-            }
+            let p = calloc(1, 1);
+            // assert!(!p.is_null());
+            // assert_eq!(*(p as *const u8), 0, "单字节应为零");
+            let _ = p;
         });
 
         test!("test_large_allocation" {
         // 测试 3: 大块分配 —— 1024 字节。
-            unsafe {
-                let p = calloc(1, 1024);
-                // assert!(!p.is_null());
-                let _ = p;
-            }
+            let p = calloc(1, 1024);
+            // assert!(!p.is_null());
+            let _ = p;
         });
 
         test!("test_zero_count" {
         // 测试 4: 零计数 —— m=0, n=1。
-            unsafe {
-                let p = calloc(0, 1);
-                let _ = p;
-            }
+            let p = calloc(0, 1);
+            let _ = p;
         });
 
         test!("test_zero_size_public" {
         // 测试 5: 零大小 —— m=1, n=0。
-            unsafe {
-                let p = calloc(1, 0);
-                let _ = p;
-            }
+            let p = calloc(1, 0);
+            let _ = p;
         });
 
         test!("test_both_zero_public" {
         // 测试 6: 双零 —— m=0, n=0。
-            unsafe {
-                let p = calloc(0, 0);
-                let _ = p;
-            }
+            let p = calloc(0, 0);
+            let _ = p;
         });
 
         test!("test_overflow_max_times_two" {
         // 测试 7: 溢出检测 —— calloc(usize::MAX, 2)。
-            unsafe {
-                let p = calloc(usize::MAX, 2);
-                // assert!(p.is_null(), "溢出时应返回 NULL");
-                // errno 应设为 ENOMEM
-                let _ = p;
-            }
+            let p = calloc(usize::MAX, 2);
+            // assert!(p.is_null(), "溢出时应返回 NULL");
+            // errno 应设为 ENOMEM
+            let _ = p;
         });
 
         test!("test_overflow_both_max" {
         // 测试 8: 溢出检测 —— calloc(usize::MAX, usize::MAX)。
-            unsafe {
-                let p = calloc(usize::MAX, usize::MAX);
-                // assert!(p.is_null());
-                let _ = p;
-            }
+            let p = calloc(usize::MAX, usize::MAX);
+            // assert!(p.is_null());
+            let _ = p;
         });
 
         test!("test_no_overflow_max_times_one" {
         // 测试 9: 非溢出边界 —— calloc(usize::MAX, 1)。
-            unsafe {
-                let p = calloc(usize::MAX, 1);
-                // 不溢出，但分配注定失败
-                // assert!(p.is_null()); // 分配失败，非溢出
-                let _ = p;
-            }
+            let p = calloc(usize::MAX, 1);
+            // 不溢出，但分配注定失败
+            // assert!(p.is_null()); // 分配失败，非溢出
+            let _ = p;
         });
 
         test!("test_zero_initialization" {
         // 测试 10: 返回内存应为全零。
-            unsafe {
-                let p = calloc(64, 1);
-                // 实现后验证：
-                // assert!(!p.is_null());
-                // let slice = core::slice::from_raw_parts(p as *const u8, 64);
-                // assert!(slice.iter().all(|&b| b == 0),
-                //     "calloc 返回的 64 字节必须全部为零");
-                let _ = p;
-            }
+            let p = calloc(64, 1);
+            // 实现后验证：
+            // assert!(!p.is_null());
+            // let slice = core::slice::from_raw_parts(p as *const u8, 64);
+            // assert!(slice.iter().all(|&b| b == 0),
+            //     "calloc 返回的 64 字节必须全部为零");
+            let _ = p;
         });
 
         test!("test_pointer_validity" {
         // 测试 11: 返回指针不应为悬垂指针。
         // 验证基本的指针有效性（非 null）。
-            unsafe {
-                let p = calloc(4, 8);
-                // assert!(!p.is_null());
-                // 可安全地读取前几个字节
-                // let byte = ptr::read_unaligned(p as *const u8);
-                // assert_eq!(byte, 0);
-                let _ = p;
-            }
+            let p = calloc(4, 8);
+            // assert!(!p.is_null());
+            // 可安全地读取前几个字节
+            // let byte = ptr::read_unaligned(p as *const u8);
+            // assert_eq!(byte, 0);
+            let _ = p;
         });
 
         test!("test_fn_pointer_compatibility" {
         // 测试 12: 函数指针类型兼容性验证。
         // 确保 calloc 可以传递 extern "C" fn 类型的分配器函数指针。
-            unsafe {
-                // calloc 内部调用 calloc_impl(_, _, malloc)
-                // malloc 的类型是 unsafe extern "C" fn(usize) -> *mut c_void
-                // 验证此类型可以被正确传递给 calloc_impl
-                let p = calloc(4, 4);
-                let _ = p;
-            }
+            // calloc 内部调用 calloc_impl(_, _, malloc)
+            // malloc 的类型是 unsafe extern "C" fn(usize) -> *mut c_void
+            // 验证此类型可以被正确传递给 calloc_impl
+            let p = calloc(4, 4);
+            let _ = p;
         });
     }
 
@@ -1117,9 +1093,7 @@ mod tests {
         // 因为 calloc 使用公共 malloc（可能被替换），__libc_calloc 使用内部 malloc，
         // 两者从不同的堆区域分配。
         // 注意：实际行为取决于 malloc 实现。
-            unsafe {
-                let _p1 = calloc(4, 4);
-            }
+            let _p1 = calloc(4, 4);
             let _p2 = __libc_calloc(4, 4);
             // 两者应该都能成功分配
             // assert!(!p1.is_null());
@@ -1129,11 +1103,9 @@ mod tests {
         test!("test_calloc_equivalence" {
         // 测试: calloc(m, n) 应等价于 calloc_impl(m, n, malloc)。
         // 验证 public calloc 的委托路径正确性。
-            unsafe {
-                let p1 = calloc(4, 4);
-                // 由于实现未完成，此处仅为骨架占位
-                let _ = p1;
-            }
+            let p1 = calloc(4, 4);
+            // 由于实现未完成，此处仅为骨架占位
+            let _ = p1;
         });
 
         test!("test_internal_equivalence" {

@@ -24,8 +24,8 @@ use core::ffi::{c_char, c_int, c_void};
 use core::sync::atomic::Ordering;
 
 use rusl_core::c_types::size_t;
-use rusl_core::syscall::{raw_syscall1, raw_syscall3, raw_syscall5};
-use rusl_core::syscall::{SYS_exit, SYS_exit_group, SYS_open};
+use rusl_internal::syscall::{raw_syscall1, raw_syscall3, raw_syscall5};
+use rusl_internal::syscall::{SYS_exit, SYS_exit_group, SYS_open};
 
 // ============================================================================
 // _start — per-arch entry point (global_asm!)
@@ -288,14 +288,14 @@ pub unsafe extern "C" fn __init_libc(envp: *mut *mut c_char, pn: *const c_char) 
     // poll(2) 或 ppoll(2) — 取决于架构是否有 SYS_poll
     #[cfg(target_arch = "x86_64")]
     let r = {
-        use rusl_core::syscall::SYS_poll;
+        use rusl_internal::syscall::SYS_poll;
         raw_syscall3(SYS_poll, pfd.as_mut_ptr() as i64, 3, 0)
     };
 
     #[cfg(target_arch = "aarch64")]
     let r = {
         // aarch64 无 SYS_poll，使用 SYS_ppoll
-        use rusl_core::syscall::SYS_ppoll;
+        use rusl_internal::syscall::SYS_ppoll;
         #[repr(C)]
         struct Timespec { tv_sec: i64, tv_nsec: i64 }
         let ts = Timespec { tv_sec: 0, tv_nsec: 0 };

@@ -1,21 +1,19 @@
 [package]
-name = "rusl-errno"
+name = "rusl-syscall"
 version = "0.1.0"
 edition = "2021"
-description = "rusl errno module — thread-local errno storage and error message mapping"
+description = "rusl syscall — 独立系统调用宏, FFI 到 musl libc, 不依赖 rusl 生态"
 
 [lib]
-crate-type = ["lib", "staticlib"]
+crate-type = ["lib"]
 doctest = false
 test = true
 
 [features]
-default = ["rusl"]
+default = []
 c-test = []
-rusl = []
 
 [dependencies]
-rusl-core = { path = "../rusl-core", features = ["rusl"] }
 
 [profile.dev]
 panic = "abort"

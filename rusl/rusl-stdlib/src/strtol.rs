@@ -6,7 +6,7 @@
 #![allow(unused_imports, unused_variables)]
 
 use core::ffi::c_char;
-use rusl_core::errno::__errno_location;
+use rusl_errno::__errno_location;
 /// Linux ERANGE 值
 const ERANGE: i32 = 34;
 

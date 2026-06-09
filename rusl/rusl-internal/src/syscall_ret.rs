@@ -1,1 +1,0 @@
-//! 移到下层的rusl-core了，这样可以避免其他crate依赖rusl-internal（非rusl模式Rust不能ffi调用C的__syscall宏）
