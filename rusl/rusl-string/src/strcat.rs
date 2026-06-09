@@ -11,7 +11,7 @@ use core::ffi::c_char;
 /// - dest 和 src 以 null 结尾
 /// - dest 缓冲区至少可容纳 strlen(dest) + strlen(src) + 1 字节
 #[no_mangle]
-pub unsafe extern "C" fn strcat(dest: *mut core::ffi::c_char, src: *const core::ffi::c_char) -> *mut core::ffi::c_char {
+pub extern "C" fn strcat(dest: *mut core::ffi::c_char, src: *const core::ffi::c_char) -> *mut core::ffi::c_char {
     let d = dest as *mut u8;
     let s = src as *const u8;
     // 找到 dest 的结尾

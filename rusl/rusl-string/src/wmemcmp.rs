@@ -8,15 +8,18 @@
 /// - `l` 非空、`r` 非空
 /// - l 和 r 各自至少可读 n 个 wchar_t
 #[no_mangle]
-pub unsafe extern "C" fn wmemcmp(l: *const u32, r: *const u32, n: usize) -> core::ffi::c_int {
-    for i in 0..n {
-        let lv = unsafe { *l.add(i) };
-        let rv = unsafe { *r.add(i) };
-        if lv != rv {
-            return if lv < rv { -1 } else { 1 };
+pub extern "C" fn wmemcmp(l: *const u32, r: *const u32, n: usize) -> core::ffi::c_int {
+    // SAFETY: 调用者保证 l 和 r 非空且各自至少可读 n 个 wchar_t
+    unsafe {
+        for i in 0..n {
+            let lv = *l.add(i);
+            let rv = *r.add(i);
+            if lv != rv {
+                return if lv < rv { -1 } else { 1 };
+            }
         }
+        0
     }
-    0
 }
 
 /// 安全的 Rust 内部实现。

@@ -271,21 +271,23 @@ pub(crate) unsafe fn putenv_core(
 /// - `setenv`: 在堆上构造 `"NAME=VALUE"` 字符串，通过 `putenv_core`
 ///   传入 `r = s` 并注册到内存管理模块。
 #[no_mangle]
-pub unsafe extern "C" fn putenv(s: *mut c_char) -> c_int {
-    // Step 1: 查找 '=' 的位置
-    let eq = strchrnul(s as *const c_char, b'=' as c_int);
-    let l = (eq as usize).wrapping_sub(s as usize);
+pub extern "C" fn putenv(s: *mut c_char) -> c_int {
+    // SAFETY: caller guarantees s is a valid null-terminated C string per C ABI contract.
+    unsafe {
+        // Step 1: 查找 '=' 的位置
+        let eq = strchrnul(s as *const c_char, b'=' as c_int);
+        let l = (eq as usize).wrapping_sub(s as usize);
 
-    // Step 2: 检查有效性 — 空变量名或无 '='
-    // SAFETY: s 由调用方保证有效
-    if l == 0 || unsafe { *s.add(l) } == 0 {
-        // 不含 '=' 或变量名为空：委托给 unsetenv
-        return unsafe { unsetenv(s) };
+        // Step 2: 检查有效性 — 空变量名或无 '='
+        if l == 0 || *s.add(l) == 0 {
+            // 不含 '=' 或变量名为空：委托给 unsetenv
+            return unsetenv(s);
+        }
+
+        // Step 3: 委托核心逻辑
+        // r = null_mut() 表示 putenv 未在堆上分配字符串，无需 ENV_RM_ADD 注册
+        putenv_core(s, l, null_mut())
     }
-
-    // Step 3: 委托核心逻辑
-    // r = null_mut() 表示 putenv 未在堆上分配字符串，无需 ENV_RM_ADD 注册
-    unsafe { putenv_core(s, l, null_mut()) }
 }
 
 // ---------------------------------------------------------------------------

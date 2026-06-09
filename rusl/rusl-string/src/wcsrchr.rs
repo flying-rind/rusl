@@ -8,20 +8,23 @@
 /// - `s` 非空
 /// - s 以 L'\0' 结尾
 #[no_mangle]
-pub unsafe extern "C" fn wcsrchr(s: *const u32, c: u32) -> *mut u32 {
-    let mut result: *mut u32 = core::ptr::null_mut();
-    let mut i = 0;
-    loop {
-        let ch = unsafe { *s.add(i) };
-        if ch == c {
-            result = s.add(i) as *mut u32;
+pub extern "C" fn wcsrchr(s: *const u32, c: u32) -> *mut u32 {
+    // SAFETY: 调用者保证 s 非空且以 L'\0' 结尾
+    unsafe {
+        let mut result: *mut u32 = core::ptr::null_mut();
+        let mut i = 0;
+        loop {
+            let ch = *s.add(i);
+            if ch == c {
+                result = s.add(i) as *mut u32;
+            }
+            if ch == 0 {
+                break;
+            }
+            i += 1;
         }
-        if ch == 0 {
-            break;
-        }
-        i += 1;
+        result
     }
-    result
 }
 
 /// 安全的 Rust 内部实现。

@@ -8,11 +8,14 @@
 /// - `d` 非空
 /// - `d` 至少可写 n 个 wchar_t
 #[no_mangle]
-pub unsafe extern "C" fn wmemset(d: *mut u32, c: u32, n: usize) -> *mut u32 {
-    for i in 0..n {
-        unsafe { *d.add(i) = c; }
+pub extern "C" fn wmemset(d: *mut u32, c: u32, n: usize) -> *mut u32 {
+    // SAFETY: 调用者保证 d 非空且至少可写 n 个 wchar_t。
+    unsafe {
+        for i in 0..n {
+            *d.add(i) = c;
+        }
+        d
     }
-    d
 }
 
 /// 安全的 Rust 内部实现。

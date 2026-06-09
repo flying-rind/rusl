@@ -76,11 +76,13 @@ unsafe fn neg_accum_i64(s: &mut *const c_char) -> i64 {
 ///
 /// 内部采用负向累加策略，中间值始终 <= 0，以安全解析 TYPE_MIN。
 #[no_mangle]
-pub unsafe extern "C" fn atoi(s: *const c_char) -> i32 {
-    let mut p = s;
-    let neg = skip_whitespace_and_sign(&mut p);
-    let n = neg_accum_i32(&mut p);
-    if neg { n } else { -n }
+pub extern "C" fn atoi(s: *const c_char) -> i32 {
+    unsafe {
+        let mut p = s;
+        let neg = skip_whitespace_and_sign(&mut p);
+        let n = neg_accum_i32(&mut p);
+        if neg { n } else { -n }
+    }
 }
 
 /// 将 `s` 指向的以 null 结尾的字符串转换为 `i64`。
@@ -97,11 +99,13 @@ pub unsafe extern "C" fn atoi(s: *const c_char) -> i32 {
 ///
 /// 内部采用负向累加策略，中间值始终 <= 0，以安全解析 TYPE_MIN。
 #[no_mangle]
-pub unsafe extern "C" fn atol(s: *const c_char) -> i64 {
-    let mut p = s;
-    let neg = skip_whitespace_and_sign(&mut p);
-    let n = neg_accum_i64(&mut p);
-    if neg { n } else { -n }
+pub extern "C" fn atol(s: *const c_char) -> i64 {
+    unsafe {
+        let mut p = s;
+        let neg = skip_whitespace_and_sign(&mut p);
+        let n = neg_accum_i64(&mut p);
+        if neg { n } else { -n }
+    }
 }
 
 /// 将 `s` 指向的以 null 结尾的字符串转换为 `i64`。
@@ -118,6 +122,6 @@ pub unsafe extern "C" fn atol(s: *const c_char) -> i64 {
 ///
 /// 内部采用负向累加策略，中间值始终 <= 0，以安全解析 TYPE_MIN。
 #[no_mangle]
-pub unsafe extern "C" fn atoll(s: *const c_char) -> i64 {
+pub extern "C" fn atoll(s: *const c_char) -> i64 {
     atol(s)
 }

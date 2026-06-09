@@ -9,27 +9,30 @@ use core::ffi::c_char;
 /// - `s` 非空、`b` 非空
 /// - s 和 b 以 null 结尾
 #[no_mangle]
-pub unsafe extern "C" fn strpbrk(s: *const core::ffi::c_char, b: *const core::ffi::c_char) -> *mut core::ffi::c_char {
-    let sp = s as *const u8;
-    let accept = b as *const u8;
-    let mut i = 0;
-    loop {
-        let sc = unsafe { *sp.add(i) };
-        if sc == 0 {
-            return core::ptr::null_mut();
-        }
-        let mut j = 0;
+pub extern "C" fn strpbrk(s: *const core::ffi::c_char, b: *const core::ffi::c_char) -> *mut core::ffi::c_char {
+    // SAFETY: 调用者保证 s 和 b 非空，且均以 null 结尾。
+    unsafe {
+        let sp = s as *const u8;
+        let accept = b as *const u8;
+        let mut i = 0;
         loop {
-            let ac = unsafe { *accept.add(j) };
-            if ac == 0 {
-                break;
+            let sc = *sp.add(i);
+            if sc == 0 {
+                return core::ptr::null_mut();
             }
-            if ac == sc {
-                return sp.add(i) as *mut core::ffi::c_char;
+            let mut j = 0;
+            loop {
+                let ac = *accept.add(j);
+                if ac == 0 {
+                    break;
+                }
+                if ac == sc {
+                    return sp.add(i) as *mut core::ffi::c_char;
+                }
+                j += 1;
             }
-            j += 1;
+            i += 1;
         }
-        i += 1;
     }
 }
 

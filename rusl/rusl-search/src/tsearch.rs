@@ -185,12 +185,12 @@ pub(crate) unsafe fn tsearch_impl(
 /// 测试通过 `tsearch_impl` 直接调用，避免与 libc 的 `tsearch` 符号冲突。
 #[cfg(not(test))]
 #[no_mangle]
-pub unsafe extern "C" fn tsearch(
+pub extern "C" fn tsearch(
     key: *const c_void,
     rootp: *mut *mut c_void,
     compar: Option<unsafe extern "C" fn(*const c_void, *const c_void) -> i32>,
 ) -> *mut c_void {
-    tsearch_impl(key, rootp, compar)
+    unsafe { tsearch_impl(key, rootp, compar) }
 }
 
 #[cfg(test)]

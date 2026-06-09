@@ -11,7 +11,7 @@ use rusl_core::c_types::locale_t;
 /// - `_l` 非空、`_r` 非空
 /// - _l 和 _r 以 null 结尾
 #[no_mangle]
-pub unsafe extern "C" fn strncasecmp(_l: *const core::ffi::c_char, _r: *const core::ffi::c_char, n: usize) -> core::ffi::c_int {
+pub extern "C" fn strncasecmp(_l: *const core::ffi::c_char, _r: *const core::ffi::c_char, n: usize) -> core::ffi::c_int {
     let a = _l as *const u8;
     let b = _r as *const u8;
     for i in 0..n {
@@ -31,11 +31,11 @@ pub unsafe extern "C" fn strncasecmp(_l: *const core::ffi::c_char, _r: *const co
 
 #[no_mangle]
 pub unsafe extern "C" fn __strncasecmp_l(l: *const c_char, r: *const c_char, n: usize, _loc: locale_t) -> c_int {
-    unsafe { strncasecmp(l, r, n) }
+    strncasecmp(l, r, n)
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn strncasecmp_l(l: *const c_char, r: *const c_char, n: usize, loc: locale_t) -> c_int {
+pub extern "C" fn strncasecmp_l(l: *const c_char, r: *const c_char, n: usize, loc: locale_t) -> c_int {
     unsafe { __strncasecmp_l(l, r, n, loc) }
 }
 

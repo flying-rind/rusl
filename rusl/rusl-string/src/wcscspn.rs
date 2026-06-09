@@ -8,20 +8,23 @@
 /// - `s` 非空、`c` 非空
 /// - s 和 c 以 L'\0' 结尾
 #[no_mangle]
-pub unsafe extern "C" fn wcscspn(s: *const u32, c: *const u32) -> usize {
-    let mut i = 0;
-    loop {
-        let ch = unsafe { *s.add(i) };
-        if ch == 0 { return i; }
-        // 检查 ch 是否在 c 中
-        let mut j = 0;
+pub extern "C" fn wcscspn(s: *const u32, c: *const u32) -> usize {
+    // SAFETY: 调用者保证 s 和 c 是非空的以 L'\0' 结尾的宽字符串指针
+    unsafe {
+        let mut i = 0;
         loop {
-            let rc = unsafe { *c.add(j) };
-            if rc == 0 { break; }
-            if rc == ch { return i; }
-            j += 1;
+            let ch = *s.add(i);
+            if ch == 0 { return i; }
+            // 检查 ch 是否在 c 中
+            let mut j = 0;
+            loop {
+                let rc = *c.add(j);
+                if rc == 0 { break; }
+                if rc == ch { return i; }
+                j += 1;
+            }
+            i += 1;
         }
-        i += 1;
     }
 }
 

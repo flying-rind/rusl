@@ -13,11 +13,14 @@
 ///
 /// 修改全局可变状态（`__seed48`），非线程安全。
 #[no_mangle]
-pub unsafe extern "C" fn srand48(seedval: i64) {
+pub extern "C" fn srand48(seedval: i64) {
     // 与 musl `seed48((unsigned short [3]){ 0x330e, seed, seed>>16 })` 一致
-    crate::__seed48::__seed48[0] = 0x330e;
-    crate::__seed48::__seed48[1] = seedval as u16;
-    crate::__seed48::__seed48[2] = (seedval >> 16) as u16;
-    // 注意：乘数 (__seed48[3..5]) 和加数 (__seed48[6]) 保持不变
-    // 与 musl 代码 `seed48(...)` 行为一致（seed48 只复制 3 个 u16）
+    // SAFETY: 修改全局可变状态 __seed48，由调用者确保同步
+    unsafe {
+        crate::__seed48::__seed48[0] = 0x330e;
+        crate::__seed48::__seed48[1] = seedval as u16;
+        crate::__seed48::__seed48[2] = (seedval >> 16) as u16;
+        // 注意：乘数 (__seed48[3..5]) 和加数 (__seed48[6]) 保持不变
+        // 与 musl 代码 `seed48(...)` 行为一致（seed48 只复制 3 个 u16）
+    }
 }

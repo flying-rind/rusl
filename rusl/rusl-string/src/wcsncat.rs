@@ -10,24 +10,27 @@
 /// - d 和 s 以 L'\0' 结尾
 /// - d 缓冲区至少可容纳 (wcslen(d) + min(n, wcslen(s)) + 1) 个 wchar_t
 #[no_mangle]
-pub unsafe extern "C" fn wcsncat(d: *mut u32, s: *const u32, n: usize) -> *mut u32 {
-    // 找到 d 结尾
-    let mut i = 0;
-    while unsafe { *d.add(i) } != 0 {
-        i += 1;
+pub extern "C" fn wcsncat(d: *mut u32, s: *const u32, n: usize) -> *mut u32 {
+    // SAFETY: 调用者保证 d 和 s 非空、非重叠、以 L'\0' 结尾，且 d 缓冲区足够大。
+    unsafe {
+        // 找到 d 结尾
+        let mut i = 0;
+        while *d.add(i) != 0 {
+            i += 1;
+        }
+        // 复制最多 n 个字符
+        let mut j = 0;
+        while j < n {
+            let ch = *s.add(j);
+            *d.add(i) = ch;
+            if ch == 0 { return d; }
+            i += 1;
+            j += 1;
+        }
+        // 始终添加 null 终止符
+        *d.add(i) = 0;
+        d
     }
-    // 复制最多 n 个字符
-    let mut j = 0;
-    while j < n {
-        let ch = unsafe { *s.add(j) };
-        unsafe { *d.add(i) = ch; }
-        if ch == 0 { return d; }
-        i += 1;
-        j += 1;
-    }
-    // 始终添加 null 终止符
-    unsafe { *d.add(i) = 0; }
-    d
 }
 
 /// 安全的 Rust 内部实现。

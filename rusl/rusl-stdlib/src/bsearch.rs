@@ -18,7 +18,7 @@ use core::ffi::c_void;
 /// - 找到匹配元素：返回指向该元素的 `*mut c_void` 指针。
 /// - 未找到匹配元素：返回 `null`。
 #[no_mangle]
-pub unsafe extern "C" fn bsearch(
+pub extern "C" fn bsearch(
     key: *const c_void,
     base: *const c_void,
     nel: usize,
@@ -29,19 +29,22 @@ pub unsafe extern "C" fn bsearch(
         Some(f) => f,
         None => return core::ptr::null_mut(),
     };
-    let mut base = base as *const u8;
-    let mut nel = nel;
-    while nel > 0 {
-        let try_ptr = unsafe { base.add(width * (nel / 2)) };
-        let sign = cmp(key, try_ptr as *const c_void);
-        if sign < 0 {
-            nel /= 2;
-        } else if sign > 0 {
-            base = unsafe { try_ptr.add(width) };
-            nel -= nel / 2 + 1;
-        } else {
-            return try_ptr as *mut c_void;
+    // SAFETY: 调用者确保 key/base 指针有效，nel*width 不越界
+    unsafe {
+        let mut base = base as *const u8;
+        let mut nel = nel;
+        while nel > 0 {
+            let try_ptr = base.add(width * (nel / 2));
+            let sign = cmp(key, try_ptr as *const c_void);
+            if sign < 0 {
+                nel /= 2;
+            } else if sign > 0 {
+                base = try_ptr.add(width);
+                nel -= nel / 2 + 1;
+            } else {
+                return try_ptr as *mut c_void;
+            }
         }
+        core::ptr::null_mut()
     }
-    core::ptr::null_mut()
 }

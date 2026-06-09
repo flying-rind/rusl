@@ -88,7 +88,7 @@ pub(crate) fn aligned_alloc_inner(
     // 2. 校验 len 是否溢出（否则返回 NULL + ENOMEM）
     // 3. 校验 align 是否过大（否则返回 NULL + ENOMEM）
     // 4. 实际内存分配和指针对齐
-    let ptr = unsafe { super::mallocng::aligned_alloc::aligned_alloc(align, len) };
+    let ptr = super::mallocng::aligned_alloc::aligned_alloc(align, len);
     if ptr.is_null() {
         // aligned_alloc 返回 NULL 时已设置 errno，据此区分错误类型
         let errno_val = unsafe { *__errno_location() };
@@ -157,7 +157,7 @@ pub(crate) fn aligned_alloc_inner(
 /// - 分配的内存未初始化，读取前必须写入。
 /// - 本函数不保证分配的内存可以传递给 `realloc`。
 #[no_mangle]
-pub unsafe extern "C" fn posix_memalign(
+pub extern "C" fn posix_memalign(
     res: *mut *mut c_void,
     align: c_ulong,
     len: c_ulong,
@@ -177,7 +177,8 @@ pub unsafe extern "C" fn posix_memalign(
     // - aligned_alloc_inner 内部完成 2 的幂校验、溢出检测、实际分配
     // - convert_aligned_alloc_result 负责 Result → C 错误码转换和 *res 写入
     let result = aligned_alloc_inner(align as usize, len as usize);
-    convert_aligned_alloc_result(result, res)
+    // SAFETY: convert_aligned_alloc_result 的调用者保证 res 非 NULL 且指向有效可写内存。
+    unsafe { convert_aligned_alloc_result(result, res) }
 }
 
 // ===========================================================================

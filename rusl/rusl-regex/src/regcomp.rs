@@ -158,363 +158,365 @@ pub const REG_ENOSYS: c_int = -1;
 /// | 编译成功 | `REG_OK` (0) | `re_nsub` 已设置，`__opaque` 指向 Tnfa |
 /// | 编译失败 | 非零错误码 | `__opaque` 可能需 `regfree` 释放 |
 #[no_mangle]
-pub unsafe extern "C" fn regcomp(
+pub extern "C" fn regcomp(
     preg: *mut regex_t,
     regex: *const c_char,
     cflags: c_int,
 ) -> c_int {
-    use alloc::boxed::Box;
-    use core::slice;
-    use super::tre::Tnfa;
-    use super::tre_mem::tre_mem_new;
-    use super::regcomp_ast::*;
-    use super::regcomp_parse::{RegError, tre_parse};
-    use super::regcomp_transform::*;
-    use super::regcomp_nfl::*;
-    use super::tre::{TnfaTransition, SubmatchData, TagDirection};
-
-    if preg.is_null() || regex.is_null() {
-        return REG_ESPACE;
-    }
-
-    // 释放之前的编译结果
-    regfree(preg);
-
-    // 计算正则字符串长度
-    let mut regex_len = 0usize;
-    while *regex.add(regex_len) != 0 {
-        regex_len += 1;
-    }
-    let regex_bytes = slice::from_raw_parts(regex as *const u8, regex_len);
-
-    // 1. 创建 TreMem 分配器
-    let mut mem = tre_mem_new();
-
-    // 2-4. 解析和校验（在独立作用域中，之后释放 mem 借用）
-    let (tree, re_nsub, have_backrefs, num_submatches, position_val, _max_backref) = {
-        // 2. 创建解析上下文
-        let mut parse_ctx = super::regcomp_ast::ParseContext {
-            mem: &mut mem,
-            stack: Vec::new(),
-            result: None,
-            pos: regex_bytes,
-            start: regex_bytes,
-            submatch_id: 0,
-            position: 0,
-            max_backref: 0,
-            backref_ok: 0,
-            cflags,
-        };
-
-        // 3. 解析
-        let tree = match tre_parse(&mut parse_ctx) {
-            Ok(t) => t,
-            Err(e) => {
-                (*(preg as *mut regex_t)).__opaque = core::ptr::null_mut();
-                return e.to_errno();
-            }
-        };
-
-        let re_nsub = parse_ctx.submatch_id.saturating_sub(1);
-        (*preg).re_nsub = re_nsub as usize;
-
-        // 4. 校验反向引用不越界
-        if parse_ctx.max_backref > re_nsub {
-            (*(preg as *mut regex_t)).__opaque = core::ptr::null_mut();
-            return REG_ESUBREG;
+    unsafe {
+        use alloc::boxed::Box;
+        use core::slice;
+        use super::tre::Tnfa;
+        use super::tre_mem::tre_mem_new;
+        use super::regcomp_ast::*;
+        use super::regcomp_parse::{RegError, tre_parse};
+        use super::regcomp_transform::*;
+        use super::regcomp_nfl::*;
+        use super::tre::{TnfaTransition, SubmatchData, TagDirection};
+    
+        if preg.is_null() || regex.is_null() {
+            return REG_ESPACE;
         }
-
-        (tree, re_nsub, parse_ctx.max_backref > 0, parse_ctx.submatch_id, parse_ctx.position, parse_ctx.max_backref)
-    };
-    // parse_ctx 已释放，mem 借用结束
-
-    let mut tnfa = Box::new(Tnfa {
-        transitions: Box::new([]),
-        initial_id: 0,
-        final_id: -1,
-        initial_tags: None,
-        submatch_data: Box::new([]),
-        firstpos_chars: [0u8; 32],
-        first_char: -1,
-        num_submatches,
-        tag_directions: Box::new([]),
-        minimal_tags: None,
-        num_tags: 0,
-        num_minimals: 0,
-        end_tag: -1,
-        num_states: 0,
-        cflags,
-        have_backrefs,
-        have_approx: false,
-    });
-
-    // 6. Tag 注入（若需要）
-    if have_backrefs || (cflags & REG_NOSUB) == 0 {
-        // 6a. 构建 TnfaBuilder
-        let mut tnfa_builder = TnfaBuilder {
-            tag_directions: None,
+    
+        // 释放之前的编译结果
+        regfree(preg);
+    
+        // 计算正则字符串长度
+        let mut regex_len = 0usize;
+        while *regex.add(regex_len) != 0 {
+            regex_len += 1;
+        }
+        let regex_bytes = slice::from_raw_parts(regex as *const u8, regex_len);
+    
+        // 1. 创建 TreMem 分配器
+        let mut mem = tre_mem_new();
+    
+        // 2-4. 解析和校验（在独立作用域中，之后释放 mem 借用）
+        let (tree, re_nsub, have_backrefs, num_submatches, position_val, _max_backref) = {
+            // 2. 创建解析上下文
+            let mut parse_ctx = super::regcomp_ast::ParseContext {
+                mem: &mut mem,
+                stack: Vec::new(),
+                result: None,
+                pos: regex_bytes,
+                start: regex_bytes,
+                submatch_id: 0,
+                position: 0,
+                max_backref: 0,
+                backref_ok: 0,
+                cflags,
+            };
+    
+            // 3. 解析
+            let tree = match tre_parse(&mut parse_ctx) {
+                Ok(t) => t,
+                Err(e) => {
+                    (*(preg as *mut regex_t)).__opaque = core::ptr::null_mut();
+                    return e.to_errno();
+                }
+            };
+    
+            let re_nsub = parse_ctx.submatch_id.saturating_sub(1);
+            (*preg).re_nsub = re_nsub as usize;
+    
+            // 4. 校验反向引用不越界
+            if parse_ctx.max_backref > re_nsub {
+                (*(preg as *mut regex_t)).__opaque = core::ptr::null_mut();
+                return REG_ESUBREG;
+            }
+    
+            (tree, re_nsub, parse_ctx.max_backref > 0, parse_ctx.submatch_id, parse_ctx.position, parse_ctx.max_backref)
+        };
+        // parse_ctx 已释放，mem 借用结束
+    
+        let mut tnfa = Box::new(Tnfa {
+            transitions: Box::new([]),
+            initial_id: 0,
+            final_id: -1,
+            initial_tags: None,
+            submatch_data: Box::new([]),
+            firstpos_chars: [0u8; 32],
+            first_char: -1,
+            num_submatches,
+            tag_directions: Box::new([]),
             minimal_tags: None,
-            submatch_data: None,
             num_tags: 0,
             num_minimals: 0,
             end_tag: -1,
-        };
-
-        // 初始 submatch_data
-        let mut sd_vec = Vec::with_capacity(num_submatches as usize);
-        for _ in 0..num_submatches {
-            sd_vec.push(SubmatchData {
-                so_tag: -1,
-                eo_tag: -1,
-                parents: None,
-            });
+            num_states: 0,
+            cflags,
+            have_backrefs,
+            have_approx: false,
+        });
+    
+        // 6. Tag 注入（若需要）
+        if have_backrefs || (cflags & REG_NOSUB) == 0 {
+            // 6a. 构建 TnfaBuilder
+            let mut tnfa_builder = TnfaBuilder {
+                tag_directions: None,
+                minimal_tags: None,
+                submatch_data: None,
+                num_tags: 0,
+                num_minimals: 0,
+                end_tag: -1,
+            };
+    
+            // 初始 submatch_data
+            let mut sd_vec = Vec::with_capacity(num_submatches as usize);
+            for _ in 0..num_submatches {
+                sd_vec.push(SubmatchData {
+                    so_tag: -1,
+                    eo_tag: -1,
+                    parents: None,
+                });
+            }
+            tnfa_builder.submatch_data = Some(sd_vec);
+    
+            // 第一遍：计数
+            let mut tree_owned = tree.clone();
+            tre_add_tags(&mut mem, &mut Vec::new(), &mut tree_owned, &mut tnfa_builder)
+                .unwrap_or_else(|_| {
+                    (*(preg as *mut regex_t)).__opaque = core::ptr::null_mut();
+                    // 错误处理继续
+                });
+    
+            // 检查错误
+            let num_tags = tnfa_builder.num_tags;
+            if num_tags > 0 {
+                // 分配 tag_directions
+                let mut dirs = Vec::with_capacity(num_tags as usize);
+                dirs.resize(num_tags as usize, TagDirection::Maximize);
+                tnfa_builder.tag_directions = Some(dirs);
+    
+                // 分配 minimal_tags
+                let mut mtags = Vec::new();
+                mtags.push(-1);
+                tnfa_builder.minimal_tags = Some(mtags);
+            }
+    
+            // 第二遍：插入标签
+            let mut tree_for_tags = tree.clone();
+            tre_add_tags(&mut mem, &mut Vec::new(), &mut tree_for_tags, &mut tnfa_builder)
+                .unwrap_or_else(|_| {
+                    (*(preg as *mut regex_t)).__opaque = core::ptr::null_mut();
+                });
+    
+            // 填充 tnfa
+            tnfa.tag_directions = match tnfa_builder.tag_directions {
+                Some(dirs) => dirs.into_boxed_slice(),
+                None => Box::new([]),
+            };
+            tnfa.minimal_tags = match tnfa_builder.minimal_tags {
+                Some(mt) => Some(mt.into_boxed_slice()),
+                None => None,
+            };
+            tnfa.submatch_data = match tnfa_builder.submatch_data {
+                Some(sd) => sd.into_boxed_slice(),
+                None => Box::new([]),
+            };
+            tnfa.num_tags = tnfa_builder.num_tags;
+            tnfa.num_minimals = tnfa_builder.num_minimals;
+            tnfa.end_tag = tnfa_builder.end_tag;
         }
-        tnfa_builder.submatch_data = Some(sd_vec);
-
-        // 第一遍：计数
-        let mut tree_owned = tree.clone();
-        tre_add_tags(&mut mem, &mut Vec::new(), &mut tree_owned, &mut tnfa_builder)
+    
+        // 7. 展开迭代节点
+        let mut tree_mut = tree.clone();
+        let mut position = position_val;
+        let empty_dirs: Vec<TagDirection> = Vec::new();
+        let tag_dirs: &[TagDirection] = if tnfa.num_tags > 0 {
+            &*tnfa.tag_directions
+        } else {
+            &empty_dirs
+        };
+        tre_expand_ast(&mut mem, &mut tree_mut, &mut position, tag_dirs)
             .unwrap_or_else(|_| {
                 (*(preg as *mut regex_t)).__opaque = core::ptr::null_mut();
-                // 错误处理继续
             });
-
-        // 检查错误
-        let num_tags = tnfa_builder.num_tags;
-        if num_tags > 0 {
-            // 分配 tag_directions
-            let mut dirs = Vec::with_capacity(num_tags as usize);
-            dirs.resize(num_tags as usize, TagDirection::Maximize);
-            tnfa_builder.tag_directions = Some(dirs);
-
-            // 分配 minimal_tags
-            let mut mtags = Vec::new();
-            mtags.push(-1);
-            tnfa_builder.minimal_tags = Some(mtags);
+    
+        // 8. 添加终态哨兵节点
+        {
+            let dummy = ast_new_literal(&mut mem, LiteralKind::Char(0, 0), position);
+            tree_mut = ast_new_catenation(&mut mem, Some(tree_mut), dummy.unwrap())
+                .unwrap_or_else(|| {
+                    Box::new(AstNode {
+                        node_type: AstType::Literal,
+                        nullable: Some(true),
+                        submatch_id: None,
+                        num_submatches: 0,
+                        num_tags: 0,
+                        firstpos: None,
+                        lastpos: None,
+                        obj: AstNodeObj::Literal(Literal {
+                            kind: LiteralKind::Empty,
+                            position: None,
+                            class: None,
+                            neg_classes: None,
+                        }),
+                    })
+                });
+            position += 1;
         }
-
-        // 第二遍：插入标签
-        let mut tree_for_tags = tree.clone();
-        tre_add_tags(&mut mem, &mut Vec::new(), &mut tree_for_tags, &mut tnfa_builder)
-            .unwrap_or_else(|_| {
-                (*(preg as *mut regex_t)).__opaque = core::ptr::null_mut();
-            });
-
-        // 填充 tnfa
-        tnfa.tag_directions = match tnfa_builder.tag_directions {
-            Some(dirs) => dirs.into_boxed_slice(),
-            None => Box::new([]),
-        };
-        tnfa.minimal_tags = match tnfa_builder.minimal_tags {
-            Some(mt) => Some(mt.into_boxed_slice()),
-            None => None,
-        };
-        tnfa.submatch_data = match tnfa_builder.submatch_data {
-            Some(sd) => sd.into_boxed_slice(),
-            None => Box::new([]),
-        };
-        tnfa.num_tags = tnfa_builder.num_tags;
-        tnfa.num_minimals = tnfa_builder.num_minimals;
-        tnfa.end_tag = tnfa_builder.end_tag;
-    }
-
-    // 7. 展开迭代节点
-    let mut tree_mut = tree.clone();
-    let mut position = position_val;
-    let empty_dirs: Vec<TagDirection> = Vec::new();
-    let tag_dirs: &[TagDirection] = if tnfa.num_tags > 0 {
-        &*tnfa.tag_directions
-    } else {
-        &empty_dirs
-    };
-    tre_expand_ast(&mut mem, &mut tree_mut, &mut position, tag_dirs)
-        .unwrap_or_else(|_| {
+    
+        // 9. NFL 计算
+        tre_compute_nfl(&mut mem, &mut tree_mut).unwrap_or_else(|_| {
             (*(preg as *mut regex_t)).__opaque = core::ptr::null_mut();
         });
-
-    // 8. 添加终态哨兵节点
-    {
-        let dummy = ast_new_literal(&mut mem, LiteralKind::Char(0, 0), position);
-        tree_mut = ast_new_catenation(&mut mem, Some(tree_mut), dummy.unwrap())
-            .unwrap_or_else(|| {
-                Box::new(AstNode {
-                    node_type: AstType::Literal,
-                    nullable: Some(true),
-                    submatch_id: None,
-                    num_submatches: 0,
-                    num_tags: 0,
-                    firstpos: None,
-                    lastpos: None,
-                    obj: AstNodeObj::Literal(Literal {
-                        kind: LiteralKind::Empty,
-                        position: None,
-                        class: None,
-                        neg_classes: None,
-                    }),
-                })
-            });
-        position += 1;
-    }
-
-    // 9. NFL 计算
-    tre_compute_nfl(&mut mem, &mut tree_mut).unwrap_or_else(|_| {
-        (*(preg as *mut regex_t)).__opaque = core::ptr::null_mut();
-    });
-
-    // 10. TNFA 转移统计（第一遍）
-    let num_positions = position as usize;
-    let mut counts: Vec<u32> = vec![0u32; num_positions];
-
-    {
-        let mut tnfa_builder2 = TnfaBuilder {
-            tag_directions: None,
-            minimal_tags: None,
-            submatch_data: None,
-            num_tags: 0,
-            num_minimals: 0,
-            end_tag: -1,
-        };
-        tre_ast_to_tnfa(&tree_mut, &mut tnfa_builder2, None, Some(&mut counts), None)
-            .unwrap_or_else(|_| {
-                (*(preg as *mut regex_t)).__opaque = core::ptr::null_mut();
-            });
-    }
-
-    // 11. 计算偏移并分配转移表
-    let mut offs: Vec<u32> = vec![0u32; num_positions];
-    let mut total = 0u32;
-    for i in 0..num_positions {
-        offs[i] = total;
-        total += counts[i] + 1;
-        counts[i] = 0; // 清零以准备第二遍
-    }
-    // Pre-fill with dummy entries so tre_make_trans can fill correct offsets
-    let dummy_trans = TnfaTransition {
-        code_min: 0, code_max: 0, state_id: -1, assertions: 0,
-        tags: None, u_class: None, u_backref: None, neg_classes: None,
-    };
-    let mut transitions: Vec<TnfaTransition> = vec![dummy_trans; total as usize];
-
-    // 12. TNFA 转移填充（第二遍）
-    {
-        let mut tnfa_builder3 = TnfaBuilder {
-            tag_directions: None,
-            minimal_tags: None,
-            submatch_data: None,
-            num_tags: 0,
-            num_minimals: 0,
-            end_tag: -1,
-        };
-        // 直接使用预填充的 transitions Vec，不创建新的
-        tre_ast_to_tnfa(&tree_mut, &mut tnfa_builder3, Some(&mut transitions), Some(&mut counts), Some(&offs))
-            .unwrap_or_else(|_| {
-                (*(preg as *mut regex_t)).__opaque = core::ptr::null_mut();
-            });
-    }
-
-    // 13. 构建转移表（按状态组织，每状态以 state_id == -1 终止）
-    {
-        let mut final_trans: Vec<TnfaTransition> = Vec::new();
-
-        // 状态 0：初始转移
-        if let Some(ref firstpos) = tree_mut.firstpos {
-            for p in firstpos {
-                // 构建初始转移，目标为 position+1（state 0 是初始状态）
-                let trans = TnfaTransition {
-                    code_min: p.code_min as i32,
-                    code_max: p.code_max as i32,
-                    state_id: p.position + 1,
-                    assertions: p.assertions,
-                    tags: p.tags.clone().map(|t| t.into_boxed_slice()),
-                    u_class: p.class,
-                    u_backref: p.backref,
-                    neg_classes: p.neg_classes.clone().map(|nc| nc.into_boxed_slice()),
-                };
-                final_trans.push(trans);
-            }
+    
+        // 10. TNFA 转移统计（第一遍）
+        let num_positions = position as usize;
+        let mut counts: Vec<u32> = vec![0u32; num_positions];
+    
+        {
+            let mut tnfa_builder2 = TnfaBuilder {
+                tag_directions: None,
+                minimal_tags: None,
+                submatch_data: None,
+                num_tags: 0,
+                num_minimals: 0,
+                end_tag: -1,
+            };
+            tre_ast_to_tnfa(&tree_mut, &mut tnfa_builder2, None, Some(&mut counts), None)
+                .unwrap_or_else(|_| {
+                    (*(preg as *mut regex_t)).__opaque = core::ptr::null_mut();
+                });
         }
-        // 状态 0 终止标记
-        final_trans.push(TnfaTransition {
+    
+        // 11. 计算偏移并分配转移表
+        let mut offs: Vec<u32> = vec![0u32; num_positions];
+        let mut total = 0u32;
+        for i in 0..num_positions {
+            offs[i] = total;
+            total += counts[i] + 1;
+            counts[i] = 0; // 清零以准备第二遍
+        }
+        // Pre-fill with dummy entries so tre_make_trans can fill correct offsets
+        let dummy_trans = TnfaTransition {
             code_min: 0, code_max: 0, state_id: -1, assertions: 0,
             tags: None, u_class: None, u_backref: None, neg_classes: None,
-        });
-
-        // 状态 1..num_positions：从 transitions 数组按偏移复制
-        for pos_idx in 0..num_positions {
-            let base = offs[pos_idx] as usize;
-            let count = counts[pos_idx] as usize;
-            // 注意：counts 已清零（第二遍后）
-            // 重新统计 or use raw_transitions
-            // 实际上 transitions Vec 是按 offs 线性排列的，base+count 后是下一位置
-            // 但 counts 已清零，用 transitions 的实际布局
-        }
-
-        // 简化：直接使用 transitions，并在每位置后加终止标记
-        // transitions 数组是按 offs[i] 排布的，每个位置有固定数量的条目
-        // 由于 counts 在第二遍中已清零，我们重新计算实际条目数
-        // 实际上第二遍 tre_make_trans 填充时 counts 不变，是在第一遍设置的
-        // 但在 regcomp 中第二遍后又清零了...
-        // 构造最终转移表：需要每状态带终止标记
-        let pos_counts: Vec<u32> = vec![0u32; num_positions];
-        // 重新从 transitions 数组统计（通过扫描）
-        let idx: usize = 0;
-        for pos_idx in 0..num_positions {
-            let base = offs[pos_idx] as usize;
-            let limit = if pos_idx + 1 < num_positions {
-                offs[pos_idx + 1] as usize
-            } else {
-                transitions.len()
+        };
+        let mut transitions: Vec<TnfaTransition> = vec![dummy_trans; total as usize];
+    
+        // 12. TNFA 转移填充（第二遍）
+        {
+            let mut tnfa_builder3 = TnfaBuilder {
+                tag_directions: None,
+                minimal_tags: None,
+                submatch_data: None,
+                num_tags: 0,
+                num_minimals: 0,
+                end_tag: -1,
             };
-            // 在 base..limit 中，遇到第一个 state_id == -1 就是终止标记
-            let mut i = base;
-            while i < limit && i < transitions.len() {
-                if transitions[i].state_id == -1 {
-                    break; // 终止标记
-                }
-                final_trans.push(TnfaTransition {
-                    code_min: transitions[i].code_min,
-                    code_max: transitions[i].code_max,
-                    state_id: transitions[i].state_id + 1, // offset for extra initial state 0
-                    assertions: transitions[i].assertions,
-                    tags: transitions[i].tags.clone(),
-                    u_class: transitions[i].u_class,
-                    u_backref: transitions[i].u_backref,
-                    neg_classes: transitions[i].neg_classes.clone(),
+            // 直接使用预填充的 transitions Vec，不创建新的
+            tre_ast_to_tnfa(&tree_mut, &mut tnfa_builder3, Some(&mut transitions), Some(&mut counts), Some(&offs))
+                .unwrap_or_else(|_| {
+                    (*(preg as *mut regex_t)).__opaque = core::ptr::null_mut();
                 });
-                i += 1;
+        }
+    
+        // 13. 构建转移表（按状态组织，每状态以 state_id == -1 终止）
+        {
+            let mut final_trans: Vec<TnfaTransition> = Vec::new();
+    
+            // 状态 0：初始转移
+            if let Some(ref firstpos) = tree_mut.firstpos {
+                for p in firstpos {
+                    // 构建初始转移，目标为 position+1（state 0 是初始状态）
+                    let trans = TnfaTransition {
+                        code_min: p.code_min as i32,
+                        code_max: p.code_max as i32,
+                        state_id: p.position + 1,
+                        assertions: p.assertions,
+                        tags: p.tags.clone().map(|t| t.into_boxed_slice()),
+                        u_class: p.class,
+                        u_backref: p.backref,
+                        neg_classes: p.neg_classes.clone().map(|nc| nc.into_boxed_slice()),
+                    };
+                    final_trans.push(trans);
+                }
             }
-            // 状态终止标记
+            // 状态 0 终止标记
             final_trans.push(TnfaTransition {
                 code_min: 0, code_max: 0, state_id: -1, assertions: 0,
                 tags: None, u_class: None, u_backref: None, neg_classes: None,
             });
+    
+            // 状态 1..num_positions：从 transitions 数组按偏移复制
+            for pos_idx in 0..num_positions {
+                let base = offs[pos_idx] as usize;
+                let count = counts[pos_idx] as usize;
+                // 注意：counts 已清零（第二遍后）
+                // 重新统计 or use raw_transitions
+                // 实际上 transitions Vec 是按 offs 线性排列的，base+count 后是下一位置
+                // 但 counts 已清零，用 transitions 的实际布局
+            }
+    
+            // 简化：直接使用 transitions，并在每位置后加终止标记
+            // transitions 数组是按 offs[i] 排布的，每个位置有固定数量的条目
+            // 由于 counts 在第二遍中已清零，我们重新计算实际条目数
+            // 实际上第二遍 tre_make_trans 填充时 counts 不变，是在第一遍设置的
+            // 但在 regcomp 中第二遍后又清零了...
+            // 构造最终转移表：需要每状态带终止标记
+            let pos_counts: Vec<u32> = vec![0u32; num_positions];
+            // 重新从 transitions 数组统计（通过扫描）
+            let idx: usize = 0;
+            for pos_idx in 0..num_positions {
+                let base = offs[pos_idx] as usize;
+                let limit = if pos_idx + 1 < num_positions {
+                    offs[pos_idx + 1] as usize
+                } else {
+                    transitions.len()
+                };
+                // 在 base..limit 中，遇到第一个 state_id == -1 就是终止标记
+                let mut i = base;
+                while i < limit && i < transitions.len() {
+                    if transitions[i].state_id == -1 {
+                        break; // 终止标记
+                    }
+                    final_trans.push(TnfaTransition {
+                        code_min: transitions[i].code_min,
+                        code_max: transitions[i].code_max,
+                        state_id: transitions[i].state_id + 1, // offset for extra initial state 0
+                        assertions: transitions[i].assertions,
+                        tags: transitions[i].tags.clone(),
+                        u_class: transitions[i].u_class,
+                        u_backref: transitions[i].u_backref,
+                        neg_classes: transitions[i].neg_classes.clone(),
+                    });
+                    i += 1;
+                }
+                // 状态终止标记
+                final_trans.push(TnfaTransition {
+                    code_min: 0, code_max: 0, state_id: -1, assertions: 0,
+                    tags: None, u_class: None, u_backref: None, neg_classes: None,
+                });
+            }
+    
+            tnfa.transitions = final_trans.into_boxed_slice();
+            tnfa.num_states = (num_positions + 1) as i32; // +1 for initial state
+            tnfa.initial_id = 0;
+            tnfa.final_id = num_positions as i32; // last position = sentinel = final state
         }
-
-        tnfa.transitions = final_trans.into_boxed_slice();
-        tnfa.num_states = (num_positions + 1) as i32; // +1 for initial state
-        tnfa.initial_id = 0;
-        tnfa.final_id = num_positions as i32; // last position = sentinel = final state
-    }
-
-    // 14. 设置 Tnfa 最终状态
-    tnfa.cflags = cflags;
-
-    // 设置 firstpos_chars 和 first_char
-    if let Some(ref firstpos) = tree_mut.firstpos {
-        // 尝试确定首字符
-        if firstpos.len() == 1 && firstpos[0].code_min == firstpos[0].code_max {
-            tnfa.first_char = firstpos[0].code_min as i32;
-        } else {
-            tnfa.first_char = -1;
+    
+        // 14. 设置 Tnfa 最终状态
+        tnfa.cflags = cflags;
+    
+        // 设置 firstpos_chars 和 first_char
+        if let Some(ref firstpos) = tree_mut.firstpos {
+            // 尝试确定首字符
+            if firstpos.len() == 1 && firstpos[0].code_min == firstpos[0].code_max {
+                tnfa.first_char = firstpos[0].code_min as i32;
+            } else {
+                tnfa.first_char = -1;
+            }
         }
+    
+        // 15. 保存到 preg
+        (*preg).re_nsub = re_nsub as usize;
+        (*preg).__opaque = Box::into_raw(tnfa) as *mut c_void;
+    
+        // mem 通过 RAII 自动释放
+        REG_OK
     }
-
-    // 15. 保存到 preg
-    (*preg).re_nsub = re_nsub as usize;
-    (*preg).__opaque = Box::into_raw(tnfa) as *mut c_void;
-
-    // mem 通过 RAII 自动释放
-    REG_OK
 }
 
 // ============================================================================
@@ -536,16 +538,18 @@ pub unsafe extern "C" fn regcomp(
 /// - `preg` 不再持有任何动态分配的资源
 /// - 多次调用 `regfree(preg)` 是安全的（NULL 检查）
 #[no_mangle]
-pub unsafe extern "C" fn regfree(preg: *mut regex_t) {
-    if preg.is_null() {
-        return;
-    }
+pub extern "C" fn regfree(preg: *mut regex_t) {
+    unsafe {
+        if preg.is_null() {
+            return;
+        }
 
-    let opaque = (*preg).__opaque;
-    if !opaque.is_null() {
-        // 将 opaque 指针转回 Box<Tnfa> 并 drop
-        let _ = Box::from_raw(opaque as *mut super::tre::Tnfa);
-        (*preg).__opaque = core::ptr::null_mut();
+        let opaque = (*preg).__opaque;
+        if !opaque.is_null() {
+            // 将 opaque 指针转回 Box<Tnfa> 并 drop
+            let _ = Box::from_raw(opaque as *mut super::tre::Tnfa);
+            (*preg).__opaque = core::ptr::null_mut();
+        }
     }
 }
 

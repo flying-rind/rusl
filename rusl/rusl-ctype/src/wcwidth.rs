@@ -279,7 +279,7 @@ pub(crate) static WIDE_TABLE: &[u8] = &[
 ///
 /// [ISO C 标准库 `<wchar.h>`]
 #[no_mangle]
-pub unsafe extern "C" fn wcwidth(wc: wchar_t) -> c_int {
+pub extern "C" fn wcwidth(wc: wchar_t) -> c_int {
     // musl 原实现的逐行翻译
     let wc_u = wc as u32;
 

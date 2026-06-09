@@ -47,6 +47,7 @@ mod wcwidth_test;
 #[cfg(feature = "rusl")]
 mod imports {
     pub use rusl_ctype::*;
+    pub use rusl::api::types::*;
 }
 #[cfg(not(feature = "rusl"))]
 mod imports {

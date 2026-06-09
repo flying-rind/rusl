@@ -36,7 +36,9 @@ pub unsafe extern "C" fn __stpncpy(
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn stpncpy(d: *mut core::ffi::c_char, s: *const core::ffi::c_char, n: usize) -> *mut core::ffi::c_char {
+pub extern "C" fn stpncpy(d: *mut core::ffi::c_char, s: *const core::ffi::c_char, n: usize) -> *mut core::ffi::c_char {
+    // SAFETY: delegates to __stpncpy which requires valid non-null, non-overlapping pointers
+    // and d must be writable for n bytes, s must be null-terminated.
     unsafe { __stpncpy(d, s, n) }
 }
 

@@ -33,8 +33,11 @@ fn temper(x: u32) -> u32 {
 ///
 /// - `seed` 必须指向调用者维护的有效可读写 `u32` 变量，不能为空指针。
 #[no_mangle]
-pub unsafe extern "C" fn rand_r(seed: *mut u32) -> i32 {
-    let new_seed = (*seed).wrapping_mul(1103515245).wrapping_add(12345);
-    *seed = new_seed;
-    (temper(new_seed) >> 1) as i32
+pub extern "C" fn rand_r(seed: *mut u32) -> i32 {
+    // SAFETY: 调用者确保 seed 指向有效的 u32 变量
+    unsafe {
+        let new_seed = (*seed).wrapping_mul(1103515245).wrapping_add(12345);
+        *seed = new_seed;
+        (temper(new_seed) >> 1) as i32
+    }
 }

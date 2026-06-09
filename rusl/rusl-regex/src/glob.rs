@@ -464,12 +464,13 @@ pub(crate) fn do_glob(
 
 /// POSIX `glob()` — 查找文件系统中匹配 shell 通配符模式的路径名。
 #[no_mangle]
-pub unsafe extern "C" fn glob(
+pub extern "C" fn glob(
     pat: *const c_char,
     flags: c_int,
     errfunc: Option<unsafe extern "C" fn(*const c_char, c_int) -> c_int>,
     g: *mut glob_t,
 ) -> c_int {
+    // SAFETY: caller guarantees pat and g are valid pointers per C ABI contract.
     if pat.is_null() || g.is_null() {
         return GLOB_NOSPACE;
     }
@@ -538,10 +539,12 @@ pub unsafe extern "C" fn glob(
     let ptr_size = core::mem::size_of::<*mut c_char>();
     let arr_size = (offs + cnt + 1) * ptr_size;
 
-    let pathv: *mut *mut c_char = if (flags & GLOB_APPEND) != 0 && !(*g).gl_pathv.is_null() {
-        unsafe { glob_realloc((*g).gl_pathv as *mut c_void, arr_size) as *mut *mut c_char }
-    } else {
-        unsafe { glob_malloc(arr_size) as *mut *mut c_char }
+    let pathv: *mut *mut c_char = unsafe {
+        if (flags & GLOB_APPEND) != 0 && !(*g).gl_pathv.is_null() {
+            glob_realloc((*g).gl_pathv as *mut c_void, arr_size) as *mut *mut c_char
+        } else {
+            glob_malloc(arr_size) as *mut *mut c_char
+        }
     };
 
     if pathv.is_null() {
@@ -603,7 +606,8 @@ pub unsafe extern "C" fn glob(
 
 /// POSIX `globfree()` — 释放由先前 `glob()` 调用分配的所有内存。
 #[no_mangle]
-pub unsafe extern "C" fn globfree(g: *mut glob_t) {
+pub extern "C" fn globfree(g: *mut glob_t) {
+    // SAFETY: caller guarantees g is a valid pointer to glob_t per C ABI contract.
     if g.is_null() {
         return;
     }

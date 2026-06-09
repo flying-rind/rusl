@@ -9,10 +9,13 @@ use core::ffi::c_void;
 /// - `s` 非空
 /// - 当 `n > 0` 时，`s` 至少可写 n 字节
 #[no_mangle]
-pub unsafe extern "C" fn bzero(s: *mut core::ffi::c_void, n: usize) {
-    let p = s as *mut u8;
-    for i in 0..n {
-        unsafe { *p.add(i) = 0; }
+pub extern "C" fn bzero(s: *mut core::ffi::c_void, n: usize) {
+    // SAFETY: caller ensures s is non-null and points to at least n writable bytes
+    unsafe {
+        let p = s as *mut u8;
+        for i in 0..n {
+            *p.add(i) = 0;
+        }
     }
 }
 

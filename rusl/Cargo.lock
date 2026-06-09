@@ -9,6 +9,7 @@ dependencies = [
  "rusl-core",
  "rusl-ctype",
  "rusl-env",
+ "rusl-errno",
  "rusl-exit",
  "rusl-internal",
  "rusl-malloc",
@@ -45,6 +46,14 @@ dependencies = [
  "rusl-internal",
  "rusl-malloc",
  "rusl-string",
+]
+
+[[package]]
+name = "rusl-errno"
+version = "0.1.0"
+dependencies = [
+ "rusl-core",
+ "rusl-internal",
 ]
 
 [[package]]

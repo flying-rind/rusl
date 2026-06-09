@@ -9,7 +9,7 @@ use core::ffi::c_void;
 /// - `dest` 非空
 /// - `dest` 至少可写 n 字节
 #[no_mangle]
-pub unsafe extern "C" fn memset(dest: *mut core::ffi::c_void, c: core::ffi::c_int, n: usize) -> *mut core::ffi::c_void {
+pub extern "C" fn memset(dest: *mut core::ffi::c_void, c: core::ffi::c_int, n: usize) -> *mut core::ffi::c_void {
     // 不能使用 slice::fill，因为 fill 内部可能调用 LLVM memset intrinsic，进而调用我们的 memset 导致无限递归。
     let ptr = dest as *mut u8;
     let val = c as u8;

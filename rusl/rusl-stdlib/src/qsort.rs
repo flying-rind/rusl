@@ -295,14 +295,16 @@ pub unsafe extern "C" fn __qsort_r(
 
 /// `qsort_r` 是 `__qsort_r` 的别名（与 musl 的 weak_alias 行为一致）。
 #[no_mangle]
-pub unsafe extern "C" fn qsort_r(
+pub extern "C" fn qsort_r(
     base: *mut c_void,
     nel: usize,
     width: usize,
     cmp: Option<CmpFunR>,
     arg: *mut c_void,
 ) {
-    __qsort_r(base, nel, width, cmp, arg);
+    unsafe {
+        __qsort_r(base, nel, width, cmp, arg);
+    }
 }
 
 // ========== qsort 包装 ==========
@@ -330,7 +332,7 @@ unsafe extern "C" fn qsort_wrapper(
 /// - `cmp` 是比较函数，不得修改数组元素。
 /// - 每对元素通过 `cmp` 比较时，传入的指针在其生命周期内有效。
 #[no_mangle]
-pub unsafe extern "C" fn qsort(
+pub extern "C" fn qsort(
     base: *mut c_void,
     nel: usize,
     width: usize,
@@ -340,11 +342,13 @@ pub unsafe extern "C" fn qsort(
         Some(f) => f,
         None => return,
     };
-    __qsort_r(
-        base,
-        nel,
-        width,
-        Some(qsort_wrapper),
-        core::mem::transmute(cmp),
-    );
+    unsafe {
+        __qsort_r(
+            base,
+            nel,
+            width,
+            Some(qsort_wrapper),
+            core::mem::transmute(cmp),
+        );
+    }
 }

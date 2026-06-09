@@ -25,19 +25,21 @@ struct Link {
 /// - 若 `pred` 非空，`pred` 必须是有效链表节点。
 /// - 链表指针操作是侵入式的，不进行内存分配。
 #[no_mangle]
-pub unsafe extern "C" fn insque(element: *mut c_void, pred: *const c_void) {
-    let e = &mut *(element as *mut Link);
-    if pred.is_null() {
-        e.next = core::ptr::null_mut();
-        e.prev = core::ptr::null_mut();
-        return;
-    }
-    let p = &mut *(pred as *mut Link);
-    e.next = p.next;              // e->next = p->next
-    e.prev = pred as *mut c_void; // e->prev = p
-    p.next = element;             // p->next = e
-    if !e.next.is_null() {
-        (*(e.next as *mut Link)).prev = element; // e->next->prev = e
+pub extern "C" fn insque(element: *mut c_void, pred: *const c_void) {
+    unsafe {
+        let e = &mut *(element as *mut Link);
+        if pred.is_null() {
+            e.next = core::ptr::null_mut();
+            e.prev = core::ptr::null_mut();
+            return;
+        }
+        let p = &mut *(pred as *mut Link);
+        e.next = p.next;              // e->next = p->next
+        e.prev = pred as *mut c_void; // e->prev = p
+        p.next = element;             // p->next = e
+        if !e.next.is_null() {
+            (*(e.next as *mut Link)).prev = element; // e->next->prev = e
+        }
     }
 }
 
@@ -52,12 +54,14 @@ pub unsafe extern "C" fn insque(element: *mut c_void, pred: *const c_void) {
 /// - `element` 非空。
 /// - 摘除后不再通过旧的 neighbor 链接访问 `element`。
 #[no_mangle]
-pub unsafe extern "C" fn remque(element: *mut c_void) {
-    let e = &mut *(element as *mut Link);
-    if !e.next.is_null() {
-        (*(e.next as *mut Link)).prev = e.prev; // e->next->prev = e->prev
-    }
-    if !e.prev.is_null() {
-        (*(e.prev as *mut Link)).next = e.next; // e->prev->next = e->next
+pub extern "C" fn remque(element: *mut c_void) {
+    unsafe {
+        let e = &mut *(element as *mut Link);
+        if !e.next.is_null() {
+            (*(e.next as *mut Link)).prev = e.prev; // e->next->prev = e->prev
+        }
+        if !e.prev.is_null() {
+            (*(e.prev as *mut Link)).next = e.next; // e->prev->next = e->next
+        }
     }
 }

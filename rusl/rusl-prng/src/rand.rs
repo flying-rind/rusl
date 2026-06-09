@@ -18,9 +18,12 @@ static mut SEED: u64 = 0;
 ///
 /// 读取并修改全局可变种子 (`static mut seed: u64`)，非线程安全。
 #[no_mangle]
-pub unsafe extern "C" fn rand() -> i32 {
-    SEED = 6364136223846793005u64.wrapping_mul(SEED).wrapping_add(1);
-    (SEED >> 33) as i32
+pub extern "C" fn rand() -> i32 {
+    // SAFETY: 访问 static mut 全局种子，由调用者确保同步
+    unsafe {
+        SEED = 6364136223846793005u64.wrapping_mul(SEED).wrapping_add(1);
+        (SEED >> 33) as i32
+    }
 }
 
 /// srand — 设置全局种子为 `(seed - 1) as u64`。
@@ -29,6 +32,7 @@ pub unsafe extern "C" fn rand() -> i32 {
 ///
 /// 修改全局可变种子，非线程安全。
 #[no_mangle]
-pub unsafe extern "C" fn srand(seed: u32) {
-    SEED = (seed as u64).wrapping_sub(1);
+pub extern "C" fn srand(seed: u32) {
+    // SAFETY: 访问 static mut 全局种子，由调用者确保同步
+    unsafe { SEED = (seed as u64).wrapping_sub(1) };
 }

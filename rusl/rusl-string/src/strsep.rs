@@ -11,61 +11,65 @@ use core::ffi::c_char;
 /// - `sep` 非空，以 null 结尾
 /// - 若 *str 非 null，*str 以 null 结尾
 #[no_mangle]
-pub unsafe extern "C" fn strsep(str: *mut *mut core::ffi::c_char, sep: *const core::ffi::c_char) -> *mut core::ffi::c_char {
-    let s = *str;
-    if s.is_null() {
-        return core::ptr::null_mut();
-    }
-    // 找到第一个不在分隔符中的字符（跳过开头的分隔符）
-    let sp = s as *const u8;
-    let sep_bytes = sep as *const u8;
-    // 构建分隔符集合（简单实现，直接遍历比较）
-    let token_start = sp;
-    let mut found_token = false;
-    // 在字符串中扫描
-    let mut i = 0;
-    loop {
-        let c = unsafe { *sp.add(i) };
-        if c == 0 {
-            // 字符串结束
-            if !found_token {
-                // 没有找到 token
-                *str = core::ptr::null_mut();
-                return core::ptr::null_mut();
-            }
-            // 找到最后一个 token（不含分隔符）
-            *str = core::ptr::null_mut();
-            return s as *mut core::ffi::c_char;
+pub extern "C" fn strsep(str: *mut *mut core::ffi::c_char, sep: *const core::ffi::c_char) -> *mut core::ffi::c_char {
+    // SAFETY: caller guarantees `str` is non-null, `sep` is non-null and null-terminated,
+    // and if `*str` is non-null, it is null-terminated.
+    unsafe {
+        let s = *str;
+        if s.is_null() {
+            return core::ptr::null_mut();
         }
-        // 检查 c 是否是分隔符
-        let mut is_sep = false;
-        let mut j = 0;
+        // 找到第一个不在分隔符中的字符（跳过开头的分隔符）
+        let sp = s as *const u8;
+        let sep_bytes = sep as *const u8;
+        // 构建分隔符集合（简单实现，直接遍历比较）
+        let token_start = sp;
+        let mut found_token = false;
+        // 在字符串中扫描
+        let mut i = 0;
         loop {
-            let sc = unsafe { *sep_bytes.add(j) };
-            if sc == 0 {
-                break;
+            let c = *sp.add(i);
+            if c == 0 {
+                // 字符串结束
+                if !found_token {
+                    // 没有找到 token
+                    *str = core::ptr::null_mut();
+                    return core::ptr::null_mut();
+                }
+                // 找到最后一个 token（不含分隔符）
+                *str = core::ptr::null_mut();
+                return s as *mut core::ffi::c_char;
             }
-            if sc == c {
-                is_sep = true;
-                break;
+            // 检查 c 是否是分隔符
+            let mut is_sep = false;
+            let mut j = 0;
+            loop {
+                let sc = *sep_bytes.add(j);
+                if sc == 0 {
+                    break;
+                }
+                if sc == c {
+                    is_sep = true;
+                    break;
+                }
+                j += 1;
             }
-            j += 1;
+            if is_sep {
+                if found_token {
+                    // 找到 token 的结尾，替换分隔符为 null
+                    *(sp.add(i) as *mut u8) = 0;
+                    *str = sp.add(i + 1) as *mut core::ffi::c_char;
+                    return s;
+                }
+                // 跳过开头的分隔符
+            } else {
+                if !found_token {
+                    found_token = true;
+                    // token_start 已经在 sp+i 处
+                }
+            }
+            i += 1;
         }
-        if is_sep {
-            if found_token {
-                // 找到 token 的结尾，替换分隔符为 null
-                unsafe { *(sp.add(i) as *mut u8) = 0; }
-                *str = unsafe { sp.add(i + 1) as *mut core::ffi::c_char };
-                return s;
-            }
-            // 跳过开头的分隔符
-        } else {
-            if !found_token {
-                found_token = true;
-                // token_start 已经在 sp+i 处
-            }
-        }
-        i += 1;
     }
 }
 

@@ -12,37 +12,41 @@ use super::strlen::strlen;
 /// - d 以 null 结尾
 /// - s 以 null 结尾
 #[no_mangle]
-pub unsafe extern "C" fn strlcat(d: *mut core::ffi::c_char, s: *const core::ffi::c_char, n: usize) -> usize {
-    let dst = d as *mut u8;
-    let src = s as *const u8;
-    // 找到 dst 中 null 的位置（或 n 限制位置）
-    let mut dlen = 0;
-    while dlen < n && unsafe { *dst.add(dlen) } != 0 {
-        dlen += 1;
-    }
-    if dlen == n {
-        // dst 没有 null 终止符
-        return dlen + unsafe { strlen(s) };
-    }
-    // 计算 src 长度，同时复制
-    let mut slen = 0;
-    while slen < n - dlen {
-        let byte = unsafe { *src.add(slen) };
-        unsafe { *dst.add(dlen + slen) = byte; }
-        if byte == 0 {
-            return dlen + slen;
+pub extern "C" fn strlcat(d: *mut core::ffi::c_char, s: *const core::ffi::c_char, n: usize) -> usize {
+    // SAFETY: caller guarantees d and s are valid null-terminated pointers,
+    // d points to a writable buffer of at least n bytes.
+    unsafe {
+        let dst = d as *mut u8;
+        let src = s as *const u8;
+        // 找到 dst 中 null 的位置（或 n 限制位置）
+        let mut dlen = 0;
+        while dlen < n && *dst.add(dlen) != 0 {
+            dlen += 1;
         }
-        slen += 1;
+        if dlen == n {
+            // dst 没有 null 终止符
+            return dlen + strlen(s);
+        }
+        // 计算 src 长度，同时复制
+        let mut slen = 0;
+        while slen < n - dlen {
+            let byte = *src.add(slen);
+            *dst.add(dlen + slen) = byte;
+            if byte == 0 {
+                return dlen + slen;
+            }
+            slen += 1;
+        }
+        // 到达缓冲区边界，添加 null 终止符
+        *dst.add(n - 1) = 0;
+        // 继续计算 src 剩余长度
+        let mut total = dlen + slen;
+        while *src.add(slen) != 0 {
+            total += 1;
+            slen += 1;
+        }
+        total
     }
-    // 到达缓冲区边界，添加 null 终止符
-    unsafe { *dst.add(n - 1) = 0; }
-    // 继续计算 src 剩余长度
-    let mut total = dlen + slen;
-    while unsafe { *src.add(slen) } != 0 {
-        total += 1;
-        slen += 1;
-    }
-    total
 }
 
 /// 安全的 Rust 内部实现。

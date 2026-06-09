@@ -10,7 +10,7 @@ use core::ffi::c_void;
 /// - `dest` 和 `src` 不重叠（违反则行为未定义）
 /// - `dest` 至少可写 n 字节，`src` 至少可读 n 字节
 #[no_mangle]
-pub unsafe extern "C" fn memcpy(dest: *mut core::ffi::c_void, src: *const core::ffi::c_void, n: usize) -> *mut core::ffi::c_void {
+pub extern "C" fn memcpy(dest: *mut core::ffi::c_void, src: *const core::ffi::c_void, n: usize) -> *mut core::ffi::c_void {
     // 不能使用 slice::copy_from_slice，因为它内部调用 ptr::copy_nonoverlapping，
     // 而 ptr::copy_nonoverlapping 可能降级为 LLVM memcpy intrinsic 调用我们的 memcpy，导致无限递归。
     let d = dest as *mut u8;

@@ -10,18 +10,21 @@ use core::ffi::c_void;
 /// - `dest` 和 `src` 不重叠（restrict 约束）
 /// - `dest` 至少可写 n 字节，`src` 至少可读 n 字节
 #[no_mangle]
-pub unsafe extern "C" fn memccpy(dest: *mut core::ffi::c_void, src: *const core::ffi::c_void, c: core::ffi::c_int, n: usize) -> *mut core::ffi::c_void {
-    let d = dest as *mut u8;
-    let s = src as *const u8;
-    let target = c as u8;
-    for i in 0..n {
-        let byte = unsafe { *s.add(i) };
-        unsafe { *d.add(i) = byte; }
-        if byte == target {
-            return unsafe { d.add(i + 1) as *mut core::ffi::c_void };
+pub extern "C" fn memccpy(dest: *mut core::ffi::c_void, src: *const core::ffi::c_void, c: core::ffi::c_int, n: usize) -> *mut core::ffi::c_void {
+    // SAFETY: 调用者保证 dest/src 非空、不重叠，且 dest 可写 n 字节、src 可读 n 字节
+    unsafe {
+        let d = dest as *mut u8;
+        let s = src as *const u8;
+        let target = c as u8;
+        for i in 0..n {
+            let byte = *s.add(i);
+            *d.add(i) = byte;
+            if byte == target {
+                return d.add(i + 1) as *mut core::ffi::c_void;
+            }
         }
+        core::ptr::null_mut()
     }
-    core::ptr::null_mut()
 }
 
 /// 安全的 Rust 内部实现。

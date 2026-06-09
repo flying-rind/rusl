@@ -11,7 +11,7 @@ use core::ffi::c_void;
 /// - `_src` 至少可读 n 字节
 /// - `_dest` 至少可写 (n & !1) 字节
 #[no_mangle]
-pub unsafe extern "C" fn swab(_src: *const core::ffi::c_void, _dest: *mut core::ffi::c_void, n: isize) {
+pub extern "C" fn swab(_src: *const core::ffi::c_void, _dest: *mut core::ffi::c_void, n: isize) {
     if n <= 1 {
         return;
     }

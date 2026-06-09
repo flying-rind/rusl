@@ -11,7 +11,7 @@ use rusl_core::c_types::locale_t;
 /// - `_l` 非空、`_r` 非空
 /// - _l 和 _r 以 null 结尾
 #[no_mangle]
-pub unsafe extern "C" fn strcasecmp(_l: *const core::ffi::c_char, _r: *const core::ffi::c_char) -> core::ffi::c_int {
+pub extern "C" fn strcasecmp(_l: *const core::ffi::c_char, _r: *const core::ffi::c_char) -> core::ffi::c_int {
     let a = _l as *const u8;
     let b = _r as *const u8;
     let mut i = 0;
@@ -32,11 +32,11 @@ pub unsafe extern "C" fn strcasecmp(_l: *const core::ffi::c_char, _r: *const cor
 
 #[no_mangle]
 pub unsafe extern "C" fn __strcasecmp_l(l: *const c_char, r: *const c_char, _loc: locale_t) -> c_int {
-    unsafe { strcasecmp(l, r) }
+    strcasecmp(l, r)
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn strcasecmp_l(l: *const c_char, r: *const c_char, loc: locale_t) -> c_int {
+pub extern "C" fn strcasecmp_l(l: *const c_char, r: *const c_char, loc: locale_t) -> c_int {
     unsafe { __strcasecmp_l(l, r, loc) }
 }
 

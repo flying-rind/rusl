@@ -38,7 +38,7 @@
 ///
 /// 时间复杂度 O(1)。
 #[no_mangle]
-pub unsafe extern "C" fn __ctype_get_mb_cur_max() -> usize {
+pub extern "C" fn __ctype_get_mb_cur_max() -> usize {
     // 在 C locale (默认) 下，MB_CUR_MAX = 1。
     // musl 中 MB_CUR_MAX 宏展开为 (CURRENT_UTF8 ? 4 : 1)，
     // 其中 CURRENT_UTF8 检查当前线程 locale 的 LC_CTYPE 类别。

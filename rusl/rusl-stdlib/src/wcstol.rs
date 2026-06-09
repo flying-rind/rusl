@@ -127,38 +127,38 @@ unsafe fn wcstox_unsigned_ll(
 
 /// 将 `s` 指向的宽字符串按 `base` 进制转换为 `i64`。
 #[no_mangle]
-pub unsafe extern "C" fn wcstol(s: *const wchar_t, endptr: *mut *mut wchar_t, base: i32) -> i64 {
-    wcstox_signed(s, endptr, base)
+pub extern "C" fn wcstol(s: *const wchar_t, endptr: *mut *mut wchar_t, base: i32) -> i64 {
+    unsafe { wcstox_signed(s, endptr, base) }
 }
 
 /// 将 `s` 指向的宽字符串按 `base` 进制转换为 `i64`（long long 版）。
 #[no_mangle]
-pub unsafe extern "C" fn wcstoll(s: *const wchar_t, endptr: *mut *mut wchar_t, base: i32) -> i64 {
-    wcstox_signed_ll(s, endptr, base)
+pub extern "C" fn wcstoll(s: *const wchar_t, endptr: *mut *mut wchar_t, base: i32) -> i64 {
+    unsafe { wcstox_signed_ll(s, endptr, base) }
 }
 
 /// 将 `s` 指向的宽字符串按 `base` 进制转换为 `u64`（unsigned long 版）。
 #[no_mangle]
-pub unsafe extern "C" fn wcstoul(s: *const wchar_t, endptr: *mut *mut wchar_t, base: i32) -> u64 {
-    wcstox_unsigned(s, endptr, base)
+pub extern "C" fn wcstoul(s: *const wchar_t, endptr: *mut *mut wchar_t, base: i32) -> u64 {
+    unsafe { wcstox_unsigned(s, endptr, base) }
 }
 
 /// 将 `s` 指向的宽字符串按 `base` 进制转换为 `u64`（unsigned long long 版）。
 #[no_mangle]
-pub unsafe extern "C" fn wcstoull(s: *const wchar_t, endptr: *mut *mut wchar_t, base: i32) -> u64 {
-    wcstox_unsigned_ll(s, endptr, base)
+pub extern "C" fn wcstoull(s: *const wchar_t, endptr: *mut *mut wchar_t, base: i32) -> u64 {
+    unsafe { wcstox_unsigned_ll(s, endptr, base) }
 }
 
 /// 将 `s` 指向的宽字符串按 `base` 进制转换为 `i64`（intmax_t 版）。
 #[no_mangle]
-pub unsafe extern "C" fn wcstoimax(s: *const wchar_t, endptr: *mut *mut wchar_t, base: i32) -> i64 {
-    wcstox_signed(s, endptr, base)
+pub extern "C" fn wcstoimax(s: *const wchar_t, endptr: *mut *mut wchar_t, base: i32) -> i64 {
+    unsafe { wcstox_signed(s, endptr, base) }
 }
 
 /// 将 `s` 指向的宽字符串按 `base` 进制转换为 `u64`（uintmax_t 版）。
 #[no_mangle]
-pub unsafe extern "C" fn wcstoumax(s: *const wchar_t, endptr: *mut *mut wchar_t, base: i32) -> u64 {
-    wcstox_unsigned(s, endptr, base)
+pub extern "C" fn wcstoumax(s: *const wchar_t, endptr: *mut *mut wchar_t, base: i32) -> u64 {
+    unsafe { wcstox_unsigned(s, endptr, base) }
 }
 
 // ---------- 测试 ----------

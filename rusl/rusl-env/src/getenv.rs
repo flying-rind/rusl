@@ -34,40 +34,44 @@ use core::ffi::{c_char, CStr};
 ///
 /// 调用者只能读取返回值，不得修改或释放。本函数不设置 `errno`。
 #[no_mangle]
-pub unsafe extern "C" fn getenv(name: *const c_char) -> *mut c_char {
-    // Step 1: 计算名称长度，同时检测 '=' 字符
-    let eq_or_end = strchrnul_impl(name, b'=');
-    let l = (eq_or_end as usize).wrapping_sub(name as usize);
+pub extern "C" fn getenv(name: *const c_char) -> *mut c_char {
+    // SAFETY: 调用者确保 name 为非空、以 \0 结尾的有效 C 字符串。
+    // 内部访问全局 environ 指针及环境条目内存。
+    unsafe {
+        // Step 1: 计算名称长度，同时检测 '=' 字符
+        let eq_or_end = strchrnul_impl(name, b'=');
+        let l = (eq_or_end as usize).wrapping_sub(name as usize);
 
-    // Step 2: 非法名称 — 空字符串 或 包含 '='
-    if l == 0 || *eq_or_end != 0 {
-        return core::ptr::null_mut();
-    }
-
-    // Step 3: 检查 environ 是否已初始化
-    let env_ptr = unsafe { crate::__environ::environ };
-    if env_ptr.is_null() {
-        return core::ptr::null_mut();
-    }
-
-    // Step 4: 线性扫描环境变量数组
-    let name_bytes = unsafe { core::slice::from_raw_parts(name as *const u8, l) };
-    let mut i = 0;
-    loop {
-        let entry = unsafe { *env_ptr.add(i) };
-        if entry.is_null() {
-            break;
+        // Step 2: 非法名称 — 空字符串 或 包含 '='
+        if l == 0 || *eq_or_end != 0 {
+            return core::ptr::null_mut();
         }
-        // 精确名称匹配: 前 l 个字符相等
-        if prefix_match(name_bytes, entry, l)
-            && unsafe { *entry.add(l) as u8 } == b'='
-        {
-            return unsafe { entry.add(l + 1) };
-        }
-        i += 1;
-    }
 
-    core::ptr::null_mut()
+        // Step 3: 检查 environ 是否已初始化
+        let env_ptr = crate::__environ::environ;
+        if env_ptr.is_null() {
+            return core::ptr::null_mut();
+        }
+
+        // Step 4: 线性扫描环境变量数组
+        let name_bytes = core::slice::from_raw_parts(name as *const u8, l);
+        let mut i = 0;
+        loop {
+            let entry = *env_ptr.add(i);
+            if entry.is_null() {
+                break;
+            }
+            // 精确名称匹配: 前 l 个字符相等
+            if prefix_match(name_bytes, entry, l)
+                && *entry.add(l) as u8 == b'='
+            {
+                return entry.add(l + 1);
+            }
+            i += 1;
+        }
+
+        core::ptr::null_mut()
+    }
 }
 
 // ============================================================================

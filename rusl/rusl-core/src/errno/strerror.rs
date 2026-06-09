@@ -130,7 +130,7 @@ fn errno_to_message(e: c_int) -> *const c_char {
 /// ```c
 /// char *strerror(int errnum);
 /// ```
-#[no_mangle]
+
 pub extern "C" fn strerror(e: c_int) -> *mut c_char {
     errno_to_message(e) as *mut c_char
 }
@@ -146,7 +146,7 @@ pub extern "C" fn strerror(e: c_int) -> *mut c_char {
 /// ```c
 /// char *strerror_l(int errnum, locale_t loc);
 /// ```
-#[no_mangle]
+
 pub extern "C" fn strerror_l(e: c_int, _loc: locale_t) -> *mut c_char {
     errno_to_message(e) as *mut c_char
 }

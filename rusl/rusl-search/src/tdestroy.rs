@@ -24,28 +24,31 @@ extern "C" {
 /// - `free_key` 回调中不应访问树的结构。
 /// - 销毁后所有指向树节点的指针变为悬空指针。
 #[no_mangle]
-pub unsafe extern "C" fn tdestroy(
+pub extern "C" fn tdestroy(
     root: *mut c_void,
     free_key: Option<unsafe extern "C" fn(*mut c_void)>,
 ) {
-    if root.is_null() {
-        return;
-    }
-    let r = root as *mut Node;
+    // SAFETY: 调用者确保 root 为 null 或指向 tsearch/tdelete 管理的有效树节点
+    unsafe {
+        if root.is_null() {
+            return;
+        }
+        let r = root as *mut Node;
 
-    // 后序遍历：先递归处理子树，再释放当前节点
-    if !(*r).a[0].is_null() {
-        tdestroy((*r).a[0], free_key);
-    }
-    if !(*r).a[1].is_null() {
-        tdestroy((*r).a[1], free_key);
-    }
+        // 后序遍历：先递归处理子树，再释放当前节点
+        if !(*r).a[0].is_null() {
+            tdestroy((*r).a[0], free_key);
+        }
+        if !(*r).a[1].is_null() {
+            tdestroy((*r).a[1], free_key);
+        }
 
-    // 调用 free_key 回调（如果提供）释放用户数据
-    if let Some(fk) = free_key {
-        fk((*r).key as *mut c_void);
-    }
+        // 调用 free_key 回调（如果提供）释放用户数据
+        if let Some(fk) = free_key {
+            fk((*r).key as *mut c_void);
+        }
 
-    // 释放节点内存
-    free(r as *mut c_void);
+        // 释放节点内存
+        free(r as *mut c_void);
+    }
 }

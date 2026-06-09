@@ -63,36 +63,37 @@ unsafe extern "C" fn sn_write(f: *mut FILE, buf: *const u8, len: usize) -> usize
 ///
 /// 返回若缓冲区足够大时本应写入的字节数（不含 '\0'）。
 #[no_mangle]
-pub unsafe extern "C" fn vsnprintf(
+pub extern "C" fn vsnprintf(
     s: *mut c_char,
     n: usize,
     fmt: *const c_char,
     ap: *mut VaList,
 ) -> c_int {
-    let mut buf: u8 = 0;
-    let mut dummy: u8 = 0;
-
-    let mut c = Cookie {
-        s: if n > 0 {
-            s as *mut u8
-        } else {
-            &mut dummy as *mut u8
-        },
-        n: if n > 0 { n - 1 } else { 0 },
-    };
-
-    // 构建栈上的 FILE，lock == -1 消除所有锁操作
-    let mut f: FILE = unsafe { core::mem::zeroed() };
-    f.lbf = EOF;
-    f.write = Some(sn_write);
-    f.lock = -1;
-    f.buf = &mut buf as *mut u8;
-    f.cookie = &mut c as *mut Cookie as *mut core::ffi::c_void;
-
-    // 确保初始以 '\0' 结尾
+    // SAFETY: caller guarantees s (if non-null) is a valid buffer and fmt/ap are valid per C ABI contract.
     unsafe {
-        *c.s = 0;
-    }
+        let mut buf: u8 = 0;
+        let mut dummy: u8 = 0;
 
-    vfprintf(&mut f as *mut FILE, fmt, ap)
+        let mut c = Cookie {
+            s: if n > 0 {
+                s as *mut u8
+            } else {
+                &mut dummy as *mut u8
+            },
+            n: if n > 0 { n - 1 } else { 0 },
+        };
+
+        // 构建栈上的 FILE，lock == -1 消除所有锁操作
+        let mut f: FILE = core::mem::zeroed();
+        f.lbf = EOF;
+        f.write = Some(sn_write);
+        f.lock = -1;
+        f.buf = &mut buf as *mut u8;
+        f.cookie = &mut c as *mut Cookie as *mut core::ffi::c_void;
+
+        // 确保初始以 '\0' 结尾
+        *c.s = 0;
+
+        vfprintf(&mut f as *mut FILE, fmt, ap)
+    }
 }

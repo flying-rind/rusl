@@ -8,27 +8,30 @@
 /// - `h` 非空、`n` 非空
 /// - h 和 n 以 L'\0' 结尾
 #[no_mangle]
-pub unsafe extern "C" fn wcsstr(h: *const u32, n: *const u32) -> *mut u32 {
-    let haystack = h;
-    let needle = n;
-    if unsafe { *needle } == 0 {
-        return h as *mut u32;
-    }
-    let first = unsafe { *needle };
-    let mut i = 0;
-    loop {
-        let hc = unsafe { *haystack.add(i) };
-        if hc == 0 { return core::ptr::null_mut(); }
-        if hc == first {
-            let mut j = 1;
-            loop {
-                let nc = unsafe { *needle.add(j) };
-                if nc == 0 { return haystack.add(i) as *mut u32; }
-                if unsafe { *haystack.add(i + j) } != nc { break; }
-                j += 1;
-            }
+pub extern "C" fn wcsstr(h: *const u32, n: *const u32) -> *mut u32 {
+    // SAFETY: caller guarantees h and n are valid, non-null, null-terminated wide strings
+    unsafe {
+        let haystack = h;
+        let needle = n;
+        if *needle == 0 {
+            return h as *mut u32;
         }
-        i += 1;
+        let first = *needle;
+        let mut i = 0;
+        loop {
+            let hc = *haystack.add(i);
+            if hc == 0 { return core::ptr::null_mut(); }
+            if hc == first {
+                let mut j = 1;
+                loop {
+                    let nc = *needle.add(j);
+                    if nc == 0 { return haystack.add(i) as *mut u32; }
+                    if *haystack.add(i + j) != nc { break; }
+                    j += 1;
+                }
+            }
+            i += 1;
+        }
     }
 }
 

@@ -10,13 +10,17 @@
 /// - `d` 至少可写 (wcslen(s) + 1) 个 wchar_t
 /// - s 以 L'\0' 结尾
 #[no_mangle]
-pub unsafe extern "C" fn wcpcpy(d: *mut u32, s: *const u32) -> *mut u32 {
-    let mut i = 0;
-    loop {
-        let ch = unsafe { *s.add(i) };
-        unsafe { *d.add(i) = ch; }
-        if ch == 0 { return d.add(i) as *mut u32; }
-        i += 1;
+pub extern "C" fn wcpcpy(d: *mut u32, s: *const u32) -> *mut u32 {
+    // SAFETY: caller guarantees d and s are non-null, non-overlapping,
+    // d has space for wcslen(s)+1 wchar_t, and s is null-terminated.
+    unsafe {
+        let mut i = 0;
+        loop {
+            let ch = *s.add(i);
+            *d.add(i) = ch;
+            if ch == 0 { return d.add(i) as *mut u32; }
+            i += 1;
+        }
     }
 }
 

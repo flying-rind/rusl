@@ -188,12 +188,12 @@ mod debug_tests {
 /// 测试通过 `tdelete_impl` 直接调用，避免与 libc 的 `tdelete` 符号冲突。
 #[cfg(not(test))]
 #[no_mangle]
-pub unsafe extern "C" fn tdelete(
+pub extern "C" fn tdelete(
     key: *const c_void,
     rootp: *mut *mut c_void,
     compar: Option<unsafe extern "C" fn(*const c_void, *const c_void) -> i32>,
 ) -> *mut c_void {
-    tdelete_impl(key, rootp, compar)
+    unsafe { tdelete_impl(key, rootp, compar) }
 }
 
 #[cfg(test)]

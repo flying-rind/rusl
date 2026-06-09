@@ -9,7 +9,7 @@
 /// - l 和 r 以 L'\0' 结尾
 use super::wcsncasecmp::wcsncasecmp;
 
-pub unsafe extern "C" fn wcsncasecmp_l(l: *const u32, r: *const u32, n: usize, _locale: *mut core::ffi::c_void) -> core::ffi::c_int {
+pub extern "C" fn wcsncasecmp_l(l: *const u32, r: *const u32, n: usize, _locale: *mut core::ffi::c_void) -> core::ffi::c_int {
     // musl 实现忽略 locale 参数
     wcsncasecmp(l, r, n)
 }

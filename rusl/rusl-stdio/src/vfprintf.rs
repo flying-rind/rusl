@@ -555,64 +555,67 @@ unsafe fn printf_core(f: *mut FILE, fmt: *const u8, ap: *mut VaList) -> i32 {
 // ===========================================================================
 
 #[no_mangle]
-pub unsafe extern "C" fn vfprintf(
+pub extern "C" fn vfprintf(
     f: *mut FILE,
     fmt: *const c_char,
     ap: *mut VaList,
 ) -> c_int {
-    let f_ref = &mut *f;
-    let mut saved_buf: *mut u8 = core::ptr::null_mut();
-    let mut internal_buf = [0u8; 80];
-    let olderr = f_ref.flags & F_ERR;
-    let mut ret: c_int;
+    // SAFETY: caller guarantees f, fmt, ap are valid pointers per C ABI contract.
+    unsafe {
+        let f_ref = &mut *f;
+        let mut saved_buf: *mut u8 = core::ptr::null_mut();
+        let mut internal_buf = [0u8; 80];
+        let olderr = f_ref.flags & F_ERR;
+        let mut ret: c_int;
 
-    f_ref.flags &= !F_ERR;
+        f_ref.flags &= !F_ERR;
 
-    if f_ref.buf_size == 0 {
-        saved_buf = f_ref.buf;
-        f_ref.buf = internal_buf.as_mut_ptr();
-        f_ref.buf_size = internal_buf.len();
-        f_ref.wpos = core::ptr::null_mut();
-        f_ref.wbase = core::ptr::null_mut();
-        f_ref.wend = core::ptr::null_mut();
-    }
+        if f_ref.buf_size == 0 {
+            saved_buf = f_ref.buf;
+            f_ref.buf = internal_buf.as_mut_ptr();
+            f_ref.buf_size = internal_buf.len();
+            f_ref.wpos = core::ptr::null_mut();
+            f_ref.wbase = core::ptr::null_mut();
+            f_ref.wend = core::ptr::null_mut();
+        }
 
-    if f_ref.wend.is_null() {
-        if __towrite(f) != 0 {
-            ret = -1;
-            if !saved_buf.is_null() {
-                f_ref.buf = saved_buf;
-                f_ref.buf_size = 0;
-                f_ref.wpos = core::ptr::null_mut();
-                f_ref.wbase = core::ptr::null_mut();
-                f_ref.wend = core::ptr::null_mut();
+        if f_ref.wend.is_null() {
+            if __towrite(f) != 0 {
+                ret = -1;
+                if !saved_buf.is_null() {
+                    f_ref.buf = saved_buf;
+                    f_ref.buf_size = 0;
+                    f_ref.wpos = core::ptr::null_mut();
+                    f_ref.wbase = core::ptr::null_mut();
+                    f_ref.wend = core::ptr::null_mut();
+                }
+                f_ref.flags |= olderr;
+                return ret;
             }
-            f_ref.flags |= olderr;
-            return ret;
         }
-    }
 
-    ret = printf_core(f, fmt as *const u8, ap);
+        ret = printf_core(f, fmt as *const u8, ap);
 
-    if !saved_buf.is_null() {
-        if let Some(write_fn) = f_ref.write {
-            write_fn(f, core::ptr::null(), 0);
+        if !saved_buf.is_null() {
+            if let Some(write_fn) = f_ref.write {
+                write_fn(f, core::ptr::null(), 0);
+            }
+            if f_ref.wpos.is_null() {
+                ret = -1;
+            }
+            f_ref.buf = saved_buf;
+            f_ref.buf_size = 0;
+            f_ref.wpos = core::ptr::null_mut();
+            f_ref.wbase = core::ptr::null_mut();
+            f_ref.wend = core::ptr::null_mut();
         }
-        if f_ref.wpos.is_null() {
+
+        if ferror(f) {
             ret = -1;
         }
-        f_ref.buf = saved_buf;
-        f_ref.buf_size = 0;
-        f_ref.wpos = core::ptr::null_mut();
-        f_ref.wbase = core::ptr::null_mut();
-        f_ref.wend = core::ptr::null_mut();
+        f_ref.flags |= olderr;
+        ret
     }
-
-    if ferror(f) {
-        ret = -1;
-    }
-    f_ref.flags |= olderr;
-    ret
 }
 
 // ===========================================================================

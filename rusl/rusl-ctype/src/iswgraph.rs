@@ -17,10 +17,9 @@ use rusl_core::c_types::{locale_t, wint_t};
 ///
 /// # 安全性
 ///
-/// 此函数标记为 `unsafe` 以保持 C ABI 签名兼容。
 /// 实际调用无内存安全性风险。
 #[no_mangle]
-pub unsafe extern "C" fn iswgraph(wc: wint_t) -> c_int {
+pub extern "C" fn iswgraph(wc: wint_t) -> c_int {
     __iswgraph_l(wc, core::ptr::null_mut())
 }
 
@@ -28,11 +27,8 @@ pub unsafe extern "C" fn iswgraph(wc: wint_t) -> c_int {
 ///
 /// 等价于 `!iswspace_l(wc, l) && iswprint_l(wc, l)`。
 ///
-/// # 安全性
-///
-/// - `l`: 必须为有效的 locale 句柄, 或 `NULL` 表示 C locale。
 #[no_mangle]
-pub unsafe extern "C" fn iswgraph_l(wc: wint_t, l: locale_t) -> c_int {
+pub extern "C" fn iswgraph_l(wc: wint_t, l: locale_t) -> c_int {
     __iswgraph_l(wc, l)
 }
 

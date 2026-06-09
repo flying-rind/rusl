@@ -812,105 +812,107 @@ pub(crate) fn fnmatch_internal(
 /// | 匹配成功 | `0` |
 /// | 匹配失败 | `FNM_NOMATCH` (1) |
 #[no_mangle]
-pub unsafe extern "C" fn fnmatch(
+pub extern "C" fn fnmatch(
     pat: *const c_char,
     str: *const c_char,
     flags: c_int,
 ) -> c_int {
-    // 将空指针视为空字符串
-    if pat.is_null() || str.is_null() {
-        return FNM_NOMATCH;
-    }
+    unsafe {
+        // 将空指针视为空字符串
+        if pat.is_null() || str.is_null() {
+            return FNM_NOMATCH;
+        }
 
-    let pat_len = unsafe { libc_strlen(pat) };
-    let str_len = unsafe { libc_strlen(str) };
-    let pat_slice = unsafe { core::slice::from_raw_parts(pat as *const u8, pat_len) };
-    let str_slice = unsafe { core::slice::from_raw_parts(str as *const u8, str_len) };
-    let fnm_flags = FnmFlags::from_bits_truncate(flags);
+        let pat_len = libc_strlen(pat);
+        let str_len = libc_strlen(str);
+        let pat_slice = core::slice::from_raw_parts(pat as *const u8, pat_len);
+        let str_slice = core::slice::from_raw_parts(str as *const u8, str_len);
+        let fnm_flags = FnmFlags::from_bits_truncate(flags);
 
-    // ===== FNM_PATHNAME 模式 =====
-    if fnm_flags.contains(FnmFlags::PATHNAME) {
-        let mut p_pos: usize = 0;
-        let mut s_pos: usize = 0;
+        // ===== FNM_PATHNAME 模式 =====
+        if fnm_flags.contains(FnmFlags::PATHNAME) {
+            let mut p_pos: usize = 0;
+            let mut s_pos: usize = 0;
 
-        loop {
-            // 在字符串中找下一个 '/'
-            let s_start = s_pos;
-            while s_pos < str_slice.len() && str_slice[s_pos] != b'/' {
-                s_pos += 1;
-            }
-            let s_seg_end = s_pos;
-
-            // 在模式中找下一个 '/' 或 END
-            let p_start = p_pos;
-            let p_seg_end = loop {
-                let prev = p_pos;
-                let c = pat_next(pat_slice, &mut p_pos, fnm_flags);
-                match c {
-                    TokenKind::End => break p_pos,
-                    TokenKind::Literal(val) if val == b'/' as i32 => break prev, // '/' 之前
-                    TokenKind::Unmatchable => return FNM_NOMATCH,
-                    _ => {}
+            loop {
+                // 在字符串中找下一个 '/'
+                let s_start = s_pos;
+                while s_pos < str_slice.len() && str_slice[s_pos] != b'/' {
+                    s_pos += 1;
                 }
-                if p_pos == prev {
-                    // 防止无限循环
-                    break p_pos;
+                let s_seg_end = s_pos;
+
+                // 在模式中找下一个 '/' 或 END
+                let p_start = p_pos;
+                let p_seg_end = loop {
+                    let prev = p_pos;
+                    let c = pat_next(pat_slice, &mut p_pos, fnm_flags);
+                    match c {
+                        TokenKind::End => break p_pos,
+                        TokenKind::Literal(val) if val == b'/' as i32 => break prev, // '/' 之前
+                        TokenKind::Unmatchable => return FNM_NOMATCH,
+                        _ => {}
+                    }
+                    if p_pos == prev {
+                        // 防止无限循环
+                        break p_pos;
+                    }
+                };
+
+                // 检查模式与字符串的终止状态一致性
+                // C 代码: if (c!=*s && (!*s || !(flags & FNM_LEADING_DIR))) return FNM_NOMATCH;
+                let pat_ended = p_pos >= pat_slice.len()
+                    || (p_pos < pat_slice.len() && pat_slice[p_pos] == 0);
+                let str_ended = s_pos >= str_slice.len();
+
+                if pat_ended != str_ended {
+                    if str_ended && fnm_flags.contains(FnmFlags::LEADING_DIR) {
+                        return 0;
+                    }
+                    return FNM_NOMATCH;
                 }
-            };
 
-            // 检查模式与字符串的终止状态一致性
-            // C 代码: if (c!=*s && (!*s || !(flags & FNM_LEADING_DIR))) return FNM_NOMATCH;
-            let pat_ended = p_pos >= pat_slice.len()
-                || (p_pos < pat_slice.len() && pat_slice[p_pos] == 0);
-            let str_ended = s_pos >= str_slice.len();
+                // 匹配当前段
+                if !fnmatch_internal(
+                    &pat_slice[p_start..p_seg_end],
+                    &str_slice[s_start..s_seg_end],
+                    fnm_flags,
+                ) {
+                    return FNM_NOMATCH;
+                }
 
-            if pat_ended != str_ended {
-                if str_ended && fnm_flags.contains(FnmFlags::LEADING_DIR) {
+                if pat_ended {
                     return 0;
                 }
-                return FNM_NOMATCH;
-            }
 
-            // 匹配当前段
-            if !fnmatch_internal(
-                &pat_slice[p_start..p_seg_end],
-                &str_slice[s_start..s_seg_end],
-                fnm_flags,
-            ) {
-                return FNM_NOMATCH;
-            }
-
-            if pat_ended {
-                return 0;
-            }
-
-            // 跳过 '/' 分隔符
-            s_pos += 1; // 跳过字符串中的 '/'
-                          // p_pos 需要跳过模式中的 '/'（pat_next 已消费 '/' 字面）
-            if p_pos < pat_slice.len() && pat_slice[p_pos] == b'/' {
-                p_pos += 1;
-            }
-            // 如果 pat_next 消费了 '/' 作为 Literal，则 p_pos 已在其后
-        }
-    }
-
-    // ===== FNM_LEADING_DIR 模式 =====
-    if fnm_flags.contains(FnmFlags::LEADING_DIR) {
-        for s_pos in 0..str_slice.len() {
-            if str_slice[s_pos] != b'/' {
-                continue;
-            }
-            if fnmatch_internal(pat_slice, &str_slice[..s_pos], fnm_flags) {
-                return 0;
+                // 跳过 '/' 分隔符
+                s_pos += 1; // 跳过字符串中的 '/'
+                              // p_pos 需要跳过模式中的 '/'（pat_next 已消费 '/' 字面）
+                if p_pos < pat_slice.len() && pat_slice[p_pos] == b'/' {
+                    p_pos += 1;
+                }
+                // 如果 pat_next 消费了 '/' 作为 Literal，则 p_pos 已在其后
             }
         }
-    }
 
-    // ===== 普通模式：直接全字符串匹配 =====
-    if fnmatch_internal(pat_slice, str_slice, fnm_flags) {
-        0
-    } else {
-        FNM_NOMATCH
+        // ===== FNM_LEADING_DIR 模式 =====
+        if fnm_flags.contains(FnmFlags::LEADING_DIR) {
+            for s_pos in 0..str_slice.len() {
+                if str_slice[s_pos] != b'/' {
+                    continue;
+                }
+                if fnmatch_internal(pat_slice, &str_slice[..s_pos], fnm_flags) {
+                    return 0;
+                }
+            }
+        }
+
+        // ===== 普通模式：直接全字符串匹配 =====
+        if fnmatch_internal(pat_slice, str_slice, fnm_flags) {
+            0
+        } else {
+            FNM_NOMATCH
+        }
     }
 }
 

@@ -9,7 +9,7 @@ use core::ffi::c_char;
 /// - `s` 非空
 /// - s 以 null 结尾
 #[no_mangle]
-pub unsafe extern "C" fn strrchr(s: *const core::ffi::c_char, c: core::ffi::c_int) -> *mut core::ffi::c_char {
+pub extern "C" fn strrchr(s: *const core::ffi::c_char, c: core::ffi::c_int) -> *mut core::ffi::c_char {
     let p = s as *const u8;
     let target = c as u8;
     let mut result: *mut core::ffi::c_char = core::ptr::null_mut();
@@ -17,7 +17,7 @@ pub unsafe extern "C" fn strrchr(s: *const core::ffi::c_char, c: core::ffi::c_in
     loop {
         let byte = unsafe { *p.add(i) };
         if byte == target {
-            result = p.add(i) as *mut core::ffi::c_char;
+            result = unsafe { p.add(i) } as *mut core::ffi::c_char;
         }
         if byte == 0 {
             break;

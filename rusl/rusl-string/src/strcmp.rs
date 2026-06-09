@@ -9,7 +9,7 @@ use core::ffi::c_char;
 /// - `l` 非空、`r` 非空
 /// - l 和 r 以 null 结尾
 #[no_mangle]
-pub unsafe extern "C" fn strcmp(l: *const core::ffi::c_char, r: *const core::ffi::c_char) -> core::ffi::c_int {
+pub extern "C" fn strcmp(l: *const core::ffi::c_char, r: *const core::ffi::c_char) -> core::ffi::c_int {
     // 不能使用 CStr::from_ptr，因为它内部调用 strlen，而 strlen 被我们的实现覆盖。
     let a = l as *const u8;
     let b = r as *const u8;

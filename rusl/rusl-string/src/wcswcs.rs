@@ -9,7 +9,7 @@
 /// - haystack 和 needle 以 L'\0' 结尾
 use super::wcsstr::wcsstr;
 
-pub unsafe extern "C" fn wcswcs(haystack: *const u32, needle: *const u32) -> *mut u32 {
+pub extern "C" fn wcswcs(haystack: *const u32, needle: *const u32) -> *mut u32 {
     // wcswcs 是 wcsstr 的 BSD 别名
     wcsstr(haystack, needle)
 }

@@ -8,7 +8,7 @@ use core::ffi::c_char;
 /// # Safety
 /// - `s` 非空，指向以 null 结尾的有效 C 字符串
 #[no_mangle]
-pub unsafe extern "C" fn index(s: *const core::ffi::c_char, c: core::ffi::c_int) -> *mut core::ffi::c_char {
+pub extern "C" fn index(s: *const core::ffi::c_char, c: core::ffi::c_int) -> *mut core::ffi::c_char {
     // index 等价于 strchr
     super::strchr::strchr(s, c)
 }

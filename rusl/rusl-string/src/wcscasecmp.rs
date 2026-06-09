@@ -16,18 +16,21 @@ fn wchar_to_lower(c: u32) -> u32 {
     }
 }
 
-pub unsafe extern "C" fn wcscasecmp(l: *const u32, r: *const u32) -> core::ffi::c_int {
-    let mut i = 0;
-    loop {
-        let lv = unsafe { *l.add(i) };
-        let rv = unsafe { *r.add(i) };
-        let ll = wchar_to_lower(lv);
-        let rl = wchar_to_lower(rv);
-        if ll != rl {
-            return if ll < rl { -1 } else { 1 };
+pub extern "C" fn wcscasecmp(l: *const u32, r: *const u32) -> core::ffi::c_int {
+    // SAFETY: 调用者保证 l 和 r 非空且均指向以 L'\0' 结尾的有效宽字符串。
+    unsafe {
+        let mut i = 0;
+        loop {
+            let lv = *l.add(i);
+            let rv = *r.add(i);
+            let ll = wchar_to_lower(lv);
+            let rl = wchar_to_lower(rv);
+            if ll != rl {
+                return if ll < rl { -1 } else { 1 };
+            }
+            if lv == 0 { return 0; }
+            i += 1;
         }
-        if lv == 0 { return 0; }
-        i += 1;
     }
 }
 

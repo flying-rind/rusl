@@ -51,7 +51,7 @@ use crate::import::__errno_location;
 /// }
 /// ```
 #[no_mangle]
-pub unsafe extern "C" fn reallocarray(
+pub extern "C" fn reallocarray(
     ptr: *mut c_void,
     m: usize,
     n: usize,

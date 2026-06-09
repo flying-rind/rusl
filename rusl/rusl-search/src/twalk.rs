@@ -47,11 +47,11 @@ unsafe fn walk(
 /// - `action` 为有效回调函数或 None（此时无操作）。
 /// - 在遍历过程中不修改树的结构。
 #[no_mangle]
-pub unsafe extern "C" fn twalk(
+pub extern "C" fn twalk(
     root: *const c_void,
     action: Option<unsafe extern "C" fn(*const c_void, VISIT, i32)>,
 ) {
     if let Some(ref act) = action {
-        walk(root as *const Node, act, 0);
+        unsafe { walk(root as *const Node, act, 0); }
     }
 }

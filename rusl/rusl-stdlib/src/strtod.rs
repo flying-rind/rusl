@@ -406,23 +406,29 @@ fn try_shorten_and_parse(
 
 /// 将 `s` 转换为 `f64`。
 #[no_mangle]
-pub unsafe extern "C" fn strtod(s: *const c_char, endptr: *mut *mut c_char) -> f64 {
-    let (val, _) = strtox_inner(s, endptr);
-    val
+pub extern "C" fn strtod(s: *const c_char, endptr: *mut *mut c_char) -> f64 {
+    unsafe {
+        let (val, _) = strtox_inner(s, endptr);
+        val
+    }
 }
 
 /// 将 `s` 转换为 `f32`。
 #[no_mangle]
-pub unsafe extern "C" fn strtof(s: *const c_char, endptr: *mut *mut c_char) -> f32 {
-    let (val, _) = strtox_inner(s, endptr);
-    val as f32
+pub extern "C" fn strtof(s: *const c_char, endptr: *mut *mut c_char) -> f32 {
+    unsafe {
+        let (val, _) = strtox_inner(s, endptr);
+        val as f32
+    }
 }
 
 /// 将 `s` 转换为 `f64`（long double 精度，当前以 f64 表示）。
 #[no_mangle]
-pub unsafe extern "C" fn strtold(s: *const c_char, endptr: *mut *mut c_char) -> f64 {
-    let (val, _) = strtox_inner(s, endptr);
-    val
+pub extern "C" fn strtold(s: *const c_char, endptr: *mut *mut c_char) -> f64 {
+    unsafe {
+        let (val, _) = strtox_inner(s, endptr);
+        val
+    }
 }
 
 // ---------- 测试 ----------

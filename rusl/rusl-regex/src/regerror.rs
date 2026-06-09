@@ -75,7 +75,7 @@ pub(crate) static UNKNOWN_ERROR: &str = "Unknown error";
 /// musl 实现中 `preg` 参数被完全忽略。消息通过直接数组索引定位（而非
 /// C 实现的线性扫描），索引与 `REG_*` 错误码数值严格对应。
 #[no_mangle]
-pub unsafe extern "C" fn regerror(
+pub extern "C" fn regerror(
     errcode: c_int,
     _preg: *const super::regcomp::regex_t,
     errbuf: *mut c_char,

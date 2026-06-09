@@ -9,7 +9,7 @@ use core::ffi::c_char;
 /// - `s` 非空、`c` 非空
 /// - s 和 c 以 null 结尾
 #[no_mangle]
-pub unsafe extern "C" fn strcspn(s: *const core::ffi::c_char, c: *const core::ffi::c_char) -> usize {
+pub extern "C" fn strcspn(s: *const core::ffi::c_char, c: *const core::ffi::c_char) -> usize {
     let sp = s as *const u8;
     let reject = c as *const u8;
     let mut i = 0;

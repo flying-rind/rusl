@@ -23,7 +23,7 @@ pub unsafe extern "C" fn __strchrnul(s: *const core::ffi::c_char, c: core::ffi::
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn strchrnul(s: *const core::ffi::c_char, c: core::ffi::c_int) -> *mut core::ffi::c_char {
+pub extern "C" fn strchrnul(s: *const core::ffi::c_char, c: core::ffi::c_int) -> *mut core::ffi::c_char {
     unsafe { __strchrnul(s, c) }
 }
 

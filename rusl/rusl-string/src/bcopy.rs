@@ -9,19 +9,22 @@ use core::ffi::c_void;
 /// - `s1` 非空、`s2` 非空
 /// - 当 `n > 0` 时，`s1` 至少可读 n 字节，`s2` 至少可写 n 字节
 #[no_mangle]
-pub unsafe extern "C" fn bcopy(s1: *const core::ffi::c_void, s2: *mut core::ffi::c_void, n: usize) {
-    // 不能使用 ptr::copy 因为可能降级为 LLVM memmove 导致递归。
-    let src = s1 as *const u8;
-    let dst = s2 as *mut u8;
-    if (dst as *const u8) < src || (dst as *const u8) >= src.wrapping_add(n) {
-        for i in 0..n {
-            unsafe { *dst.add(i) = *src.add(i); }
-        }
-    } else {
-        let mut i = n;
-        while i > 0 {
-            i -= 1;
-            unsafe { *dst.add(i) = *src.add(i); }
+pub extern "C" fn bcopy(s1: *const core::ffi::c_void, s2: *mut core::ffi::c_void, n: usize) {
+    // SAFETY: 调用者保证 s1/s2 非空且内存区间有效；本函数仅执行原始指针读写。
+    unsafe {
+        // 不能使用 ptr::copy 因为可能降级为 LLVM memmove 导致递归。
+        let src = s1 as *const u8;
+        let dst = s2 as *mut u8;
+        if (dst as *const u8) < src || (dst as *const u8) >= src.wrapping_add(n) {
+            for i in 0..n {
+                *dst.add(i) = *src.add(i);
+            }
+        } else {
+            let mut i = n;
+            while i > 0 {
+                i -= 1;
+                *dst.add(i) = *src.add(i);
+            }
         }
     }
 }

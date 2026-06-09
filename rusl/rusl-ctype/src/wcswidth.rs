@@ -40,7 +40,7 @@ use super::wcwidth::wcwidth;
 ///
 /// [ISO C 标准库 `<wchar.h>`]
 #[no_mangle]
-pub unsafe extern "C" fn wcswidth(wcs: *const wchar_t, n: size_t) -> c_int {
+pub extern "C" fn wcswidth(wcs: *const wchar_t, n: size_t) -> c_int {
     // musl 原实现:
     //   int l=0, k=0;
     //   for (; n-- && *wcs && (k = wcwidth(*wcs)) >= 0; l+=k, wcs++);

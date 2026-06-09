@@ -13,6 +13,6 @@
 /// - `a >= 0` 时返回 `a`。
 /// - `a < 0` 时返回 `-a`。
 #[no_mangle]
-pub unsafe extern "C" fn abs(a: i32) -> i32 {
+pub extern "C" fn abs(a: i32) -> i32 {
     if a > 0 { a } else { a.wrapping_neg() }
 }

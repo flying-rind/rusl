@@ -19,10 +19,6 @@ use core::ffi::c_int;
 /// - 若 `c` 在 0 到 127 范围内（7 位 ASCII 字符）：返回非零值（通常为 1）。
 /// - 若 `c` 超出 0-127 范围（bit 7 或更高位被设置），或 `c` 为负数：返回 0。
 ///
-/// # Safety
-///
-/// 标记为 `unsafe` 以保持与 C ABI 兼容。调用者无特殊前置条件，任意 `c_int` 值均可安全调用。
-///
 /// # 算法
 ///
 /// 使用等价位运算 `(c & !0x7f) == 0` 或 `(c as u32) <= 0x7f`：
@@ -37,7 +33,7 @@ use core::ffi::c_int;
 ///
 /// 此函数行为在所有平台上完全一致，不依赖字节序或 locale。
 #[no_mangle]
-pub unsafe extern "C" fn isascii(c: c_int) -> c_int {
+pub extern "C" fn isascii(c: c_int) -> c_int {
     // 算法: !(c & ~0x7f)
     // 检查 c 的 bit 7 及以上是否全为零，即 c 是否在 0-127 范围内。
     // 若 c & ~0x7f == 0，说明 c 是 7 位 ASCII，返回 1（真）；

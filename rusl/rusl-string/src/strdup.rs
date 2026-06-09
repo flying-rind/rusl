@@ -15,23 +15,26 @@ extern "C" {
 /// - `s` 非空
 /// - s 以 null 结尾
 #[no_mangle]
-pub unsafe extern "C" fn strdup(s: *const core::ffi::c_char) -> *mut core::ffi::c_char {
-    let src = s as *const u8;
-    // 计算长度
-    let mut len = 0;
-    while unsafe { *src.add(len) } != 0 {
-        len += 1;
+pub extern "C" fn strdup(s: *const core::ffi::c_char) -> *mut core::ffi::c_char {
+    // SAFETY: 调用者保证 s 非空且以 null 结尾；malloc 来自 C 的 allocator。
+    unsafe {
+        let src = s as *const u8;
+        // 计算长度
+        let mut len = 0;
+        while *src.add(len) != 0 {
+            len += 1;
+        }
+        // 分配内存
+        let mem = malloc(len + 1) as *mut u8;
+        if mem.is_null() {
+            return core::ptr::null_mut();
+        }
+        // 复制字节（含 null）
+        for i in 0..=len {
+            *mem.add(i) = *src.add(i);
+        }
+        mem as *mut core::ffi::c_char
     }
-    // 分配内存
-    let mem = unsafe { malloc(len + 1) } as *mut u8;
-    if mem.is_null() {
-        return core::ptr::null_mut();
-    }
-    // 复制字节（含 null）
-    for i in 0..=len {
-        unsafe { *mem.add(i) = *src.add(i); }
-    }
-    mem as *mut core::ffi::c_char
 }
 
 /// 安全的 Rust 内部实现。

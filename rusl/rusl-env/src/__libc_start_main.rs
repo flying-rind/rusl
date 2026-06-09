@@ -372,12 +372,15 @@ unsafe fn libc_start_main_stage2(
 
 /// POSIX _Exit — 立即终止进程，不执行任何清理。
 #[no_mangle]
-pub unsafe extern "C" fn _Exit(code: c_int) -> ! {
+pub extern "C" fn _Exit(code: c_int) -> ! {
     let c = code as i64;
-    // exit_group 终止线程组中所有线程
-    raw_syscall1(SYS_exit_group, c);
-    // 回退：exit 仅终止当前线程
-    raw_syscall1(SYS_exit, c);
+    // SAFETY: 系统调用终止进程，无内存安全性影响
+    unsafe {
+        // exit_group 终止线程组中所有线程
+        raw_syscall1(SYS_exit_group, c);
+        // 回退：exit 仅终止当前线程
+        raw_syscall1(SYS_exit, c);
+    }
     loop {
         core::hint::spin_loop();
     }
@@ -386,12 +389,12 @@ pub unsafe extern "C" fn _Exit(code: c_int) -> ! {
 /// ISO C exit — 调用 atexit 处理函数后终止进程。
 /// 当前为最小实现：直接委托给 _Exit（atexit 尚未支持）。
 #[no_mangle]
-pub unsafe extern "C" fn exit(code: c_int) -> ! {
+pub extern "C" fn exit(code: c_int) -> ! {
     _Exit(code)
 }
 
 /// POSIX _exit — _Exit 的同义词。
 #[no_mangle]
-pub unsafe extern "C" fn _exit(code: c_int) -> ! {
+pub extern "C" fn _exit(code: c_int) -> ! {
     _Exit(code)
 }

@@ -11,8 +11,10 @@
 ///
 /// 读取并修改全局可变状态（`__seed48`），非线程安全。
 #[no_mangle]
-pub unsafe extern "C" fn lrand48() -> i64 {
-    nrand48(&mut crate::__seed48::__seed48[0] as *mut u16)
+pub extern "C" fn lrand48() -> i64 {
+    unsafe {
+        nrand48(&mut crate::__seed48::__seed48[0] as *mut u16)
+    }
 }
 
 /// nrand48 — 使用调用者提供的种子，返回 [0, 2^31) 的非负伪随机 i64。
@@ -23,9 +25,11 @@ pub unsafe extern "C" fn lrand48() -> i64 {
 ///
 /// - `xsubi` 必须指向 3 个 `u16` 的有效可读写缓冲区（48 位种子，小端排列）。
 #[no_mangle]
-pub unsafe extern "C" fn nrand48(xsubi: *mut u16) -> i64 {
-    (crate::__rand48_step::__rand48_step(
+pub extern "C" fn nrand48(xsubi: *mut u16) -> i64 {
+    unsafe {
+        (crate::__rand48_step::__rand48_step(
         xsubi,
         &crate::__seed48::__seed48[3] as *const u16,
     ) >> 17) as i64
+    }
 }

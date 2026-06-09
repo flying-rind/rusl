@@ -18,7 +18,7 @@ use rusl_core::c_types::locale_t;
 /// - `|32` 将大写字母转为小写（小写字母不变）
 /// - 判断结果是否在 'a'..='z' 范围内（差值 < 26）
 #[inline]
-unsafe fn isalpha_impl(c: c_int) -> c_int {
+fn isalpha_impl(c: c_int) -> c_int {
     // 使用 u32 算术：c as u32 将 EOF(-1) 等负数转为大正数，
     // 自然不满足小于 26 的条件，无需特殊分支处理。
     if ((c as u32 | 32).wrapping_sub(b'a' as u32)) < 26 {
@@ -39,10 +39,6 @@ unsafe fn isalpha_impl(c: c_int) -> c_int {
 /// - 若 c 是英文字母（大小写均可）：返回非零值（表示真）。
 /// - 若 c 不是字母，或 c 为 `EOF`：返回 0（表示假）。
 ///
-/// # Safety
-///
-/// 标记为 `unsafe` 以保持与 C ABI 兼容。调用者需确保 `c` 可表示为 `c_uchar` 或为 `EOF`。
-///
 /// # 算法
 ///
 /// 使用无分支位运算 `((c_uchar)c|32)-'a' < 26`：
@@ -54,7 +50,7 @@ unsafe fn isalpha_impl(c: c_int) -> c_int {
 ///
 /// 纯函数。无内部可变状态。此 musl 实现不依赖 locale 参数。
 #[no_mangle]
-pub unsafe extern "C" fn isalpha(c: c_int) -> c_int {
+pub extern "C" fn isalpha(c: c_int) -> c_int {
     isalpha_impl(c)
 }
 
@@ -73,11 +69,8 @@ pub unsafe extern "C" fn isalpha(c: c_int) -> c_int {
 /// - 若 c 是英文字母：返回非零值。
 /// - 否则：返回 0。
 ///
-/// # Safety
-///
-/// 标记为 `unsafe` 以保持与 C ABI 兼容。
 #[no_mangle]
-pub unsafe extern "C" fn __isalpha_l(c: c_int, _l: locale_t) -> c_int {
+pub extern "C" fn __isalpha_l(c: c_int, _l: locale_t) -> c_int {
     // musl 实现忽略 locale 参数，始终使用 C locale 规则
     isalpha_impl(c)
 }
@@ -96,17 +89,13 @@ pub unsafe extern "C" fn __isalpha_l(c: c_int, _l: locale_t) -> c_int {
 ///
 /// 与 `isalpha(c)` 相同。
 ///
-/// # Safety
-///
-/// 标记为 `unsafe` 以保持与 C ABI 兼容。
-///
 /// # 实现说明
 ///
 /// `isalpha_l` 是 `__isalpha_l` 的弱别名（`weak_alias(__isalpha_l, isalpha_l)`）。
 /// Rust 不支持弱别名，因此两个函数体都使用 `todo!()`，
 /// 实现时 `isalpha_l` 将直接调用 `__isalpha_l` 的逻辑。
 #[no_mangle]
-pub unsafe extern "C" fn isalpha_l(c: c_int, _l: locale_t) -> c_int {
+pub extern "C" fn isalpha_l(c: c_int, _l: locale_t) -> c_int {
     // isalpha_l 是 __isalpha_l 的弱别名，共享同一实现体
     isalpha_impl(c)
 }

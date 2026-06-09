@@ -16,7 +16,7 @@ fn wchar_to_lower(c: u32) -> u32 {
     }
 }
 
-pub unsafe extern "C" fn wcsncasecmp(l: *const u32, r: *const u32, n: usize) -> core::ffi::c_int {
+pub extern "C" fn wcsncasecmp(l: *const u32, r: *const u32, n: usize) -> core::ffi::c_int {
     for i in 0..n {
         let lv = unsafe { *l.add(i) };
         let rv = unsafe { *r.add(i) };

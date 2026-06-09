@@ -59,9 +59,8 @@ const SPACES: [wint_t; 21] = [
 ///
 /// # Safety
 ///
-/// 此函数标记为 unsafe 以匹配 C ABI 调用约定。
 #[no_mangle]
-pub unsafe extern "C" fn iswspace(wc: wint_t) -> c_int {
+pub extern "C" fn iswspace(wc: wint_t) -> c_int {
     __iswspace_l(wc) as c_int
 }
 
@@ -70,11 +69,8 @@ pub unsafe extern "C" fn iswspace(wc: wint_t) -> c_int {
 /// `locale` 参数保留为 API 兼容占位，内部实现忽略此参数。
 /// 行为与 `iswspace(wc)` 完全一致。
 ///
-/// # Safety
-///
-/// `l` 若不为 null 则必须指向有效的 locale 对象。
 #[no_mangle]
-pub unsafe extern "C" fn iswspace_l(c: wint_t, _l: locale_t) -> c_int {
+pub extern "C" fn iswspace_l(c: wint_t, _l: locale_t) -> c_int {
     __iswspace_l(c) as c_int
 }
 

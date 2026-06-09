@@ -1,0 +1,30 @@
+[package]
+name = "rusl-errno"
+version = "0.1.0"
+edition = "2021"
+description = "rusl errno module — thread-local errno storage and error message mapping"
+
+[lib]
+crate-type = ["lib", "staticlib"]
+doctest = false
+test = true
+
+[features]
+default = ["rusl"]
+c-test = []
+rusl = ["dep:rusl-internal"]
+
+[dependencies]
+rusl-core = { path = "../rusl-core", features = ["rusl"] }
+rusl-internal = { path = "../rusl-internal", optional = true }
+
+[profile.dev]
+panic = "abort"
+
+[profile.test]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+opt-level = "s"
+lto = true

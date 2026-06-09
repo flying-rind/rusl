@@ -26,7 +26,8 @@ pub unsafe extern "C" fn __stpcpy(d: *mut core::ffi::c_char, s: *const core::ffi
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn stpcpy(d: *mut core::ffi::c_char, s: *const core::ffi::c_char) -> *mut core::ffi::c_char {
+pub extern "C" fn stpcpy(d: *mut core::ffi::c_char, s: *const core::ffi::c_char) -> *mut core::ffi::c_char {
+    // SAFETY: __stpcpy requires d non-null, s non-null, non-overlapping, d writable for strlen(s)+1 bytes, s null-terminated.
     unsafe { __stpcpy(d, s) }
 }
 

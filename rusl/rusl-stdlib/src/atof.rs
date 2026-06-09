@@ -20,6 +20,6 @@ use core::ffi::c_char;
 /// - 无有效数字：返回 `0.0`。
 /// - 溢出：返回 `±HUGE_VAL`。
 #[no_mangle]
-pub unsafe extern "C" fn atof(s: *const c_char) -> f64 {
+pub extern "C" fn atof(s: *const c_char) -> f64 {
     super::strtod::strtod(s, core::ptr::null_mut())
 }

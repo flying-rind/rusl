@@ -9,11 +9,14 @@ use core::ffi::c_void;
 /// - `d` 非空
 /// - 当 `n > 0` 时，`d` 至少可写 n 字节
 #[no_mangle]
-pub unsafe extern "C" fn explicit_bzero(d: *mut core::ffi::c_void, n: usize) {
-    let p = d as *mut u8;
-    for i in 0..n {
-        // 使用 volatile 写入阻止编译器优化清零操作
-        unsafe { core::ptr::write_volatile(p.add(i), 0); }
+pub extern "C" fn explicit_bzero(d: *mut core::ffi::c_void, n: usize) {
+    // SAFETY: 调用者保证 d 非空且指向至少 n 可写字节
+    unsafe {
+        let p = d as *mut u8;
+        for i in 0..n {
+            // 使用 volatile 写入阻止编译器优化清零操作
+            core::ptr::write_volatile(p.add(i), 0);
+        }
     }
 }
 

@@ -9,7 +9,7 @@ use core::ffi::c_char;
 /// - `_l` 非空、`_r` 非空
 /// - _l 和 _r 以 null 结尾
 #[no_mangle]
-pub unsafe extern "C" fn strncmp(_l: *const core::ffi::c_char, _r: *const core::ffi::c_char, n: usize) -> core::ffi::c_int {
+pub extern "C" fn strncmp(_l: *const core::ffi::c_char, _r: *const core::ffi::c_char, n: usize) -> core::ffi::c_int {
     let a = _l as *const u8;
     let b = _r as *const u8;
     for i in 0..n {

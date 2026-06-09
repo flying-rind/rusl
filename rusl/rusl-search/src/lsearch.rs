@@ -20,30 +20,32 @@ use super::types::CmpFn;
 /// - `nelp` 为有效非空指针。
 /// - `compar` 为有效的比较函数，接收两个 `*const c_void` 返回负数/零/正数。
 #[no_mangle]
-pub unsafe extern "C" fn lsearch(
+pub extern "C" fn lsearch(
     key: *const c_void,
     base: *mut c_void,
     nelp: *mut usize,
     width: usize,
     compar: Option<CmpFn>,
 ) -> *mut c_void {
-    let n = *nelp;
-    let p = base as *const u8;
-    let cmp = match compar {
-        Some(c) => c,
-        None => return core::ptr::null_mut(),
-    };
-    for i in 0..n {
-        let elem = p.add(i * width) as *const c_void;
-        if cmp(key, elem) == 0 {
-            return elem as *mut c_void;
+    unsafe {
+        let n = *nelp;
+        let p = base as *const u8;
+        let cmp = match compar {
+            Some(c) => c,
+            None => return core::ptr::null_mut(),
+        };
+        for i in 0..n {
+            let elem = p.add(i * width) as *const c_void;
+            if cmp(key, elem) == 0 {
+                return elem as *mut c_void;
+            }
         }
+        // 未找到：将 key 的数据复制到数组末尾
+        let dst = (base as *mut u8).add(n * width);
+        core::ptr::copy_nonoverlapping(key as *const u8, dst, width);
+        *nelp = n + 1;
+        dst as *mut c_void
     }
-    // 未找到：将 key 的数据复制到数组末尾
-    let dst = (base as *mut u8).add(n * width);
-    core::ptr::copy_nonoverlapping(key as *const u8, dst, width);
-    *nelp = n + 1;
-    dst as *mut c_void
 }
 
 /// 线性搜索（只读版本）。
@@ -60,24 +62,26 @@ pub unsafe extern "C" fn lsearch(
 /// - `nelp` 为有效非空指针。
 /// - `compar` 为有效的比较函数。
 #[no_mangle]
-pub unsafe extern "C" fn lfind(
+pub extern "C" fn lfind(
     key: *const c_void,
     base: *const c_void,
     nelp: *mut usize,
     width: usize,
     compar: Option<CmpFn>,
 ) -> *mut c_void {
-    let n = *nelp;
-    let p = base as *const u8;
-    let cmp = match compar {
-        Some(c) => c,
-        None => return core::ptr::null_mut(),
-    };
-    for i in 0..n {
-        let elem = p.add(i * width) as *const c_void;
-        if cmp(key, elem) == 0 {
-            return elem as *mut c_void;
+    unsafe {
+        let n = *nelp;
+        let p = base as *const u8;
+        let cmp = match compar {
+            Some(c) => c,
+            None => return core::ptr::null_mut(),
+        };
+        for i in 0..n {
+            let elem = p.add(i * width) as *const c_void;
+            if cmp(key, elem) == 0 {
+                return elem as *mut c_void;
+            }
         }
+        core::ptr::null_mut()
     }
-    core::ptr::null_mut()
 }

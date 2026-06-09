@@ -9,15 +9,18 @@ use core::ffi::c_void;
 /// - `s1` 非空、`s2` 非空
 /// - 当 `n > 0` 时，`s1` 和 `s2` 各自指向至少可读 n 字节的内存
 #[no_mangle]
-pub unsafe extern "C" fn bcmp(s1: *const core::ffi::c_void, s2: *const core::ffi::c_void, n: usize) -> core::ffi::c_int {
-    let a = s1 as *const u8;
-    let b = s2 as *const u8;
-    for i in 0..n {
-        if unsafe { *a.add(i) } != unsafe { *b.add(i) } {
-            return 1;
+pub extern "C" fn bcmp(s1: *const core::ffi::c_void, s2: *const core::ffi::c_void, n: usize) -> core::ffi::c_int {
+    // SAFETY: Callers must ensure s1 and s2 are non-null and point to at least n readable bytes each.
+    unsafe {
+        let a = s1 as *const u8;
+        let b = s2 as *const u8;
+        for i in 0..n {
+            if *a.add(i) != *b.add(i) {
+                return 1;
+            }
         }
+        0
     }
-    0
 }
 
 /// 安全的 Rust 内部实现。

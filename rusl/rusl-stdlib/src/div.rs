@@ -43,7 +43,7 @@ pub struct imaxdiv_t {
 ///
 /// 返回 `div_t`，满足 `num == quot * den + rem`。
 #[no_mangle]
-pub unsafe extern "C" fn div(num: i32, den: i32) -> div_t {
+pub extern "C" fn div(num: i32, den: i32) -> div_t {
     div_t {
         quot: num / den,
         rem: num % den,
@@ -61,7 +61,7 @@ pub unsafe extern "C" fn div(num: i32, den: i32) -> div_t {
 ///
 /// 返回 `ldiv_t`，满足 `num == quot * den + rem`。
 #[no_mangle]
-pub unsafe extern "C" fn ldiv(num: i64, den: i64) -> ldiv_t {
+pub extern "C" fn ldiv(num: i64, den: i64) -> ldiv_t {
     ldiv_t {
         quot: num / den,
         rem: num % den,
@@ -79,7 +79,7 @@ pub unsafe extern "C" fn ldiv(num: i64, den: i64) -> ldiv_t {
 ///
 /// 返回 `lldiv_t`，满足 `num == quot * den + rem`。
 #[no_mangle]
-pub unsafe extern "C" fn lldiv(num: i64, den: i64) -> lldiv_t {
+pub extern "C" fn lldiv(num: i64, den: i64) -> lldiv_t {
     lldiv_t {
         quot: num / den,
         rem: num % den,
@@ -97,7 +97,7 @@ pub unsafe extern "C" fn lldiv(num: i64, den: i64) -> lldiv_t {
 ///
 /// 返回 `imaxdiv_t`，满足 `num == quot * den + rem`。
 #[no_mangle]
-pub unsafe extern "C" fn imaxdiv(num: i64, den: i64) -> imaxdiv_t {
+pub extern "C" fn imaxdiv(num: i64, den: i64) -> imaxdiv_t {
     imaxdiv_t {
         quot: num / den,
         rem: num % den,

@@ -152,129 +152,128 @@ static MED_CNT_TAB: [u8; 4] = [28, 24, 20, 32];
 /// - `a_ctz_32` → `u32::trailing_zeros()`
 /// - `a_clz_32` → `u32::leading_zeros()`
 #[no_mangle]
-pub unsafe extern "C" fn malloc(n: usize) -> *mut c_void {
-    // 1) 溢出检查
-    if meta::size_overflows(n) {
-        unsafe {
+pub extern "C" fn malloc(n: usize) -> *mut c_void {
+    // SAFETY: malloc 是底层内存分配器，其核心逻辑涉及原始指针操作、全局静态
+    // 可变状态访问（CTX）、系统调用和 unsafe 函数调用。整个函数体在 unsafe
+    // 上下文中执行，调用者负责保证返回的内存被正确释放。
+    unsafe {
+        // 1) 溢出检查
+        if meta::size_overflows(n) {
             __errno_location().write(super::super::ENOMEM);
+            return core::ptr::null_mut();
         }
-        return core::ptr::null_mut();
-    }
 
-    // 2) 大块路径: n >= MMAP_THRESHOLD → 直接 mmap
-    if n >= MMAP_THRESHOLD {
-        let needed = n + IB + UNIT;
-        let p = super::syscall::sys_mmap(
-            core::ptr::null_mut(),
-            needed,
-            super::syscall::PROT_READ | super::syscall::PROT_WRITE,
-            super::syscall::MAP_PRIVATE | super::syscall::MAP_ANONYMOUS,
-            -1,
-            0,
-        );
-        if p == super::syscall::MAP_FAILED {
-            unsafe {
+        // 2) 大块路径: n >= MMAP_THRESHOLD → 直接 mmap
+        if n >= MMAP_THRESHOLD {
+            let needed = n + IB + UNIT;
+            let p = super::syscall::sys_mmap(
+                core::ptr::null_mut(),
+                needed,
+                super::syscall::PROT_READ | super::syscall::PROT_WRITE,
+                super::syscall::MAP_PRIVATE | super::syscall::MAP_ANONYMOUS,
+                -1,
+                0,
+            );
+            if p == super::syscall::MAP_FAILED {
                 __errno_location().write(super::super::ENOMEM);
+                return core::ptr::null_mut();
             }
-            return core::ptr::null_mut();
-        }
 
-        glue::wrlock();
-        meta::step_seq();
+            glue::wrlock();
+            meta::step_seq();
 
-        let g = alloc_meta();
-        if g.is_null() {
+            let g = alloc_meta();
+            if g.is_null() {
+                glue::unlock();
+                super::syscall::sys_munmap(p, needed);
+                return core::ptr::null_mut();
+            }
+
+            (*g).mem = p as *mut super::meta::Group;
+            (*(*g).mem).meta = g;
+            (*g).set_last_idx(0);
+            (*g).set_freeable(true);
+            (*g).set_sizeclass(63);
+            (*g).set_maplen((needed + 4095) / 4096);
+            (*g).avail_mask.store(0, Ordering::Relaxed);
+            (*g).freed_mask.store(0, Ordering::Relaxed);
+
+            // 使用全局计数器循环偏移 (地址随机化)
+            CTX.mmap_counter = CTX.mmap_counter.wrapping_add(1);
+            let ctr = CTX.mmap_counter as usize;
+
             glue::unlock();
-            super::syscall::sys_munmap(p, needed);
-            return core::ptr::null_mut();
+            return meta::enframe(g, 0, n, ctr) as *mut c_void;
         }
 
-        (*g).mem = p as *mut super::meta::Group;
-        (*(*g).mem).meta = g;
-        (*g).set_last_idx(0);
-        (*g).set_freeable(true);
-        (*g).set_sizeclass(63);
-        (*g).set_maplen((needed + 4095) / 4096);
-        (*g).avail_mask.store(0, Ordering::Relaxed);
-        (*g).freed_mask.store(0, Ordering::Relaxed);
+        // 3) 小/中块路径: n < MMAP_THRESHOLD
+        let mut sc = meta::size_to_class(n);
 
-        // 使用全局计数器循环偏移 (地址随机化)
-        CTX.mmap_counter = CTX.mmap_counter.wrapping_add(1);
-        let ctr = CTX.mmap_counter as usize;
+        // 获取读锁 (RDLOCK_IS_EXCLUSIVE = true, 实际为排他锁)
+        glue::wrlock(); // rdlock 等价于 wrlock
 
-        glue::unlock();
-        return meta::enframe(g, 0, n, ctr) as *mut c_void;
-    }
+        let mut g = CTX.active[sc];
 
-    // 3) 小/中块路径: n < MMAP_THRESHOLD
-    let mut sc = meta::size_to_class(n);
-
-    // 获取读锁 (RDLOCK_IS_EXCLUSIVE = true, 实际为排他锁)
-    glue::wrlock(); // rdlock 等价于 wrlock
-
-    let mut g = CTX.active[sc];
-
-    // 粗粒度尺寸类别优化:
-    // 当目标类别尚无 group 时, 使用更大的相邻类别以减少初始 slot 数
-    if g.is_null()
-        && sc >= 4
-        && sc < 32
-        && sc != 6
-        && (sc & 1) == 0
-        && CTX.usage_by_class[sc] == 0
-    {
-        let mut usage = CTX.usage_by_class[sc | 1];
-        if CTX.active[sc | 1].is_null()
-            || ((*CTX.active[sc | 1]).avail_mask.load(Ordering::Relaxed) == 0
-                && (*CTX.active[sc | 1]).freed_mask.load(Ordering::Relaxed) == 0)
+        // 粗粒度尺寸类别优化:
+        // 当目标类别尚无 group 时, 使用更大的相邻类别以减少初始 slot 数
+        if g.is_null()
+            && sc >= 4
+            && sc < 32
+            && sc != 6
+            && (sc & 1) == 0
+            && CTX.usage_by_class[sc] == 0
         {
-            usage += 3;
+            let mut usage = CTX.usage_by_class[sc | 1];
+            if CTX.active[sc | 1].is_null()
+                || ((*CTX.active[sc | 1]).avail_mask.load(Ordering::Relaxed) == 0
+                    && (*CTX.active[sc | 1]).freed_mask.load(Ordering::Relaxed) == 0)
+            {
+                usage += 3;
+            }
+            if usage <= 12 {
+                sc |= 1;
+                g = CTX.active[sc];
+            }
         }
-        if usage <= 12 {
-            sc |= 1;
-            g = CTX.active[sc];
-        }
-    }
 
-    // 快速路径: 从现有 group 的 avail_mask 用 CAS/直接写入 获取槽位
-    loop {
-        let mask = if g.is_null() {
-            0
-        } else {
-            (*g).avail_mask.load(Ordering::Relaxed)
+        // 快速路径: 从现有 group 的 avail_mask 用 CAS/直接写入 获取槽位
+        loop {
+            let mask = if g.is_null() {
+                0
+            } else {
+                (*g).avail_mask.load(Ordering::Relaxed)
+            };
+            let first = mask & mask.wrapping_neg();
+            if first == 0 {
+                break;
+            }
+
+            // RDLOCK_IS_EXCLUSIVE = true → 无竞争, 直接写入
+            (*g).avail_mask.store(mask - first, Ordering::Release);
+
+            let idx = first.trailing_zeros() as usize;
+            let ctr = CTX.mmap_counter as usize;
+            glue::unlock();
+            return meta::enframe(g, idx, n, ctr) as *mut c_void;
+        }
+
+        // 慢速路径: 已持有锁 (upgradelock 在 RDLOCK_IS_EXCLUSIVE 下为空操作)
+        // 调用 alloc_slot 从现有 group 获取或创建新 group
+        let idx = match alloc_slot(sc, n) {
+            Some(i) => i,
+            None => {
+                glue::unlock();
+                __errno_location().write(super::super::ENOMEM);
+                return core::ptr::null_mut();
+            }
         };
-        let first = mask & mask.wrapping_neg();
-        if first == 0 {
-            break;
-        }
 
-        // RDLOCK_IS_EXCLUSIVE = true → 无竞争, 直接写入
-        (*g).avail_mask.store(mask - first, Ordering::Release);
-
-        let idx = first.trailing_zeros() as usize;
+        g = CTX.active[sc];
         let ctr = CTX.mmap_counter as usize;
         glue::unlock();
-        return meta::enframe(g, idx, n, ctr) as *mut c_void;
+
+        meta::enframe(g, idx, n, ctr) as *mut c_void
     }
-
-    // 慢速路径: 已持有锁 (upgradelock 在 RDLOCK_IS_EXCLUSIVE 下为空操作)
-    // 调用 alloc_slot 从现有 group 获取或创建新 group
-    let idx = match alloc_slot(sc, n) {
-        Some(i) => i,
-        None => {
-            glue::unlock();
-            unsafe {
-                __errno_location().write(super::super::ENOMEM);
-            }
-            return core::ptr::null_mut();
-        }
-    };
-
-    g = CTX.active[sc];
-    let ctr = CTX.mmap_counter as usize;
-    glue::unlock();
-
-    meta::enframe(g, idx, n, ctr) as *mut c_void
 }
 
 // ============================================================================

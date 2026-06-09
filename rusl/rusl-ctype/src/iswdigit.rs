@@ -11,10 +11,9 @@ use rusl_core::c_types::{locale_t, wint_t};
 ///
 /// # 安全性
 ///
-/// 此函数标记为 `unsafe` 以保持 C ABI 签名兼容。
 /// 实际调用无内存安全性风险。
 #[no_mangle]
-pub unsafe extern "C" fn iswdigit(wc: wint_t) -> c_int {
+pub extern "C" fn iswdigit(wc: wint_t) -> c_int {
     __iswdigit_l(wc, core::ptr::null_mut())
 }
 
@@ -23,11 +22,8 @@ pub unsafe extern "C" fn iswdigit(wc: wint_t) -> c_int {
 /// 在 C locale 下行为与 [`iswdigit`] 完全等价。
 /// 某些 locale 可能包含非 ASCII 数字 (如阿拉伯数字 U+0660-U+0669)。
 ///
-/// # 安全性
-///
-/// - `l`: 必须为有效的 locale 句柄, 或 `NULL` 表示 C locale。
 #[no_mangle]
-pub unsafe extern "C" fn iswdigit_l(wc: wint_t, l: locale_t) -> c_int {
+pub extern "C" fn iswdigit_l(wc: wint_t, l: locale_t) -> c_int {
     __iswdigit_l(wc, l)
 }
 

@@ -56,7 +56,7 @@ pub const WCTYPE_XDIGIT: wctype_t = 12;
 /// - `desc`: 应由 [`wctype`] 返回。传入任意 `wctype_t` 值是安全的,
 ///   但无效值会导致返回 0 (行为实现定义)。
 #[no_mangle]
-pub unsafe extern "C" fn iswctype(wc: wint_t, desc: wctype_t) -> c_int {
+pub extern "C" fn iswctype(wc: wint_t, desc: wctype_t) -> c_int {
     __iswctype_l(wc, desc, core::ptr::null_mut())
 }
 
@@ -70,12 +70,11 @@ pub unsafe extern "C" fn iswctype(wc: wint_t, desc: wctype_t) -> c_int {
 /// - 若 `name` 匹配已知分类 -> 返回对应标识符 (1-12)
 /// - 若 `name` 不匹配 -> 返回 0
 ///
-/// # 安全性
+/// # Safety
 ///
-/// - `name`: 必须指向有效的以 null 结尾的 C 字符串。
-///   传入 `NULL` 将导致未定义行为。
+/// - `name`: 必须指向有效的以 null 结尾的 C 字符串。传入 `NULL` 将导致未定义行为。
 #[no_mangle]
-pub unsafe extern "C" fn wctype(name: *const c_char) -> wctype_t {
+pub extern "C" fn wctype(name: *const c_char) -> wctype_t {
     __wctype_l(name, core::ptr::null_mut())
 }
 
@@ -87,7 +86,7 @@ pub unsafe extern "C" fn wctype(name: *const c_char) -> wctype_t {
 ///
 /// - `l`: 必须为有效的 locale 句柄, 或 `NULL` 表示 C locale。
 #[no_mangle]
-pub unsafe extern "C" fn iswctype_l(
+pub extern "C" fn iswctype_l(
     wc: wint_t,
     desc: wctype_t,
     l: locale_t,
@@ -97,12 +96,12 @@ pub unsafe extern "C" fn iswctype_l(
 
 /// locale 感知的分类名称解析。
 ///
-/// # 安全性
+/// # Safety
 ///
 /// - `name`: 必须指向有效的以 null 结尾的 C 字符串。
 /// - `l`: 必须为有效的 locale 句柄, 或 `NULL` 表示 C locale。
 #[no_mangle]
-pub unsafe extern "C" fn wctype_l(name: *const c_char, l: locale_t) -> wctype_t {
+pub extern "C" fn wctype_l(name: *const c_char, l: locale_t) -> wctype_t {
     __wctype_l(name, l)
 }
 
@@ -145,22 +144,20 @@ pub(crate) fn __iswctype_l(
     desc: wctype_t,
     _l: locale_t,
 ) -> c_int {
-    // SAFETY: 所有 isw* 函数的 unsafe 标记仅用于 C ABI 兼容,
-    // 以值类型 wint_t 调用无内存安全性风险
     match desc {
         1 => super::iswalnum(wc),   // WCTYPE_ALNUM
         2 => super::iswalpha(wc),   // WCTYPE_ALPHA
         3 => super::iswblank(wc),   // WCTYPE_BLANK
-        4 => unsafe { super::iswcntrl(wc) },   // WCTYPE_CNTRL
-        5 => unsafe { super::iswdigit(wc) },   // WCTYPE_DIGIT
-        6 => unsafe { super::iswgraph(wc) },   // WCTYPE_GRAPH
-        7 => unsafe { super::iswlower(wc) },   // WCTYPE_LOWER
-        8 => unsafe { super::iswprint(wc) },   // WCTYPE_PRINT
-        9 => unsafe { super::iswpunct(wc) },   // WCTYPE_PUNCT
-        10 => unsafe { super::iswspace(wc) },  // WCTYPE_SPACE
-        11 => unsafe { super::iswupper(wc) },  // WCTYPE_UPPER
-        12 => unsafe { super::iswxdigit(wc) }, // WCTYPE_XDIGIT
-        _ => 0,                                // 无效标识符
+        4 => super::iswcntrl(wc),   // WCTYPE_CNTRL
+        5 => super::iswdigit(wc),   // WCTYPE_DIGIT
+        6 => super::iswgraph(wc),   // WCTYPE_GRAPH
+        7 => super::iswlower(wc),   // WCTYPE_LOWER
+        8 => super::iswprint(wc),   // WCTYPE_PRINT
+        9 => super::iswpunct(wc),   // WCTYPE_PUNCT
+        10 => super::iswspace(wc),  // WCTYPE_SPACE
+        11 => super::iswupper(wc),  // WCTYPE_UPPER
+        12 => super::iswxdigit(wc), // WCTYPE_XDIGIT
+        _ => 0,                     // 无效标识符
     }
 }
 

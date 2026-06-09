@@ -15,15 +15,11 @@
 // ---------------------------------------------------------------------------
 // panic_handler
 // ---------------------------------------------------------------------------
-#[cfg(feature = "rusl")]
 use core::panic::PanicInfo;
-#[cfg(feature = "rusl")]
 use core::sync::atomic::{AtomicPtr, Ordering};
 
-#[cfg(feature = "rusl")]
 static PANIC_HOOK: AtomicPtr<()> = AtomicPtr::new(core::ptr::null_mut());
 
-#[cfg(feature = "rusl")]
 #[panic_handler]
 fn panic_handler(info: &PanicInfo) -> ! {
     let hook = PANIC_HOOK.load(Ordering::SeqCst);
@@ -37,7 +33,6 @@ fn panic_handler(info: &PanicInfo) -> ! {
     loop {}
 }
 
-#[cfg(feature = "rusl")]
 #[no_mangle]
 pub fn __rusl_set_panic_hook(hook: fn(*const PanicInfo) -> !) {
     PANIC_HOOK.store(hook as *mut (), Ordering::SeqCst);

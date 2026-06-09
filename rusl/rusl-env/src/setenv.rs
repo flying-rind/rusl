@@ -219,66 +219,69 @@ fn ensure_env_init() {
 /// - `value` 若非 null，必须为以 NUL 结尾的有效 C 字符串。
 /// - 调用者负责外部同步（POSIX 未规定此函数为线程安全）。
 #[no_mangle]
-pub unsafe extern "C" fn setenv(
+pub extern "C" fn setenv(
     var: *const c_char,
     value: *const c_char,
     overwrite: c_int,
 ) -> c_int {
-    // ---- Step 1: 参数校验 ----
-    if var.is_null() {
-        *__errno_location() = EINVAL;
-        return -1;
-    }
-
-    // __strchrnul(var, '='): 查找 '=' 或末尾 NUL
-    let eq_pos = strchrnul_impl(var, b'=');
-    let l1 = (eq_pos as usize).wrapping_sub(var as usize);
-
-    // 空字符串 (l1 == 0)
-    if l1 == 0 {
-        *__errno_location() = EINVAL;
-        return -1;
-    }
-
-    // var 中包含 '=' (eq_pos 指向 '=', 而非 NUL)
-    if *eq_pos != 0 {
-        *__errno_location() = EINVAL;
-        return -1;
-    }
-
-    // ---- Step 2: 惰性初始化 env_rm_add 回调 ----
-    ensure_env_init();
-
-    // ---- Step 3: 检查 overwrite 策略 ----
-    if overwrite == 0 {
-        let existing = crate::getenv::getenv(var);
-        if !existing.is_null() {
-            return 0;
+    // SAFETY: caller guarantees var and value are valid null-terminated C strings per C ABI contract.
+    unsafe {
+        // ---- Step 1: 参数校验 ----
+        if var.is_null() {
+            *__errno_location() = EINVAL;
+            return -1;
         }
+
+        // __strchrnul(var, '='): 查找 '=' 或末尾 NUL
+        let eq_pos = strchrnul_impl(var, b'=');
+        let l1 = (eq_pos as usize).wrapping_sub(var as usize);
+
+        // 空字符串 (l1 == 0)
+        if l1 == 0 {
+            *__errno_location() = EINVAL;
+            return -1;
+        }
+
+        // var 中包含 '=' (eq_pos 指向 '=', 而非 NUL)
+        if *eq_pos != 0 {
+            *__errno_location() = EINVAL;
+            return -1;
+        }
+
+        // ---- Step 2: 惰性初始化 env_rm_add 回调 ----
+        ensure_env_init();
+
+        // ---- Step 3: 检查 overwrite 策略 ----
+        if overwrite == 0 {
+            let existing = crate::getenv::getenv(var);
+            if !existing.is_null() {
+                return 0;
+            }
+        }
+
+        // ---- Step 4: 构造新字符串 "var=value" ----
+        let l2 = strlen_impl(value);
+        let total_size = l1 + l2 + 2; // var + '=' + value + '\0'
+
+        let layout = match alloc::alloc::Layout::from_size_align(total_size, 1) {
+            Ok(l) => l,
+            Err(_) => return -1,
+        };
+        let s = alloc::alloc::alloc(layout);
+        if s.is_null() {
+            return -1;
+        }
+
+        // 复制 var 部分
+        core::ptr::copy_nonoverlapping(var as *const u8, s, l1);
+        // 写入 '='
+        *s.add(l1) = b'=';
+        // 复制 value 部分（含 '\0'）
+        core::ptr::copy_nonoverlapping(value as *const u8, s.add(l1 + 1), l2 + 1);
+
+        // ---- Step 5: 插入环境（putenv_core 内部管理 environ 更新）----
+        super::putenv::putenv_core(s as *mut c_char, l1, s as *mut c_char)
     }
-
-    // ---- Step 4: 构造新字符串 "var=value" ----
-    let l2 = strlen_impl(value);
-    let total_size = l1 + l2 + 2; // var + '=' + value + '\0'
-
-    let layout = match alloc::alloc::Layout::from_size_align(total_size, 1) {
-        Ok(l) => l,
-        Err(_) => return -1,
-    };
-    let s = alloc::alloc::alloc(layout);
-    if s.is_null() {
-        return -1;
-    }
-
-    // 复制 var 部分
-    core::ptr::copy_nonoverlapping(var as *const u8, s, l1);
-    // 写入 '='
-    *s.add(l1) = b'=';
-    // 复制 value 部分（含 '\0'）
-    core::ptr::copy_nonoverlapping(value as *const u8, s.add(l1 + 1), l2 + 1);
-
-    // ---- Step 5: 插入环境（putenv_core 内部管理 environ 更新）----
-    super::putenv::putenv_core(s as *mut c_char, l1, s as *mut c_char)
 }
 
 // ============================================================================

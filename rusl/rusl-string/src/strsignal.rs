@@ -32,42 +32,45 @@ static mut UNKNOWN_BUF: [u8; 32] = [0u8; 32];
 /// - 无（signum 可为任意整数）
 #[no_mangle]
 #[allow(static_mut_refs)]
-pub unsafe extern "C" fn strsignal(signum: core::ffi::c_int) -> *mut core::ffi::c_char {
+pub extern "C" fn strsignal(signum: core::ffi::c_int) -> *mut core::ffi::c_char {
     if let Some(&(_, msg)) = SIGNAL_MSGS.iter().find(|&&(sig, _)| sig == signum) {
         return msg.as_ptr() as *mut core::ffi::c_char;
     }
-    let buf = UNKNOWN_BUF.as_mut_ptr();
-    let msg = b"Unknown signal ";
-    let mut i = 0;
-    for &b in msg {
-        unsafe { *buf.add(i) = b; }
-        i += 1;
-    }
-    let mut n = signum;
-    if n < 0 {
-        unsafe { *buf.add(i) = b'-'; }
-        i += 1;
-        n = -n;
-    }
-    let mut digits = [0u8; 12];
-    let mut nd = 0;
-    if n == 0 {
-        digits[nd] = b'0';
-        nd += 1;
-    } else {
-        while n > 0 {
-            digits[nd] = b'0' + (n % 10) as u8;
-            nd += 1;
-            n /= 10;
+    // SAFETY: 唯一访问全局 static mut UNKNOWN_BUF 的地方，无并发冲突
+    unsafe {
+        let buf = UNKNOWN_BUF.as_mut_ptr();
+        let msg = b"Unknown signal ";
+        let mut i = 0;
+        for &b in msg {
+            *buf.add(i) = b;
+            i += 1;
         }
+        let mut n = signum;
+        if n < 0 {
+            *buf.add(i) = b'-';
+            i += 1;
+            n = -n;
+        }
+        let mut digits = [0u8; 12];
+        let mut nd = 0;
+        if n == 0 {
+            digits[nd] = b'0';
+            nd += 1;
+        } else {
+            while n > 0 {
+                digits[nd] = b'0' + (n % 10) as u8;
+                nd += 1;
+                n /= 10;
+            }
+        }
+        while nd > 0 {
+            nd -= 1;
+            *buf.add(i) = digits[nd];
+            i += 1;
+        }
+        *buf.add(i) = 0;
+        buf as *mut core::ffi::c_char
     }
-    while nd > 0 {
-        nd -= 1;
-        unsafe { *buf.add(i) = digits[nd]; }
-        i += 1;
-    }
-    unsafe { *buf.add(i) = 0; }
-    buf as *mut core::ffi::c_char
 }
 
 /// 安全的 Rust 内部实现。

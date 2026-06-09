@@ -9,7 +9,7 @@ use core::ffi::c_void;
 /// - `vl` 非空、`vr` 非空
 /// - 当 `n > 0` 时，两者各自至少可读 n 字节
 #[no_mangle]
-pub unsafe extern "C" fn memcmp(vl: *const core::ffi::c_void, vr: *const core::ffi::c_void, n: usize) -> core::ffi::c_int {
+pub extern "C" fn memcmp(vl: *const core::ffi::c_void, vr: *const core::ffi::c_void, n: usize) -> core::ffi::c_int {
     // 使用原始指针比较，避免任何可能调用 memcmp intrinsic 的 Rust 操作。
     let a = vl as *const u8;
     let b = vr as *const u8;

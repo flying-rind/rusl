@@ -221,20 +221,20 @@ unsafe fn hsearch_impl(item: ENTRY, action: ACTION, retval: *mut *mut ENTRY) -> 
 
 /// 创建哈希表。
 #[no_mangle]
-pub unsafe extern "C" fn hcreate(nel: usize) -> i32 {
-    hcreate_impl(nel)
+pub extern "C" fn hcreate(nel: usize) -> i32 {
+    unsafe { hcreate_impl(nel) }
 }
 
 /// 销毁哈希表。
 #[no_mangle]
-pub unsafe extern "C" fn hdestroy() {
-    hdestroy_impl()
+pub extern "C" fn hdestroy() {
+    unsafe { hdestroy_impl() }
 }
 
 /// 搜索或插入哈希表条目。
 #[no_mangle]
-pub unsafe extern "C" fn hsearch(item: ENTRY, action: ACTION) -> *mut ENTRY {
+pub extern "C" fn hsearch(item: ENTRY, action: ACTION) -> *mut ENTRY {
     let mut e: *mut ENTRY = ptr::null_mut();
-    hsearch_impl(item, action, &mut e);
+    unsafe { hsearch_impl(item, action, &mut e) };
     e
 }

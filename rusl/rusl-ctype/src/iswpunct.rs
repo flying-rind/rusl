@@ -300,9 +300,8 @@ pub(crate) const PUNCT_TABLE: [u8; 4000] = [
 ///
 /// # Safety
 ///
-/// 此函数标记为 unsafe 以匹配 C ABI 调用约定。函数本身无 unsafe 操作。
 #[no_mangle]
-pub unsafe extern "C" fn iswpunct(wc: wint_t) -> c_int {
+pub extern "C" fn iswpunct(wc: wint_t) -> c_int {
     __iswpunct_l(wc, core::ptr::null_mut())
 }
 
@@ -316,11 +315,8 @@ pub unsafe extern "C" fn iswpunct(wc: wint_t) -> c_int {
 /// * `c` - 宽字符值
 /// * `l` - locale 句柄，当前实现中忽略。可为 `core::ptr::null_mut()`
 ///
-/// # Safety
-///
-/// `l` 若不为 null 则必须指向有效的 locale 对象。
 #[no_mangle]
-pub unsafe extern "C" fn iswpunct_l(c: wint_t, l: locale_t) -> c_int {
+pub extern "C" fn iswpunct_l(c: wint_t, l: locale_t) -> c_int {
     __iswpunct_l(c, l)
 }
 

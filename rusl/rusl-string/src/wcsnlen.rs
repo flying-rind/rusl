@@ -8,13 +8,17 @@
 /// - `s` 非空
 /// - 当 `n > 0` 时，s 至少可读 min(n, wcslen(s)+1) 个宽字符
 #[no_mangle]
-pub unsafe extern "C" fn wcsnlen(s: *const u32, n: usize) -> usize {
-    for i in 0..n {
-        if unsafe { *s.add(i) } == 0 {
-            return i;
+pub extern "C" fn wcsnlen(s: *const u32, n: usize) -> usize {
+    // SAFETY: caller guarantees that s is non-null and, when n > 0,
+    // s points to at least min(n, wcslen(s)+1) readable wide characters.
+    unsafe {
+        for i in 0..n {
+            if *s.add(i) == 0 {
+                return i;
+            }
         }
+        n
     }
-    n
 }
 
 /// 安全的 Rust 内部实现。

@@ -13,69 +13,72 @@ static mut STRTOK_STATE: *mut u8 = core::ptr::null_mut();
 /// - 首次调用 `s` 非空，后续可传 null
 /// - `sep` 非空，以 null 结尾
 #[no_mangle]
-pub unsafe extern "C" fn strtok(s: *mut core::ffi::c_char, sep: *const core::ffi::c_char) -> *mut core::ffi::c_char {
-    let src = if s.is_null() {
-        STRTOK_STATE
-    } else {
-        s as *mut u8
-    };
-    if src.is_null() {
-        return core::ptr::null_mut();
-    }
-    // 跳过开头的分隔符
-    let sep_bytes = sep as *const u8;
-    let mut p = src;
-    loop {
-        if unsafe { *p } == 0 {
-            STRTOK_STATE = core::ptr::null_mut();
+pub extern "C" fn strtok(s: *mut core::ffi::c_char, sep: *const core::ffi::c_char) -> *mut core::ffi::c_char {
+    // SAFETY: strtok 操作原始指针访问字符串和分隔符，调用者必须保证 s 和 sep 有效。
+    unsafe {
+        let src = if s.is_null() {
+            STRTOK_STATE
+        } else {
+            s as *mut u8
+        };
+        if src.is_null() {
             return core::ptr::null_mut();
         }
-        // 检查是否分隔符
-        let mut is_sep = false;
-        let mut j = 0;
+        // 跳过开头的分隔符
+        let sep_bytes = sep as *const u8;
+        let mut p = src;
         loop {
-            let sc = unsafe { *sep_bytes.add(j) };
-            if sc == 0 {
+            if *p == 0 {
+                STRTOK_STATE = core::ptr::null_mut();
+                return core::ptr::null_mut();
+            }
+            // 检查是否分隔符
+            let mut is_sep = false;
+            let mut j = 0;
+            loop {
+                let sc = *sep_bytes.add(j);
+                if sc == 0 {
+                    break;
+                }
+                if sc == *p {
+                    is_sep = true;
+                    break;
+                }
+                j += 1;
+            }
+            if !is_sep {
                 break;
             }
-            if sc == unsafe { *p } {
-                is_sep = true;
-                break;
-            }
-            j += 1;
+            p = p.add(1);
         }
-        if !is_sep {
-            break;
-        }
-        p = unsafe { p.add(1) };
-    }
-    let token = p;
-    // 找到 token 结尾
-    loop {
-        if unsafe { *p } == 0 {
-            STRTOK_STATE = core::ptr::null_mut();
-            return token as *mut core::ffi::c_char;
-        }
-        // 检查是否分隔符
-        let mut is_sep = false;
-        let mut j = 0;
+        let token = p;
+        // 找到 token 结尾
         loop {
-            let sc = unsafe { *sep_bytes.add(j) };
-            if sc == 0 {
-                break;
+            if *p == 0 {
+                STRTOK_STATE = core::ptr::null_mut();
+                return token as *mut core::ffi::c_char;
             }
-            if sc == unsafe { *p } {
-                is_sep = true;
-                break;
+            // 检查是否分隔符
+            let mut is_sep = false;
+            let mut j = 0;
+            loop {
+                let sc = *sep_bytes.add(j);
+                if sc == 0 {
+                    break;
+                }
+                if sc == *p {
+                    is_sep = true;
+                    break;
+                }
+                j += 1;
             }
-            j += 1;
+            if is_sep {
+                *p = 0;
+                STRTOK_STATE = p.add(1);
+                return token as *mut core::ffi::c_char;
+            }
+            p = p.add(1);
         }
-        if is_sep {
-            unsafe { *p = 0; }
-            STRTOK_STATE = unsafe { p.add(1) };
-            return token as *mut core::ffi::c_char;
-        }
-        p = unsafe { p.add(1) };
     }
 }
 

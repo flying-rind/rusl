@@ -264,94 +264,96 @@ pub(crate) fn tre_fill_pmatch(
 /// - 子匹配父子约束修正
 /// - 未参与匹配的子组返回 `{-1, -1}`
 #[no_mangle]
-pub unsafe extern "C" fn regexec(
+pub extern "C" fn regexec(
     preg: *const regex_t,
     string: *const c_char,
     nmatch: size_t,
     pmatch: *mut regmatch_t,
     eflags: c_int,
 ) -> c_int {
-    // 参数校验
-    if preg.is_null() || string.is_null() {
-        return super::regcomp::REG_ESPACE;
-    }
-
-    // 从 preg 获取 TNFA
-    let tnfa_ptr = unsafe { (*preg).__opaque as *const Tnfa };
-    if tnfa_ptr.is_null() {
-        return super::regcomp::REG_ESPACE;
-    }
-    let tnfa = unsafe { &*tnfa_ptr };
-
-    // 若编译时指定 REG_NOSUB，强制 nmatch = 0
-    let effective_nmatch = if (tnfa.cflags & super::regcomp::REG_NOSUB) != 0 {
-        0
-    } else {
-        nmatch
-    };
-
-    // 分配标签数组（若需要）
-    let mut tags: Vec<regoff_t> = Vec::new();
-    if tnfa.num_tags > 0 && effective_nmatch > 0 {
-        tags.resize(tnfa.num_tags as usize, -1);
-    }
-
-    // 计算字符串长度并构造切片
-    let string_slice = {
-        let mut len: usize = 0;
         unsafe {
-            while *string.add(len) != 0 {
-                len += 1;
-            }
+        // 参数校验
+        if preg.is_null() || string.is_null() {
+            return super::regcomp::REG_ESPACE;
         }
-        unsafe { core::slice::from_raw_parts(string as *const u8, len) }
-    };
-
-    // 构造标签数组的可变引用
-    let match_tags: Option<&mut [regoff_t]> = if tags.is_empty() {
-        None
-    } else {
-        Some(&mut tags[..])
-    };
-
-    // 分派匹配引擎
-    let mut match_eo: regoff_t = -1;
-    let result: i32 = if tnfa.have_backrefs {
-        // 回溯匹配器
-        super::regexec_backtrack::tnfa_run_backtrack(
-            tnfa,
-            string_slice,
-            match_tags,
-            eflags,
-            &mut match_eo,
-        ).to_errno()
-    } else {
-        // 并行匹配器
-        super::regexec_parallel::tnfa_run_parallel(
-            tnfa,
-            string_slice,
-            match_tags,
-            eflags,
-            &mut match_eo,
-        ).to_errno()
-    };
-
-    // 填充 pmatch
-    if result == super::regcomp::REG_OK && effective_nmatch > 0 && !pmatch.is_null() {
-        let pmatch_slice = unsafe {
-            core::slice::from_raw_parts_mut(pmatch, effective_nmatch)
+    
+        // 从 preg 获取 TNFA
+        let tnfa_ptr = (*preg).__opaque as *const Tnfa;
+        if tnfa_ptr.is_null() {
+            return super::regcomp::REG_ESPACE;
+        }
+        let tnfa = &*tnfa_ptr;
+    
+        // 若编译时指定 REG_NOSUB，强制 nmatch = 0
+        let effective_nmatch = if (tnfa.cflags & super::regcomp::REG_NOSUB) != 0 {
+            0
+        } else {
+            nmatch
         };
-        tre_fill_pmatch(
-            effective_nmatch,
-            pmatch_slice,
-            tnfa.cflags,
-            tnfa,
-            &tags,
-            match_eo,
-        );
-    }
-
-    result
+    
+        // 分配标签数组（若需要）
+        let mut tags: Vec<regoff_t> = Vec::new();
+        if tnfa.num_tags > 0 && effective_nmatch > 0 {
+            tags.resize(tnfa.num_tags as usize, -1);
+        }
+    
+        // 计算字符串长度并构造切片
+        let string_slice = {
+            let mut len: usize = 0;
+            {
+                while *string.add(len) != 0 {
+                    len += 1;
+                }
+            };
+            core::slice::from_raw_parts(string as *const u8, len)
+        };
+    
+        // 构造标签数组的可变引用
+        let match_tags: Option<&mut [regoff_t]> = if tags.is_empty() {
+            None
+        } else {
+            Some(&mut tags[..])
+        };
+    
+        // 分派匹配引擎
+        let mut match_eo: regoff_t = -1;
+        let result: i32 = if tnfa.have_backrefs {
+            // 回溯匹配器
+            super::regexec_backtrack::tnfa_run_backtrack(
+                tnfa,
+                string_slice,
+                match_tags,
+                eflags,
+                &mut match_eo,
+            ).to_errno()
+        } else {
+            // 并行匹配器
+            super::regexec_parallel::tnfa_run_parallel(
+                tnfa,
+                string_slice,
+                match_tags,
+                eflags,
+                &mut match_eo,
+            ).to_errno()
+        };
+    
+        // 填充 pmatch
+        if result == super::regcomp::REG_OK && effective_nmatch > 0 && !pmatch.is_null() {
+            let pmatch_slice = {
+                core::slice::from_raw_parts_mut(pmatch, effective_nmatch)
+            };
+            tre_fill_pmatch(
+                effective_nmatch,
+                pmatch_slice,
+                tnfa.cflags,
+                tnfa,
+                &tags,
+                match_eo,
+            );
+        }
+    
+        result
+        }
 }
 
 // ============================================================================

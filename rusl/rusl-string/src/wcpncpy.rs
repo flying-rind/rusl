@@ -10,23 +10,27 @@
 /// - `d` 至少可写 n 个 wchar_t
 /// - s 以 L'\0' 结尾
 #[no_mangle]
-pub unsafe extern "C" fn wcpncpy(d: *mut u32, s: *const u32, n: usize) -> *mut u32 {
-    let mut i = 0;
-    while i < n {
-        let ch = unsafe { *s.add(i) };
-        unsafe { *d.add(i) = ch; }
-        if ch == 0 {
-            let null_pos = i;
-            i += 1;
-            while i < n {
-                unsafe { *d.add(i) = 0; }
+pub extern "C" fn wcpncpy(d: *mut u32, s: *const u32, n: usize) -> *mut u32 {
+    // SAFETY: caller guarantees d and s are non-null, non-overlapping,
+    // d has space for at least n wchar_t, and s is null-terminated.
+    unsafe {
+        let mut i = 0;
+        while i < n {
+            let ch = *s.add(i);
+            *d.add(i) = ch;
+            if ch == 0 {
+                let null_pos = i;
                 i += 1;
+                while i < n {
+                    *d.add(i) = 0;
+                    i += 1;
+                }
+                return d.add(null_pos) as *mut u32;
             }
-            return d.add(null_pos) as *mut u32;
+            i += 1;
         }
-        i += 1;
+        d.add(n) as *mut u32
     }
-    d.add(n) as *mut u32
 }
 
 /// 安全的 Rust 内部实现。

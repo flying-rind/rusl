@@ -13,8 +13,9 @@
 ///
 /// 读取并修改全局可变状态（`__seed48`），非线程安全。
 #[no_mangle]
-pub unsafe extern "C" fn drand48() -> f64 {
-    erand48(&mut crate::__seed48::__seed48[0] as *mut u16)
+pub extern "C" fn drand48() -> f64 {
+    // SAFETY: __seed48 是全局可变状态，此处通过裸指针传递
+    unsafe { erand48(&mut crate::__seed48::__seed48[0] as *mut u16) }
 }
 
 /// erand48 — 使用调用者提供的种子，返回 [0.0, 1.0) 的伪随机 f64。
@@ -25,12 +26,15 @@ pub unsafe extern "C" fn drand48() -> f64 {
 ///
 /// - `xsubi` 必须指向 3 个 `u16` 的有效可读写缓冲区（48 位种子，小端排列）。
 #[no_mangle]
-pub unsafe extern "C" fn erand48(xsubi: *mut u16) -> f64 {
-    let step = crate::__rand48_step::__rand48_step(
-        xsubi,
-        &crate::__seed48::__seed48[3] as *const u16,
-    );
-    // 将 48 位随机值左移 4 位得到 52 位尾数，嵌入 [1.0, 2.0) 的 double
-    let bits = 0x3ff0_0000_0000_0000u64 | (step << 4);
-    f64::from_bits(bits) - 1.0
+pub extern "C" fn erand48(xsubi: *mut u16) -> f64 {
+    // SAFETY: 调用者确保 xsubi 指向 3 个 u16 的有效缓冲区
+    unsafe {
+        let step = crate::__rand48_step::__rand48_step(
+            xsubi,
+            &crate::__seed48::__seed48[3] as *const u16,
+        );
+        // 将 48 位随机值左移 4 位得到 52 位尾数，嵌入 [1.0, 2.0) 的 double
+        let bits = 0x3ff0_0000_0000_0000u64 | (step << 4);
+        f64::from_bits(bits) - 1.0
+    }
 }

@@ -21,6 +21,6 @@ use core::ffi::c_int;
 ///
 /// 此函数已过时（POSIX 标记为 LEGACY）。新代码应直接使用按位与操作。
 #[no_mangle]
-pub unsafe extern "C" fn toascii(c: c_int) -> c_int {
+pub extern "C" fn toascii(c: c_int) -> c_int {
     c & 0x7f
 }

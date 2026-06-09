@@ -16,7 +16,7 @@ c-test = []
 rusl = ["dep:rusl-malloc", "dep:rusl-stdlib"]
 
 [dependencies]
-rusl-core = { path = "../rusl-core" }
+rusl-core = { path = "../rusl-core", features = ["rusl"] }
 rusl-stdlib = { path = "../rusl-stdlib", optional = true }
 rusl-malloc = { path = "../rusl-malloc", optional = true}
 

@@ -57,7 +57,6 @@ pub unsafe fn set_errno(val: c_int) {
 /// 始终返回有效的非空 `*mut c_int` 指针:
 /// - Stage 0: 所有调用返回同一个全局静态变量 [`ERRNO`] 的地址。
 /// - Stage 5: 不同线程返回不同的 per-thread 地址。
-#[no_mangle]
 pub extern "C" fn __errno_location() -> *mut c_int {
     core::ptr::addr_of_mut!(ERRNO)
 }
@@ -70,7 +69,6 @@ pub extern "C" fn __errno_location() -> *mut c_int {
 ///
 /// 与 [`__errno_location`] 返回完全相同的地址，行为完全一致。
 /// 在 musl 中通过 `weak_alias(__errno_location, ___errno_location)` 实现。
-#[no_mangle]
 pub extern "C" fn ___errno_location() -> *mut c_int {
     core::ptr::addr_of_mut!(ERRNO)
 }

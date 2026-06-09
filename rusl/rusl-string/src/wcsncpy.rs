@@ -10,23 +10,26 @@
 /// - `d` 至少可写 n 个 wchar_t
 /// - s 以 L'\0' 结尾
 #[no_mangle]
-pub unsafe extern "C" fn wcsncpy(d: *mut u32, s: *const u32, n: usize) -> *mut u32 {
-    let mut i = 0;
-    while i < n {
-        let ch = unsafe { *s.add(i) };
-        unsafe { *d.add(i) = ch; }
-        if ch == 0 {
-            // 剩余填零
-            i += 1;
-            while i < n {
-                unsafe { *d.add(i) = 0; }
+pub extern "C" fn wcsncpy(d: *mut u32, s: *const u32, n: usize) -> *mut u32 {
+    // SAFETY: 调用者保证 d 和 s 非空、不重叠，d 至少可写 n 个 wchar_t，s 以 L'\0' 结尾
+    unsafe {
+        let mut i = 0;
+        while i < n {
+            let ch = *s.add(i);
+            *d.add(i) = ch;
+            if ch == 0 {
+                // 剩余填零
                 i += 1;
+                while i < n {
+                    *d.add(i) = 0;
+                    i += 1;
+                }
+                return d;
             }
-            return d;
+            i += 1;
         }
-        i += 1;
+        d
     }
-    d
 }
 
 /// 安全的 Rust 内部实现。

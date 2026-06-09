@@ -70,23 +70,29 @@ unsafe fn wcstox_inner(s: *const wchar_t, endptr: *mut *mut wchar_t) -> (f64, bo
 
 /// 将 `s` 指向的宽字符串转换为 `f64`。
 #[no_mangle]
-pub unsafe extern "C" fn wcstod(s: *const wchar_t, endptr: *mut *mut wchar_t) -> f64 {
-    let (val, _) = wcstox_inner(s, endptr);
-    val
+pub extern "C" fn wcstod(s: *const wchar_t, endptr: *mut *mut wchar_t) -> f64 {
+    unsafe {
+        let (val, _) = wcstox_inner(s, endptr);
+        val
+    }
 }
 
 /// 将 `s` 指向的宽字符串转换为 `f32`。
 #[no_mangle]
-pub unsafe extern "C" fn wcstof(s: *const wchar_t, endptr: *mut *mut wchar_t) -> f32 {
-    let (val, _) = wcstox_inner(s, endptr);
-    val as f32
+pub extern "C" fn wcstof(s: *const wchar_t, endptr: *mut *mut wchar_t) -> f32 {
+    unsafe {
+        let (val, _) = wcstox_inner(s, endptr);
+        val as f32
+    }
 }
 
 /// 将 `s` 指向的宽字符串转换为 `f64`（long double 精度）。
 #[no_mangle]
-pub unsafe extern "C" fn wcstold(s: *const wchar_t, endptr: *mut *mut wchar_t) -> f64 {
-    let (val, _) = wcstox_inner(s, endptr);
-    val
+pub extern "C" fn wcstold(s: *const wchar_t, endptr: *mut *mut wchar_t) -> f64 {
+    unsafe {
+        let (val, _) = wcstox_inner(s, endptr);
+        val
+    }
 }
 
 // ---------- 测试 ----------

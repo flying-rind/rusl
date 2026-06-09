@@ -14,7 +14,7 @@ default = []
 c-test = []
 
 [dependencies]
-rusl-core = { path = "../rusl-core" }
+rusl-core = { path = "../rusl-core", features = ["rusl"] }
 
 [profile.dev]
 panic = "abort"

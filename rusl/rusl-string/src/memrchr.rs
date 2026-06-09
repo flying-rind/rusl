@@ -22,7 +22,8 @@ pub unsafe extern "C" fn __memrchr(m: *const core::ffi::c_void, c: core::ffi::c_
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn memrchr(m: *const core::ffi::c_void, c: core::ffi::c_int, n: usize) -> *mut core::ffi::c_void {
+pub extern "C" fn memrchr(m: *const core::ffi::c_void, c: core::ffi::c_int, n: usize) -> *mut core::ffi::c_void {
+    // SAFETY: delegates to __memrchr which performs bounds-checked raw pointer reads
     unsafe { __memrchr(m, c, n) }
 }
 

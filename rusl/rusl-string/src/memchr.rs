@@ -9,14 +9,17 @@ use core::ffi::c_void;
 /// - `src` 非空
 /// - 当 `n > 0` 时，`src` 至少可读 n 字节
 #[no_mangle]
-pub unsafe extern "C" fn memchr(src: *const core::ffi::c_void, c: core::ffi::c_int, n: usize) -> *mut core::ffi::c_void {
-    let p = src as *const u8;
-    for i in 0..n {
-        if unsafe { *p.add(i) } == c as u8 {
-            return p.add(i) as *mut core::ffi::c_void;
+pub extern "C" fn memchr(src: *const core::ffi::c_void, c: core::ffi::c_int, n: usize) -> *mut core::ffi::c_void {
+    // SAFETY: 调用者确保 src 为有效指针，前 n 字节可读
+    unsafe {
+        let p = src as *const u8;
+        for i in 0..n {
+            if *p.add(i) == c as u8 {
+                return p.add(i) as *mut core::ffi::c_void;
+            }
         }
+        core::ptr::null_mut()
     }
-    core::ptr::null_mut()
 }
 
 /// 安全的 Rust 内部实现。

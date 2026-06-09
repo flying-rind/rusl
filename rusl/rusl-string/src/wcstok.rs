@@ -9,47 +9,50 @@
 /// - 首次调用 `s` 非空，后续可传 null
 /// - `sep` 非空，以 L'\0' 结尾
 #[no_mangle]
-pub unsafe extern "C" fn wcstok(s: *mut u32, sep: *const u32, p: *mut *mut u32) -> *mut u32 {
-    let src = if s.is_null() { *p } else { s };
-    if src.is_null() { return core::ptr::null_mut(); }
-    // 跳过开头分隔符
-    let mut pos = src;
-    loop {
-        if unsafe { *pos } == 0 {
-            *p = core::ptr::null_mut();
-            return core::ptr::null_mut();
-        }
-        let mut is_sep = false;
-        let mut j = 0;
+pub extern "C" fn wcstok(s: *mut u32, sep: *const u32, p: *mut *mut u32) -> *mut u32 {
+    // SAFETY: 调用者保证 p 非空，s/sep 满足文档前置条件；内部指针运算仅在对齐的宽字符数组范围内进行。
+    unsafe {
+        let src = if s.is_null() { *p } else { s };
+        if src.is_null() { return core::ptr::null_mut(); }
+        // 跳过开头分隔符
+        let mut pos = src;
         loop {
-            let sc = unsafe { *sep.add(j) };
-            if sc == 0 { break; }
-            if sc == unsafe { *pos } { is_sep = true; break; }
-            j += 1;
+            if *pos == 0 {
+                *p = core::ptr::null_mut();
+                return core::ptr::null_mut();
+            }
+            let mut is_sep = false;
+            let mut j = 0;
+            loop {
+                let sc = *sep.add(j);
+                if sc == 0 { break; }
+                if sc == *pos { is_sep = true; break; }
+                j += 1;
+            }
+            if !is_sep { break; }
+            pos = pos.add(1);
         }
-        if !is_sep { break; }
-        pos = unsafe { pos.add(1) };
-    }
-    let token = pos;
-    loop {
-        if unsafe { *pos } == 0 {
-            *p = core::ptr::null_mut();
-            return token;
-        }
-        let mut is_sep = false;
-        let mut j = 0;
+        let token = pos;
         loop {
-            let sc = unsafe { *sep.add(j) };
-            if sc == 0 { break; }
-            if sc == unsafe { *pos } { is_sep = true; break; }
-            j += 1;
+            if *pos == 0 {
+                *p = core::ptr::null_mut();
+                return token;
+            }
+            let mut is_sep = false;
+            let mut j = 0;
+            loop {
+                let sc = *sep.add(j);
+                if sc == 0 { break; }
+                if sc == *pos { is_sep = true; break; }
+                j += 1;
+            }
+            if is_sep {
+                *pos = 0;
+                *p = pos.add(1);
+                return token;
+            }
+            pos = pos.add(1);
         }
-        if is_sep {
-            unsafe { *pos = 0; }
-            *p = unsafe { pos.add(1) };
-            return token;
-        }
-        pos = unsafe { pos.add(1) };
     }
 }
 

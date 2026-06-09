@@ -328,7 +328,7 @@ const MT: [usize; 3] = [2048, 342, 57];
 ///
 /// [ISO C 标准库 `<wctype.h>`]
 #[no_mangle]
-pub unsafe extern "C" fn towlower(wc: wint_t) -> wint_t {
+pub extern "C" fn towlower(wc: wint_t) -> wint_t {
     casemap(wc, 0)
 }
 
@@ -344,7 +344,7 @@ pub unsafe extern "C" fn towlower(wc: wint_t) -> wint_t {
 ///
 /// [ISO C 标准库 `<wctype.h>`]
 #[no_mangle]
-pub unsafe extern "C" fn towupper(wc: wint_t) -> wint_t {
+pub extern "C" fn towupper(wc: wint_t) -> wint_t {
     casemap(wc, 1)
 }
 
@@ -357,7 +357,7 @@ pub unsafe extern "C" fn towupper(wc: wint_t) -> wint_t {
 ///
 /// [POSIX 扩展 `<wctype.h>`]
 #[no_mangle]
-pub unsafe extern "C" fn towlower_l(wc: wint_t, _l: *mut c_void) -> wint_t {
+pub extern "C" fn towlower_l(wc: wint_t, _l: *mut c_void) -> wint_t {
     casemap(wc, 0)
 }
 
@@ -370,7 +370,7 @@ pub unsafe extern "C" fn towlower_l(wc: wint_t, _l: *mut c_void) -> wint_t {
 ///
 /// [POSIX 扩展 `<wctype.h>`]
 #[no_mangle]
-pub unsafe extern "C" fn towupper_l(wc: wint_t, _l: *mut c_void) -> wint_t {
+pub extern "C" fn towupper_l(wc: wint_t, _l: *mut c_void) -> wint_t {
     casemap(wc, 1)
 }
 

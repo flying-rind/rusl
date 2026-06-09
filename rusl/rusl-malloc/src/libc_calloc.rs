@@ -66,9 +66,9 @@ pub(crate) const PAGESZ: usize = 4096;
 ///   `core::ptr::null_mut()`。
 /// - **分配失败**: 若底层 `malloc` 返回 NULL，返回 `core::ptr::null_mut()`。
 ///
-/// # Safety
+/// # 安全性
 ///
-/// 此函数标记为 `unsafe` 因为：
+/// 此函数自身是安全的（未标记为 `unsafe`），但调用者仍需注意：
 /// - 返回的原始指针需要调用者正确管理生命周期
 /// - 调用者必须使用 `free` 释放返回的内存（否则内存泄漏）
 /// - 调用者不得对返回的内存执行越界读写
@@ -82,15 +82,14 @@ pub(crate) const PAGESZ: usize = 4096;
 /// ```rust,no_run,ignore
 /// # use rusl::malloc::calloc;
 /// // 分配 10 个 u32 元素的数组，全部初始化为零
-/// unsafe {
-///     let p = calloc(10, core::mem::size_of::<u32>());
-///     assert!(!p.is_null());
-///     // p 指向 40 字节的全零内存
-/// }
+/// let p = calloc(10, core::mem::size_of::<u32>());
+/// assert!(!p.is_null());
+/// // p 指向 40 字节的全零内存
 /// ```
 #[no_mangle]
-pub unsafe extern "C" fn calloc(m: usize, n: usize) -> *mut c_void {
-    calloc_impl(m, n, super::mallocng::malloc::malloc)
+pub extern "C" fn calloc(m: usize, n: usize) -> *mut c_void {
+    // SAFETY: 参数 m, n 来自调用者，malloc 函数指针指向正确的分配函数。
+    unsafe { calloc_impl(m, n, super::mallocng::malloc::malloc) }
 }
 
 // ============================================================================
@@ -432,26 +431,29 @@ mod tests {
     }
 
     /// 模拟成功的内存分配 —— 从静态缓冲区线性分配。
-    unsafe extern "C" fn mock_malloc_success(size: usize) -> *mut c_void {
+    extern "C" fn mock_malloc_success(size: usize) -> *mut c_void {
         if size == 0 {
             return core::ptr::null_mut();
         }
-        if MOCK_OFFSET + size > MOCK_HEAP.len() {
-            return core::ptr::null_mut(); // 堆耗尽
+        // SAFETY: 测试辅助函数，仅在测试上下文中使用，每次测试前调用 mock_reset 重置状态。
+        unsafe {
+            if MOCK_OFFSET + size > MOCK_HEAP.len() {
+                return core::ptr::null_mut(); // 堆耗尽
+            }
+            let ptr = MOCK_HEAP.as_mut_ptr().add(MOCK_OFFSET);
+            MOCK_OFFSET += size;
+            ptr as *mut c_void
         }
-        let ptr = MOCK_HEAP.as_mut_ptr().add(MOCK_OFFSET);
-        MOCK_OFFSET += size;
-        ptr as *mut c_void
     }
 
     /// 模拟失败的内存分配 —— 始终返回 NULL 指针。
-    unsafe extern "C" fn mock_malloc_fail(_size: usize) -> *mut c_void {
+    extern "C" fn mock_malloc_fail(_size: usize) -> *mut c_void {
         core::ptr::null_mut()
     }
 
     /// 用于验证函数指针类型匹配的辅助函数。
     /// 当实现完成后，测试验证 calloc_impl 的参数传递正确性。
-    unsafe extern "C" fn mock_malloc_small(size: usize) -> *mut c_void {
+    extern "C" fn mock_malloc_small(size: usize) -> *mut c_void {
         // 使用一个小的静态缓冲区
         static mut SMALL_BUF: [u8; 256] = [0u8; 256];
         if size == 0 || size > 256 {
@@ -459,7 +461,8 @@ mod tests {
         }
         // 注意：此处故意不重置 SMALL_BUF 以测试清零逻辑
         // （实现层应将返回的内存清零）
-        SMALL_BUF.as_mut_ptr() as *mut c_void
+        // SAFETY: 测试辅助函数，SMALL_BUF 是静态缓冲区，仅在测试中使用。
+        unsafe { SMALL_BUF.as_mut_ptr() as *mut c_void }
     }
 
     // ======================================================================

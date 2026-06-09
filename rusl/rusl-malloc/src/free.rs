@@ -53,8 +53,8 @@ use core::ffi::c_void;
 /// 3. **Page-level reclamation**: 大槽位中完整空闲物理页通过
 ///    `sys_madvise(MADV_FREE)` 向内核提示可回收 (当前默认禁用)
 #[no_mangle]
-pub unsafe extern "C" fn free(p: *mut c_void) {
-    // 直接委托给 mallocng 内部实现。
+pub extern "C" fn free(p: *mut c_void) {
+    // SAFETY: 直接委托给 mallocng 内部实现，调用者保证 p 是有效的分配指针或 NULL。
     // C 标准要求: free(NULL) 为无操作，此检查由 __libc_free 内部完成。
-    super::mallocng::free::__libc_free(p);
+    unsafe { super::mallocng::free::__libc_free(p) };
 }

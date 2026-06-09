@@ -9,21 +9,24 @@
 /// - `d` 至少可写 n 个 wchar_t
 /// - `s` 至少可读 n 个 wchar_t
 #[no_mangle]
-pub unsafe extern "C" fn wmemmove(d: *mut u32, s: *const u32, n: usize) -> *mut u32 {
-    let dst = d;
-    let src = s;
-    if (dst as *const u32) < src || (dst as *const u32) >= src.wrapping_add(n) {
-        for i in 0..n {
-            unsafe { *dst.add(i) = *src.add(i); }
+pub extern "C" fn wmemmove(d: *mut u32, s: *const u32, n: usize) -> *mut u32 {
+    // SAFETY: 调用者保证 d 和 s 非空且可读/可写 n 个 wchar_t。
+    unsafe {
+        let dst = d;
+        let src = s;
+        if (dst as *const u32) < src || (dst as *const u32) >= src.wrapping_add(n) {
+            for i in 0..n {
+                *dst.add(i) = *src.add(i);
+            }
+        } else {
+            let mut i = n;
+            while i > 0 {
+                i -= 1;
+                *dst.add(i) = *src.add(i);
+            }
         }
-    } else {
-        let mut i = n;
-        while i > 0 {
-            i -= 1;
-            unsafe { *dst.add(i) = *src.add(i); }
-        }
+        d
     }
-    d
 }
 
 /// 安全的 Rust 内部实现。

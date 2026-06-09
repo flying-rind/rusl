@@ -15,7 +15,7 @@ use core::ffi::c_void;
 /// - `a >= 0` 时返回 `a`。
 /// - `a < 0` 时返回 `-a`。
 #[no_mangle]
-pub unsafe extern "C" fn labs(a: i64) -> i64 {
+pub extern "C" fn labs(a: i64) -> i64 {
     if a > 0 { a } else { -a }
 }
 
@@ -30,7 +30,7 @@ pub unsafe extern "C" fn labs(a: i64) -> i64 {
 /// - `a >= 0` 时返回 `a`。
 /// - `a < 0` 时返回 `-a`。
 #[no_mangle]
-pub unsafe extern "C" fn llabs(a: i64) -> i64 {
+pub extern "C" fn llabs(a: i64) -> i64 {
     if a > 0 { a } else { -a }
 }
 
@@ -45,6 +45,6 @@ pub unsafe extern "C" fn llabs(a: i64) -> i64 {
 /// - `a >= 0` 时返回 `a`。
 /// - `a < 0` 时返回 `-a`。
 #[no_mangle]
-pub unsafe extern "C" fn imaxabs(a: i64) -> i64 {
+pub extern "C" fn imaxabs(a: i64) -> i64 {
     if a > 0 { a } else { -a }
 }

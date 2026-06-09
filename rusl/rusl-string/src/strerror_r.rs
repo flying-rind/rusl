@@ -34,25 +34,28 @@ const ERROR_MSGS: &[(c_int, &[u8])] = &[
 /// - `buf` 非空或 `buflen == 0`
 /// - 当 `buflen > 0` 时，`buf` 至少可写 buflen 字节
 #[no_mangle]
-pub unsafe extern "C" fn strerror_r(err: core::ffi::c_int, buf: *mut core::ffi::c_char, buflen: usize) -> core::ffi::c_int {
-    let msg = ERROR_MSGS.iter().find(|&&(code, _)| code == err)
-        .map(|&(_, msg)| msg)
-        .unwrap_or(b"Unknown error");
-    if buflen == 0 {
-        return 0;
+pub extern "C" fn strerror_r(err: core::ffi::c_int, buf: *mut core::ffi::c_char, buflen: usize) -> core::ffi::c_int {
+    // SAFETY: 调用者保证 buf 非空或 buflen == 0，当 buflen > 0 时 buf 至少可写 buflen 字节。
+    unsafe {
+        let msg = ERROR_MSGS.iter().find(|&&(code, _)| code == err)
+            .map(|&(_, msg)| msg)
+            .unwrap_or(b"Unknown error");
+        if buflen == 0 {
+            return 0;
+        }
+        let dst = buf as *mut u8;
+        let copy_len = (msg.len()).min(buflen - 1);
+        for i in 0..copy_len {
+            *dst.add(i) = msg[i];
+        }
+        *dst.add(copy_len) = 0;
+        0
     }
-    let dst = buf as *mut u8;
-    let copy_len = (msg.len()).min(buflen - 1);
-    for i in 0..copy_len {
-        unsafe { *dst.add(i) = msg[i]; }
-    }
-    unsafe { *dst.add(copy_len) = 0; }
-    0
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn __xpg_strerror_r(err: core::ffi::c_int, buf: *mut core::ffi::c_char, buflen: usize) -> core::ffi::c_int {
-    unsafe { strerror_r(err, buf, buflen) }
+    strerror_r(err, buf, buflen)
 }
 
 /// 安全的 Rust 内部实现。

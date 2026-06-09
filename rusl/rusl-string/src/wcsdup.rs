@@ -13,18 +13,23 @@ extern "C" {
     fn malloc(size: usize) -> *mut c_void;
 }
 
-pub unsafe extern "C" fn wcsdup(s: *const u32) -> *mut u32 {
-    // 计算长度
-    let mut len = 0;
-    while unsafe { *s.add(len) } != 0 {
-        len += 1;
+pub extern "C" fn wcsdup(s: *const u32) -> *mut u32 {
+    // SAFETY: musl libc 对外 API；调用者保证 `s` 指向以 L'\0' 结尾的有效宽字符串，
+    // 且对返回的堆内存有独占访问权。
+    unsafe {
+        let mut len = 0;
+        while *s.add(len) != 0 {
+            len += 1;
+        }
+        let mem = malloc((len + 1) * 4) as *mut u32;
+        if mem.is_null() {
+            return core::ptr::null_mut();
+        }
+        for i in 0..=len {
+            *mem.add(i) = *s.add(i);
+        }
+        mem
     }
-    let mem = unsafe { malloc((len + 1) * 4) } as *mut u32;
-    if mem.is_null() { return core::ptr::null_mut(); }
-    for i in 0..=len {
-        unsafe { *mem.add(i) = *s.add(i); }
-    }
-    mem
 }
 
 /// 安全的 Rust 内部实现。

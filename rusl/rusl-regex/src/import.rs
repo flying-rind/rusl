@@ -124,6 +124,8 @@ mod string_ffi {
 
 pub mod string {
     use core::ffi::{c_char, c_int};
+    // unsafe 在 not(rusl) 路径下需要（调用 extern "C" FFI）
+    #[allow(unused_unsafe)]
     pub fn strcmp(s1: *const c_char, s2: *const c_char) -> c_int {
         unsafe { super::string_ffi::strcmp(s1, s2) }
     }
@@ -149,6 +151,8 @@ mod env_ffi {
 
 pub mod env {
     use core::ffi::c_char;
+    // unsafe 在 not(rusl) 路径下需要（调用 extern "C" FFI）
+    #[allow(unused_unsafe)]
     pub fn getenv(name: *const c_char) -> *mut c_char {
         unsafe { super::env_ffi::getenv(name) }
     }

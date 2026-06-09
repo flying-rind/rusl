@@ -14,8 +14,12 @@
 /// - `p` 必须指向 7 个 `u16` 的有效可读缓冲区。
 /// - 修改全局可变状态（`__seed48`），非线程安全。
 #[no_mangle]
-pub unsafe extern "C" fn lcong48(p: *const u16) {
-    for i in 0..7 {
-        crate::__seed48::__seed48[i] = *p.add(i);
+pub extern "C" fn lcong48(p: *const u16) {
+    // SAFETY: 调用者确保 p 指向 7 个 u16 的有效缓冲区
+    // 同时修改全局可变状态 __seed48
+    unsafe {
+        for i in 0..7 {
+            crate::__seed48::__seed48[i] = *p.add(i);
+        }
     }
 }

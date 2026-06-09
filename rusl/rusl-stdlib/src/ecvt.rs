@@ -61,7 +61,7 @@ static ZEROS: [c_char; 16] = [
 /// 返回指向静态缓冲区中数字串的指针（非线程安全）。
 #[no_mangle]
 #[allow(static_mut_refs)]
-pub unsafe extern "C" fn ecvt(x: f64, n: i32, dp: *mut i32, sign: *mut i32) -> *mut c_char {
+pub extern "C" fn ecvt(x: f64, n: i32, dp: *mut i32, sign: *mut i32) -> *mut c_char {
     // 限制有效数字位数
     let n = if (n - 1) as u32 > 15 { 15 } else { n };
     let prec = (n - 1) as usize;
@@ -76,10 +76,10 @@ pub unsafe extern "C" fn ecvt(x: f64, n: i32, dp: *mut i32, sign: *mut i32) -> *
 
     // 跳过符号，设置 *sign
     let mut i: usize = 0;
-    *sign = if bytes[0] == b'-' { i = 1; 1 } else { 0 };
+    unsafe { *sign = if bytes[0] == b'-' { i = 1; 1 } else { 0 } };
 
     // 复制数字（跳过小数点）到静态缓冲区
-    let buf: &mut [c_char; 16] = &mut ECVT_BUF;
+    let buf: &mut [c_char; 16] = unsafe { &mut ECVT_BUF };
     let mut j: usize = 0;
     while i < bytes.len() && bytes[i] != b'e' {
         if bytes[i] != b'.' {
@@ -114,7 +114,7 @@ pub unsafe extern "C" fn ecvt(x: f64, n: i32, dp: *mut i32, sign: *mut i32) -> *
     if exp_neg {
         exp = -exp;
     }
-    *dp = exp + 1;
+    unsafe { *dp = exp + 1 };
 
     buf.as_mut_ptr()
 }
@@ -131,7 +131,7 @@ pub unsafe extern "C" fn ecvt(x: f64, n: i32, dp: *mut i32, sign: *mut i32) -> *
 ///
 /// 返回指向定点格式数字串的指针。当前导零过多时返回 "000..." 常量字符串。
 #[no_mangle]
-pub unsafe extern "C" fn fcvt(x: f64, n: i32, dp: *mut i32, sign: *mut i32) -> *mut c_char {
+pub extern "C" fn fcvt(x: f64, n: i32, dp: *mut i32, sign: *mut i32) -> *mut c_char {
     // 限制小数位数
     let n = if n > 1400 { 1400 } else { n };
     let prec = n as usize;
@@ -165,10 +165,10 @@ pub unsafe extern "C" fn fcvt(x: f64, n: i32, dp: *mut i32, sign: *mut i32) -> *
 
     // 如果前导零 >= n，返回 "000..." 字符串
     if n <= lz {
-        *sign = i as i32;
-        *dp = 1;
+        unsafe { *sign = i as i32 };
+        unsafe { *dp = 1 };
         let n = if n > 14 { 14 } else { n };
-        return ZEROS.as_ptr().add((14 - n) as usize) as *mut c_char;
+        return unsafe { ZEROS.as_ptr().add((14 - n) as usize) as *mut c_char };
     }
 
     // 否则委托 ecvt
@@ -186,7 +186,7 @@ pub unsafe extern "C" fn fcvt(x: f64, n: i32, dp: *mut i32, sign: *mut i32) -> *
 ///
 /// 返回 `b` 指针。
 #[no_mangle]
-pub unsafe extern "C" fn gcvt(x: f64, n: i32, b: *mut c_char) -> *mut c_char {
+pub extern "C" fn gcvt(x: f64, n: i32, b: *mut c_char) -> *mut c_char {
     // 计算缓冲区长度（假设不超过 64 字节）
     let buf_len = 64usize;
     let slice = unsafe { core::slice::from_raw_parts_mut(b as *mut u8, buf_len) };

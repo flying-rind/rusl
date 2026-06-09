@@ -11,7 +11,7 @@ use core::ffi::c_char;
 /// - d 和 s 以 null 结尾
 /// - d 缓冲区至少可容纳 strlen(d) + min(n, strlen(s)) + 1 字节
 #[no_mangle]
-pub unsafe extern "C" fn strncat(d: *mut core::ffi::c_char, s: *const core::ffi::c_char, n: usize) -> *mut core::ffi::c_char {
+pub extern "C" fn strncat(d: *mut core::ffi::c_char, s: *const core::ffi::c_char, n: usize) -> *mut core::ffi::c_char {
     let dst = d as *mut u8;
     let src = s as *const u8;
     // 找到 dst 结尾

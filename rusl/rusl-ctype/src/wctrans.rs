@@ -70,7 +70,7 @@ unsafe fn cstr_cmp(s: *const c_char, literal: &[u8]) -> bool {
 ///
 /// [ISO C 标准库 `<wctype.h>`]
 #[no_mangle]
-pub unsafe extern "C" fn wctrans(class: *const c_char) -> wctrans_t {
+pub extern "C" fn wctrans(class: *const c_char) -> wctrans_t {
     // musl 原实现:
     //   if (!strcmp(class, "toupper")) return (wctrans_t)1;
     //   if (!strcmp(class, "tolower")) return (wctrans_t)2;
@@ -105,14 +105,14 @@ pub unsafe extern "C" fn wctrans(class: *const c_char) -> wctrans_t {
 ///
 /// [ISO C 标准库 `<wctype.h>`]
 #[no_mangle]
-pub unsafe extern "C" fn towctrans(wc: wint_t, trans: wctrans_t) -> wint_t {
+pub extern "C" fn towctrans(wc: wint_t, trans: wctrans_t) -> wint_t {
     // musl 原实现:
     //   if (trans == (wctrans_t)1) return towupper(wc);
     //   if (trans == (wctrans_t)2) return towlower(wc);
     //   return wc;
     match trans {
-        1 => unsafe { towupper(wc) },
-        2 => unsafe { towlower(wc) },
+        1 => towupper(wc),
+        2 => towlower(wc),
         _ => wc,
     }
 }
@@ -130,11 +130,11 @@ pub unsafe extern "C" fn towctrans(wc: wint_t, trans: wctrans_t) -> wint_t {
 ///
 /// [POSIX 扩展 `<wctype.h>`]
 #[no_mangle]
-pub unsafe extern "C" fn wctrans_l(
+pub extern "C" fn wctrans_l(
     class: *const c_char,
     _l: *mut c_void,
 ) -> wctrans_t {
-    unsafe { wctrans(class) }
+    wctrans(class)
 }
 
 /// POSIX.1-2008: locale-aware 变换执行。
@@ -148,12 +148,12 @@ pub unsafe extern "C" fn wctrans_l(
 ///
 /// [POSIX 扩展 `<wctype.h>`]
 #[no_mangle]
-pub unsafe extern "C" fn towctrans_l(
+pub extern "C" fn towctrans_l(
     wc: wint_t,
     trans: wctrans_t,
     _l: *mut c_void,
 ) -> wint_t {
-    unsafe { towctrans(wc, trans) }
+    towctrans(wc, trans)
 }
 
 // ============================================================================
@@ -168,7 +168,7 @@ pub unsafe extern "C" fn towctrans_l(
 /// 但不使用 `#[no_mangle]`，不会作为 C ABI 符号导出。
 pub fn __wctrans_l(class: *const c_char, _l: *mut c_void) -> wctrans_t {
     // 安全: 直接委托给 wctrans，由调用者保证 class 有效性
-    unsafe { wctrans(class) }
+    wctrans(class)
 }
 
 /// 内部 locale-aware 变换执行实现，忽略 locale 参数，直接委托 towctrans。
@@ -178,5 +178,5 @@ pub fn __wctrans_l(class: *const c_char, _l: *mut c_void) -> wctrans_t {
 /// Rust 设计: 使用 `pub` 可见性以便集成测试访问，
 /// 但不使用 `#[no_mangle]`，不会作为 C ABI 符号导出。
 pub fn __towctrans_l(wc: wint_t, trans: wctrans_t, _l: *mut c_void) -> wint_t {
-    unsafe { towctrans(wc, trans) }
+    towctrans(wc, trans)
 }

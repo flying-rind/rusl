@@ -9,7 +9,7 @@ use core::ffi::c_char;
 /// - `s` 非空
 /// - 当 `n > 0` 时，s 至少可读 min(n, strlen(s)+1) 字节
 #[no_mangle]
-pub unsafe extern "C" fn strnlen(s: *const core::ffi::c_char, n: usize) -> usize {
+pub extern "C" fn strnlen(s: *const core::ffi::c_char, n: usize) -> usize {
     let p = s as *const u8;
     for i in 0..n {
         if unsafe { *p.add(i) } == 0 {

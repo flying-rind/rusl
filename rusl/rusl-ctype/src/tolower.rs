@@ -37,7 +37,7 @@ fn tolower_impl(c: c_int) -> c_int {
 ///
 /// [ISO C 标准库 `<ctype.h>`]
 #[no_mangle]
-pub unsafe extern "C" fn tolower(c: c_int) -> c_int {
+pub extern "C" fn tolower(c: c_int) -> c_int {
     tolower_impl(c)
 }
 
@@ -50,7 +50,7 @@ pub unsafe extern "C" fn tolower(c: c_int) -> c_int {
 ///
 /// [POSIX 扩展 `<ctype.h>`]
 #[no_mangle]
-pub unsafe extern "C" fn tolower_l(c: c_int, _l: *mut c_void) -> c_int {
+pub extern "C" fn tolower_l(c: c_int, _l: *mut c_void) -> c_int {
     tolower_impl(c)
 }
 

@@ -11,13 +11,16 @@ use core::ffi::c_int;
 /// 则通过 `SYS_exit_group(127)` 强制退出。从不返回。
 #[cfg(not(test))]
 #[no_mangle]
-pub unsafe extern "C" fn abort() -> ! {
-    let pid = rusl_core::syscall::raw_syscall0(rusl_core::syscall::SYS_getpid);
-    // SYS_kill(pid, SIGABRT=6): 向当前进程发送 SIGABRT
-    rusl_core::syscall::raw_syscall2(rusl_core::syscall::SYS_kill, pid, 6);
+pub extern "C" fn abort() -> ! {
+    // SAFETY: 系统调用不涉及内存安全
+    unsafe {
+        let pid = rusl_core::syscall::raw_syscall0(rusl_core::syscall::SYS_getpid);
+        // SYS_kill(pid, SIGABRT=6): 向当前进程发送 SIGABRT
+        rusl_core::syscall::raw_syscall2(rusl_core::syscall::SYS_kill, pid, 6);
 
-    // 若 SIGABRT 被用户处理器捕获且返回，或被忽略，强制终止
-    rusl_core::syscall::raw_syscall1(rusl_core::syscall::SYS_exit_group, 127);
+        // 若 SIGABRT 被用户处理器捕获且返回，或被忽略，强制终止
+        rusl_core::syscall::raw_syscall1(rusl_core::syscall::SYS_exit_group, 127);
+    }
 
     // 保险: 死循环 + 段错误确保绝不返回
     loop {
@@ -26,6 +29,6 @@ pub unsafe extern "C" fn abort() -> ! {
 }
 
 #[cfg(test)]
-pub unsafe extern "C" fn abort() -> ! {
+pub extern "C" fn abort() -> ! {
     panic!("abort() called in test mode");
 }

@@ -50,12 +50,12 @@ pub(crate) unsafe fn tfind_impl(
 /// 测试通过 `tfind_impl` 直接调用，避免与 libc 的 `tfind` 符号冲突。
 #[cfg(not(test))]
 #[no_mangle]
-pub unsafe extern "C" fn tfind(
+pub extern "C" fn tfind(
     key: *const c_void,
     rootp: *mut *const c_void,
     compar: Option<unsafe extern "C" fn(*const c_void, *const c_void) -> i32>,
 ) -> *mut c_void {
-    tfind_impl(key, rootp, compar)
+    unsafe { tfind_impl(key, rootp, compar) }
 }
 
 #[cfg(test)]

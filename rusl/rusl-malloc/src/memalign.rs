@@ -94,7 +94,7 @@ use core::ffi::c_void;
 /// `__aligned_alloc_replaced` 标志简化为编译期常量（均为 0），
 /// 避免运行时 ELF 符号查找开销。
 #[no_mangle]
-pub unsafe extern "C" fn memalign(align: usize, len: usize) -> *mut c_void {
+pub extern "C" fn memalign(align: usize, len: usize) -> *mut c_void {
     // 纯委托模式：直接转发到 aligned_alloc，与 musl C 实现完全一致。
     // memalign 自身不进行任何参数校验或变换，所有逻辑由 aligned_alloc 负责。
     // 当 mallocng 引擎的 aligned_alloc 实现完成后，本函数自动生效。
@@ -115,7 +115,7 @@ pub(crate) fn memalign_safe(align: usize, len: usize) -> Option<&'static mut [u8
     if len == 0 {
         return None;
     }
-    let ptr = unsafe { memalign(align, len) };
+    let ptr = memalign(align, len);
     if ptr.is_null() {
         None
     } else {

@@ -15,7 +15,7 @@ fn is_digit(c: u8) -> bool {
 /// - `l0` 非空、`r0` 非空
 /// - l0 和 r0 以 null 结尾
 #[no_mangle]
-pub unsafe extern "C" fn strverscmp(l0: *const core::ffi::c_char, r0: *const core::ffi::c_char) -> core::ffi::c_int {
+pub extern "C" fn strverscmp(l0: *const core::ffi::c_char, r0: *const core::ffi::c_char) -> core::ffi::c_int {
     let l = l0 as *const u8;
     let r = r0 as *const u8;
     let mut i = 0usize;

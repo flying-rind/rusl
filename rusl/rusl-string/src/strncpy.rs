@@ -11,7 +11,7 @@ use core::ffi::c_char;
 /// - `d` 至少可写 n 字节
 /// - s 以 null 结尾
 #[no_mangle]
-pub unsafe extern "C" fn strncpy(d: *mut core::ffi::c_char, s: *const core::ffi::c_char, n: usize) -> *mut core::ffi::c_char {
+pub extern "C" fn strncpy(d: *mut core::ffi::c_char, s: *const core::ffi::c_char, n: usize) -> *mut core::ffi::c_char {
     let dst = d as *mut u8;
     let src = s as *const u8;
     let mut i = 0;

@@ -9,24 +9,27 @@ use core::ffi::c_char;
 /// - `s` 非空
 /// - s 指向以 null 结尾的有效 C 字符串
 #[no_mangle]
-pub unsafe extern "C" fn rindex(s: *const core::ffi::c_char, c: core::ffi::c_int) -> *mut core::ffi::c_char {
-    // rindex 等价于 strrchr（从后向前查找）
-    // 直接实现以避免额外的符号依赖
-    let p = s as *const u8;
-    let target = c as u8;
-    let mut result: *mut core::ffi::c_char = core::ptr::null_mut();
-    let mut i = 0;
-    loop {
-        let byte = unsafe { *p.add(i) };
-        if byte == target {
-            result = p.add(i) as *mut core::ffi::c_char;
+pub extern "C" fn rindex(s: *const core::ffi::c_char, c: core::ffi::c_int) -> *mut core::ffi::c_char {
+    // SAFETY: 调用者保证 s 指向有效的以 null 结尾的 C 字符串
+    unsafe {
+        // rindex 等价于 strrchr（从后向前查找）
+        // 直接实现以避免额外的符号依赖
+        let p = s as *const u8;
+        let target = c as u8;
+        let mut result: *mut core::ffi::c_char = core::ptr::null_mut();
+        let mut i = 0;
+        loop {
+            let byte = *p.add(i);
+            if byte == target {
+                result = p.add(i) as *mut core::ffi::c_char;
+            }
+            if byte == 0 {
+                break;
+            }
+            i += 1;
         }
-        if byte == 0 {
-            break;
-        }
-        i += 1;
+        result
     }
-    result
 }
 
 /// 安全的 Rust 内部实现。

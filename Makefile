@@ -17,44 +17,20 @@ includedir = $(prefix)/include
 libdir = $(prefix)/lib
 syslibdir = /lib
 
-# ============================================================================
-# rusl 模块替换系统
-# ============================================================================
-# 支持的替换模块: string ctype search malloc
-# 用法:
-#   make replace-with-rusl MODULES="string malloc ctype"  (通过变量指定)
-#   make replace-with-rusl string malloc ctype            (通过参数指定)
-# 默认替换: string search ctype (保持向后兼容)
-# ============================================================================
-RUSL_DIR = ../rusl
-RUSL_TARGET = $(RUSL_DIR)/target/release
+# --- RUSL-MALLOC replacement ---
+# Use rusl-malloc (Rust #![no_std] staticlib) instead of musl's own malloc.
+# Build the staticlib beforehand with:
+#   cd ../rusl && cargo build --package rusl-malloc --no-default-features --release
+RUSL_MALLOC_A       = $(abspath $(srcdir)/../rusl/target/release/librusl_malloc.a)
+RUSL_MALLOC_OBJDIR  = obj/rusl_malloc
+RUSL_MALLOC_STAMP   = $(RUSL_MALLOC_OBJDIR)/.extracted
 
-# 预定义支持的模块 -> crate 名
-rusl_crate_env    = rusl-env
-rusl_crate_string = rusl-string
-rusl_crate_ctype  = rusl-ctype
-rusl_crate_search = rusl-search
-rusl_crate_malloc = rusl-malloc
-
-# 模块 -> 对象文件前缀模式 (用于从 .a 中提取 .o)
-rusl_patterns_env    = rusl_env- core- rusl_core- rusl_errno- rusl_internal- rusl_string- alloc-
-rusl_patterns_string = rusl_string- core- rusl_core-
-rusl_patterns_ctype  = rusl_ctype-  core- rusl_core- rusl_internal-
-rusl_patterns_search = rusl_search- core- rusl_core- alloc-
-rusl_patterns_malloc = rusl_malloc- core- rusl_core- rusl_string- rusl_internal- rusl_errno-
-
-# 默认替换模块
-RUSL_MODULES ?= string search ctype
-
-# 计算排除目录和 .a 文件列表
-RUSL_EXCLUDE = $(foreach m,$(RUSL_MODULES),src/$m)
-rusl_a = $(RUSL_TARGET)/librusl_$(subst -,_,$(1)).a
-RUSL_A_FILES = $(foreach m,$(RUSL_MODULES),$(call rusl_a,$m))
-
-SRC_DIRS = $(addprefix $(srcdir)/,$(filter-out $(RUSL_EXCLUDE),$(wildcard src/*)) $(if $(filter malloc,$(RUSL_MODULES)),,src/malloc/mallocng) crt ldso $(COMPAT_SRC_DIRS))
+# Original MALLOC_DIR kept for reference; musl malloc is excluded below.
+# MALLOC_DIR = mallocng
+SRC_DIRS = $(addprefix $(srcdir)/,src/* crt ldso $(COMPAT_SRC_DIRS))
 BASE_GLOBS = $(addsuffix /*.c,$(SRC_DIRS))
 ARCH_GLOBS = $(addsuffix /$(ARCH)/*.[csS],$(SRC_DIRS))
-BASE_SRCS = $(sort $(wildcard $(BASE_GLOBS)))
+BASE_SRCS = $(sort $(filter-out $(srcdir)/src/malloc/%,$(wildcard $(BASE_GLOBS))))
 ARCH_SRCS = $(sort $(wildcard $(ARCH_GLOBS)))
 BASE_OBJS = $(patsubst $(srcdir)/%,%.o,$(basename $(BASE_SRCS)))
 ARCH_OBJS = $(patsubst $(srcdir)/%,%.o,$(basename $(ARCH_SRCS)))
@@ -87,6 +63,7 @@ LDFLAGS_ALL = $(LDFLAGS_AUTO) $(LDFLAGS)
 
 AR      = $(CROSS_COMPILE)ar
 RANLIB  = $(CROSS_COMPILE)ranlib
+OBJCOPY = $(CROSS_COMPILE)objcopy
 INSTALL = $(srcdir)/tools/install.sh
 
 ARCH_INCLUDES = $(wildcard $(srcdir)/arch/$(ARCH)/bits/*.h)
@@ -121,31 +98,7 @@ else
 
 all: $(ALL_LIBS) $(ALL_TOOLS)
 
-# --- rusl 通用 crate 构建规则 (由 RUSL_MODULES 驱动) ---
-RUSL_SUPPORTED := string ctype search malloc env
-
-# 模块级额外 cargo 参数 (默认空)
-rusl_features_env = --no-default-features
-
-define RUSL_BUILD_RULE
-$$(call rusl_a,$(1)):
-	RUSTFLAGS="-C panic=abort" cargo build --release --manifest-path $$(RUSL_DIR)/$$(rusl_crate_$(1))/Cargo.toml $$(rusl_features_$(1))
-endef
-$(foreach m,$(RUSL_SUPPORTED),$(eval $(call RUSL_BUILD_RULE,$m)))
-
-# --- replace-with-rusl 目标: 动态指定替换模块 ---
-.PHONY: replace-with-rusl
-replace-with-rusl:
-	$(eval _mods := $(filter-out $@,$(MAKECMDGOALS)))
-	@test -n "$(_mods)" || { echo "Usage: make replace-with-rusl MODULES=\"string malloc\"  or  make replace-with-rusl string malloc"; exit 1; }
-	$(MAKE) all RUSL_MODULES="$(_mods)"
-
-# 吞掉作为模块名的目标，防止 make 报错
-.PHONY: $(RUSL_SUPPORTED)
-$(RUSL_SUPPORTED):
-	@:
-
-OBJ_DIRS = $(sort $(patsubst %/,%,$(dir $(ALL_LIBS) $(ALL_TOOLS) $(ALL_OBJS) $(GENH) $(GENH_INT))) obj/include)
+OBJ_DIRS = $(sort $(patsubst %/,%,$(dir $(ALL_LIBS) $(ALL_TOOLS) $(ALL_OBJS) $(ALL_OBJS:%.o=%.lo) $(GENH) $(GENH_INT))) obj/include $(RUSL_MALLOC_OBJDIR))
 
 $(ALL_LIBS) $(ALL_TOOLS) $(ALL_OBJS) $(ALL_OBJS:%.o=%.lo) $(GENH) $(GENH_INT): | $(OBJ_DIRS)
 
@@ -215,22 +168,37 @@ obj/%.lo: $(srcdir)/%.S
 obj/%.lo: $(srcdir)/%.c $(GENH) $(IMPH)
 	$(CC_CMD)
 
-lib/libc.so: $(LOBJS) $(LDSO_OBJS) $(RUSL_A_FILES)
-	@$(foreach m,$(RUSL_MODULES),mkdir -p obj/rusl_$m; rm -f obj/rusl_$m/*.o;)
-	$(foreach m,$(RUSL_MODULES),cd obj/rusl_$m && for pattern in $(rusl_patterns_$m); do OBJ=$$(ar t $(abspath $(call rusl_a,$m)) | grep "^$$pattern"); if [ -n "$$OBJ" ]; then $(AR) x $(abspath $(call rusl_a,$m)) $$OBJ; fi; done;)
-	$(CC) $(CFLAGS_ALL) $(LDFLAGS_ALL) -nostdlib -shared \
-	-Wl,-e,_dlstart -Wl,--allow-multiple-definition -o $@ $(LOBJS) $(LDSO_OBJS) \
-	$(foreach m,$(RUSL_MODULES),$(foreach pat,$(rusl_patterns_$m),obj/rusl_$m/$(pat)*.o)) \
-	$(LIBCC)
+# --- rusl-malloc object extraction ---
+# Extract .o files from the Rust staticlib.  Keep rusl_core-*.o (provides
+# rust_begin_unwind via #[panic_handler]) but weaken the C symbols that
+# conflict with musl's own implementations, so musl's versions take priority.
+# test_framework and rustc_std_workspace_core are not needed at runtime.
+$(RUSL_MALLOC_STAMP): $(RUSL_MALLOC_A)
+	@mkdir -p $(RUSL_MALLOC_OBJDIR)
+	cd $(RUSL_MALLOC_OBJDIR) && $(AR) x $(RUSL_MALLOC_A)
+	rm -f $(RUSL_MALLOC_OBJDIR)/test_framework-*.o
+	rm -f $(RUSL_MALLOC_OBJDIR)/rustc_std_workspace_core-*.o
+	@for obj in $(RUSL_MALLOC_OBJDIR)/rusl_core-*.o; do \
+		if [ -f "$$obj" ]; then \
+			$(OBJCOPY) --weaken-symbol=__errno_location "$$obj" 2>/dev/null || true; \
+			$(OBJCOPY) --weaken-symbol=___errno_location "$$obj" 2>/dev/null || true; \
+			$(OBJCOPY) --weaken-symbol=__syscall_ret "$$obj" 2>/dev/null || true; \
+			$(OBJCOPY) --weaken-symbol=strerror "$$obj" 2>/dev/null || true; \
+			$(OBJCOPY) --weaken-symbol=strerror_l "$$obj" 2>/dev/null || true; \
+		fi; \
+	done
+	@touch $@
 
-lib/libc.a: $(AOBJS) $(RUSL_A_FILES)
+lib/libc.so: $(LOBJS) $(LDSO_OBJS) $(RUSL_MALLOC_STAMP)
+	$(CC) $(CFLAGS_ALL) $(LDFLAGS_ALL) -nostdlib -shared \
+	-Wl,-e,_dlstart -o $@ $(LOBJS) $(LDSO_OBJS) \
+	$(RUSL_MALLOC_OBJDIR)/*.o $(LIBCC)
+
+lib/libc.a: $(AOBJS) $(RUSL_MALLOC_STAMP)
 	rm -f $@
 	$(AR) rc $@ $(AOBJS)
-	@$(foreach m,$(RUSL_MODULES),mkdir -p obj/rusl_$m; rm -f obj/rusl_$m/*.o;)
-	$(foreach m,$(RUSL_MODULES),cd obj/rusl_$m && for pattern in $(rusl_patterns_$m); do OBJ=$$(ar t $(abspath $(call rusl_a,$m)) | grep "^$$pattern"); if [ -n "$$OBJ" ]; then $(AR) x $(abspath $(call rusl_a,$m)) $$OBJ; fi; done;)
-	$(AR) rc $@ $(foreach m,$(RUSL_MODULES),$(foreach pat,$(rusl_patterns_$m),obj/rusl_$m/$(pat)*.o))
+	$(AR) r $@ $(RUSL_MALLOC_OBJDIR)/*.o
 	$(RANLIB) $@
-
 
 $(EMPTY_LIBS):
 	rm -f $@

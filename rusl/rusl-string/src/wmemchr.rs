@@ -8,13 +8,16 @@
 /// - `s` 非空
 /// - `s` 至少可读 n 个 wchar_t
 #[no_mangle]
-pub unsafe extern "C" fn wmemchr(s: *const u32, c: u32, n: usize) -> *mut u32 {
-    for i in 0..n {
-        if unsafe { *s.add(i) } == c {
-            return s.add(i) as *mut u32;
+pub extern "C" fn wmemchr(s: *const u32, c: u32, n: usize) -> *mut u32 {
+    // SAFETY: The caller guarantees that `s` is a valid pointer to an array of at least `n` u32 elements.
+    unsafe {
+        for i in 0..n {
+            if *s.add(i) == c {
+                return s.add(i) as *mut u32;
+            }
         }
+        core::ptr::null_mut()
     }
-    core::ptr::null_mut()
 }
 
 /// 安全的 Rust 内部实现。

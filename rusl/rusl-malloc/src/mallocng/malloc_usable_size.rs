@@ -81,7 +81,7 @@ use core::ffi::c_void;
 /// # 实现算法 (O(1) 时间)
 ///
 /// ```ignore
-/// pub unsafe extern "C" fn malloc_usable_size(p: *mut c_void) -> usize {
+/// pub extern "C" fn malloc_usable_size(p: *mut c_void) -> usize {
 ///     if p.is_null() {
 ///         return 0;
 ///     }
@@ -104,33 +104,38 @@ use core::ffi::c_void;
 ///   (建议保留核心校验以保证堆损坏检测能力)
 #[no_mangle]
 #[allow(unused_variables)]
-pub unsafe extern "C" fn malloc_usable_size(p: *mut c_void) -> usize {
+pub extern "C" fn malloc_usable_size(p: *mut c_void) -> usize {
     // 1) NULL 处理: GNU 扩展约定, malloc_usable_size(NULL) == 0
     if p.is_null() {
         return 0;
     }
 
-    let p = p as *const u8;
+    // SAFETY: p 非 NULL 时，调用者保证 p 是由本分配器返回的有效指针且未被释放。
+    // 后续所有操作（get_meta, get_slot_index, get_stride, get_nominal_size）均为
+    // 读取分配器内部元数据的 unsafe 操作。
+    unsafe {
+        let p = p as *const u8;
 
-    // 2) 逆推 Meta 控制块 (13 步 assert 校验链)
-    let g = super::meta::get_meta(p);
+        // 2) 逆推 Meta 控制块 (13 步 assert 校验链)
+        let g = super::meta::get_meta(p);
 
-    // 3) 获取槽位索引: p[-3] & 31
-    let idx = super::meta::get_slot_index(p);
+        // 3) 获取槽位索引: p[-3] & 31
+        let idx = super::meta::get_slot_index(p);
 
-    // 4) 获取槽位跨步大小
-    //    Case 1 (mmap): stride = maplen * PGSZ - UNIT
-    //    Case 2 (slab):  stride = UNIT * SIZE_CLASSES[sc]
-    let stride = super::meta::get_stride(g);
+        // 4) 获取槽位跨步大小
+        //    Case 1 (mmap): stride = maplen * PGSZ - UNIT
+        //    Case 2 (slab):  stride = UNIT * SIZE_CLASSES[sc]
+        let stride = super::meta::get_stride(g);
 
-    // 5) 定位 slot 边界
-    //    storage[] 柔性数组紧接在 Group header 之后 (偏移 UNIT 字节)
-    let start = ((*g).mem as *const u8)
-        .add(super::meta::UNIT)
-        .add(stride * idx);
-    //    slot 末尾减去 in-band 元数据 (IB = 4 字节)
-    let end = start.add(stride - super::meta::IB);
+        // 5) 定位 slot 边界
+        //    storage[] 柔性数组紧接在 Group header 之后 (偏移 UNIT 字节)
+        let start = ((*g).mem as *const u8)
+            .add(super::meta::UNIT)
+            .add(stride * idx);
+        //    slot 末尾减去 in-band 元数据 (IB = 4 字节)
+        let end = start.add(stride - super::meta::IB);
 
-    // 6) 从 in-band header 解码用户可用字节数
-    super::meta::get_nominal_size(p, end)
+        // 6) 从 in-band header 解码用户可用字节数
+        super::meta::get_nominal_size(p, end)
+    }
 }

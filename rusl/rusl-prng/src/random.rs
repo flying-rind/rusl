@@ -123,37 +123,40 @@ unsafe fn __srandom(seed: u32) {
 ///
 /// 读取并修改全局可变状态，受自旋锁保护但调用者仍需确保无数据竞争。
 #[no_mangle]
-pub unsafe extern "C" fn random() -> i64 {
-    lock();
-    ensure_init();
+pub extern "C" fn random() -> i64 {
+    // SAFETY: 访问 static mut 全局状态，受自旋锁保护
+    unsafe {
+        lock();
+        ensure_init();
 
-    let k: u32;
-    if STATE_N == 0 {
-        // 退化模式：直接使用 31 位 LCG
-        let val = lcg31(STATE_X.read_unaligned());
-        STATE_X.write_unaligned(val);
-        k = val;
-    } else {
-        // 正常模式：滞后斐波那契
-        let i = STATE_I as usize;
-        let j = STATE_J as usize;
-        let new_val = (STATE_X.add(i).read_unaligned()).wrapping_add(STATE_X.add(j).read_unaligned());
-        STATE_X.add(i).write_unaligned(new_val);
-        k = new_val >> 1;
+        let k: u32;
+        if STATE_N == 0 {
+            // 退化模式：直接使用 31 位 LCG
+            let val = lcg31(STATE_X.read_unaligned());
+            STATE_X.write_unaligned(val);
+            k = val;
+        } else {
+            // 正常模式：滞后斐波那契
+            let i = STATE_I as usize;
+            let j = STATE_J as usize;
+            let new_val = (STATE_X.add(i).read_unaligned()).wrapping_add(STATE_X.add(j).read_unaligned());
+            STATE_X.add(i).write_unaligned(new_val);
+            k = new_val >> 1;
 
-        // 推进索引
-        STATE_I += 1;
-        if STATE_I == STATE_N {
-            STATE_I = 0;
+            // 推进索引
+            STATE_I += 1;
+            if STATE_I == STATE_N {
+                STATE_I = 0;
+            }
+            STATE_J += 1;
+            if STATE_J == STATE_N {
+                STATE_J = 0;
+            }
         }
-        STATE_J += 1;
-        if STATE_J == STATE_N {
-            STATE_J = 0;
-        }
+
+        unlock();
+        k as i64
     }
-
-    unlock();
-    k as i64
 }
 
 /// srandom — 为 random() 设置种子。
@@ -164,11 +167,14 @@ pub unsafe extern "C" fn random() -> i64 {
 ///
 /// 修改全局可变状态，受自旋锁保护。
 #[no_mangle]
-pub unsafe extern "C" fn srandom(seed: u32) {
-    lock();
-    ensure_init();
-    __srandom(seed);
-    unlock();
+pub extern "C" fn srandom(seed: u32) {
+    // SAFETY: 访问 static mut 全局状态，受自旋锁保护
+    unsafe {
+        lock();
+        ensure_init();
+        __srandom(seed);
+        unlock();
+    }
 }
 
 /// initstate — 初始化 random() 的状态表并切换至此状态。
@@ -191,40 +197,43 @@ pub unsafe extern "C" fn srandom(seed: u32) {
 /// - 成功时返回指向旧状态缓冲区的指针。
 /// - `n < 8` 时返回 null 指针。
 #[no_mangle]
-pub unsafe extern "C" fn initstate(seed: u32, state: *mut u8, n: usize) -> *mut u8 {
+pub extern "C" fn initstate(seed: u32, state: *mut u8, n: usize) -> *mut u8 {
     if n < 8 {
         return core::ptr::null_mut();
     }
-    lock();
-    ensure_init();
+    // SAFETY: 访问 static mut 全局状态，受自旋锁保护；调用者确保 state 有效
+    unsafe {
+        lock();
+        ensure_init();
 
-    // 保存旧状态元数据并获取旧状态指针
-    let old = savestate();
+        // 保存旧状态元数据并获取旧状态指针
+        let old = savestate();
 
-    // 根据 buffer 大小选择度
-    STATE_N = if n < 32 {
-        0
-    } else if n < 64 {
-        7
-    } else if n < 128 {
-        15
-    } else if n < 256 {
-        31
-    } else {
-        63
-    };
+        // 根据 buffer 大小选择度
+        STATE_N = if n < 32 {
+            0
+        } else if n < 64 {
+            7
+        } else if n < 128 {
+            15
+        } else if n < 256 {
+            31
+        } else {
+            63
+        };
 
-    // 设置新状态表指针（跳过一个 u32 作为元数据字）
-    STATE_X = (state as *mut u32).add(1);
+        // 设置新状态表指针（跳过一个 u32 作为元数据字）
+        STATE_X = (state as *mut u32).add(1);
 
-    // 用种子填充新状态表
-    __srandom(seed);
+        // 用种子填充新状态表
+        __srandom(seed);
 
-    // 将新状态的元数据写入新状态表
-    savestate();
+        // 将新状态的元数据写入新状态表
+        savestate();
 
-    unlock();
-    old as *mut u8
+        unlock();
+        old as *mut u8
+    }
 }
 
 /// setstate — 切换 random() 的状态表至先前保存的状态。
@@ -238,16 +247,19 @@ pub unsafe extern "C" fn initstate(seed: u32, state: *mut u8, n: usize) -> *mut 
 ///
 /// 返回指向旧状态缓冲区的指针。
 #[no_mangle]
-pub unsafe extern "C" fn setstate(state: *mut u8) -> *mut u8 {
-    lock();
-    ensure_init();
+pub extern "C" fn setstate(state: *mut u8) -> *mut u8 {
+    // SAFETY: 访问 static mut 全局状态，受自旋锁保护；调用者确保 state 有效
+    unsafe {
+        lock();
+        ensure_init();
 
-    // 保存当前状态并获取旧状态指针
-    let old = savestate() as *mut u8;
+        // 保存当前状态并获取旧状态指针
+        let old = savestate() as *mut u8;
 
-    // 加载新状态
-    loadstate(state as *mut u32);
+        // 加载新状态
+        loadstate(state as *mut u32);
 
-    unlock();
-    old
+        unlock();
+        old
+    }
 }

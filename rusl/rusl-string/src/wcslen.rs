@@ -8,12 +8,15 @@
 /// - `s` 非空
 /// - s 以 L'\0' 结尾
 #[no_mangle]
-pub unsafe extern "C" fn wcslen(s: *const u32) -> usize {
-    let mut i = 0;
-    while unsafe { *s.add(i) } != 0 {
-        i += 1;
+pub extern "C" fn wcslen(s: *const u32) -> usize {
+    // SAFETY: caller guarantees s is non-null and points to a null-terminated wide string.
+    unsafe {
+        let mut i = 0;
+        while *s.add(i) != 0 {
+            i += 1;
+        }
+        i
     }
-    i
 }
 
 /// 安全的 Rust 内部实现。

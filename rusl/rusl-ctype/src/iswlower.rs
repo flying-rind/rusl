@@ -18,10 +18,9 @@ use rusl_core::c_types::{locale_t, wint_t};
 ///
 /// # 安全性
 ///
-/// 此函数标记为 `unsafe` 以保持 C ABI 签名兼容。
 /// 实际调用无内存安全性风险。
 #[no_mangle]
-pub unsafe extern "C" fn iswlower(wc: wint_t) -> c_int {
+pub extern "C" fn iswlower(wc: wint_t) -> c_int {
     __iswlower_l(wc, core::ptr::null_mut())
 }
 
@@ -30,11 +29,8 @@ pub unsafe extern "C" fn iswlower(wc: wint_t) -> c_int {
 /// 等价于 `towupper_l(wc, l) != wc`。
 /// 某些 locale 可能额外定义小写字母 (如带变音符号的字母)。
 ///
-/// # 安全性
-///
-/// - `l`: 必须为有效的 locale 句柄, 或 `NULL` 表示 C locale。
 #[no_mangle]
-pub unsafe extern "C" fn iswlower_l(wc: wint_t, l: locale_t) -> c_int {
+pub extern "C" fn iswlower_l(wc: wint_t, l: locale_t) -> c_int {
     __iswlower_l(wc, l)
 }
 
@@ -59,6 +55,5 @@ pub unsafe extern "C" fn iswlower_l(wc: wint_t, l: locale_t) -> c_int {
 /// 同 [`iswlower_l`]。
 pub(crate) fn __iswlower_l(wc: wint_t, _l: locale_t) -> c_int {
     // 调用 towupper 获取大写映射, 比较是否与自身不同
-    // 注意: towupper 为 unsafe extern "C", 但以值类型 wint_t 调用是安全的
-    (unsafe { super::towupper(wc) } != wc) as c_int
+    (super::towupper(wc) != wc) as c_int
 }

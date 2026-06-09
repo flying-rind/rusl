@@ -9,36 +9,38 @@ use core::ffi::c_char;
 /// - `h` 非空、`n` 非空
 /// - h 和 n 以 null 结尾
 #[no_mangle]
-pub unsafe extern "C" fn strstr(h: *const core::ffi::c_char, n: *const core::ffi::c_char) -> *mut core::ffi::c_char {
-    let haystack = h as *const u8;
-    let needle = n as *const u8;
-    // 空 needle 返回 haystack
-    if unsafe { *needle } == 0 {
-        return h as *mut core::ffi::c_char;
-    }
-    let first = unsafe { *needle };
-    let mut i = 0;
-    loop {
-        let hc = unsafe { *haystack.add(i) };
-        if hc == 0 {
-            return core::ptr::null_mut();
+pub extern "C" fn strstr(h: *const core::ffi::c_char, n: *const core::ffi::c_char) -> *mut core::ffi::c_char {
+    unsafe {
+        let haystack = h as *const u8;
+        let needle = n as *const u8;
+        // 空 needle 返回 haystack
+        if *needle == 0 {
+            return h as *mut core::ffi::c_char;
         }
-        if hc == first {
-            // 比较剩余部分
-            let mut j = 1;
-            loop {
-                let nc = unsafe { *needle.add(j) };
-                if nc == 0 {
-                    return haystack.add(i) as *mut core::ffi::c_char;
-                }
-                let hc2 = unsafe { *haystack.add(i + j) };
-                if hc2 != nc {
-                    break;
-                }
-                j += 1;
+        let first = *needle;
+        let mut i = 0;
+        loop {
+            let hc = *haystack.add(i);
+            if hc == 0 {
+                return core::ptr::null_mut();
             }
+            if hc == first {
+                // 比较剩余部分
+                let mut j = 1;
+                loop {
+                    let nc = *needle.add(j);
+                    if nc == 0 {
+                        return haystack.add(i) as *mut core::ffi::c_char;
+                    }
+                    let hc2 = *haystack.add(i + j);
+                    if hc2 != nc {
+                        break;
+                    }
+                    j += 1;
+                }
+            }
+            i += 1;
         }
-        i += 1;
     }
 }
 

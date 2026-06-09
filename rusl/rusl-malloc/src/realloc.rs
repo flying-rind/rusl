@@ -59,10 +59,10 @@ use core::ffi::c_void;
 /// }
 /// ```
 #[no_mangle]
-pub unsafe extern "C" fn realloc(p: *mut c_void, n: usize) -> *mut c_void {
-    // 直接委托给 mallocng 内部实现。
+pub extern "C" fn realloc(p: *mut c_void, n: usize) -> *mut c_void {
+    // SAFETY: 直接委托给 mallocng 内部实现，调用者保证 p 是有效的分配指针或 NULL。
     // 参数语义 (p=NULL → 等价 malloc, n 溢出 → 返回 null+ENOMEM, 原地/移动/回退) 由 realloc_impl 处理。
-    super::mallocng::realloc::realloc_impl(p, n)
+    unsafe { super::mallocng::realloc::realloc_impl(p, n) }
 }
 
 /// 内部 `realloc` —— 始终使用内部分配器，不可被用户替换。
