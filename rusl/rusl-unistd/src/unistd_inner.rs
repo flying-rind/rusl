@@ -4,5 +4,7 @@
 #![allow(dead_code, unused_imports)]
 
 mod write;
+mod _exit;
 
 pub use write::write;
+pub use _exit::_exit;

@@ -61,7 +61,12 @@ pub use setenv::setenv;
 pub use unsetenv::unsetenv;
 
 // CRT 启动入口 — 对应 musl src/env/__libc_start_main.c
-pub use __libc_start_main::{_start_c, __libc_start_main, __init_libc, exit, _Exit, _exit};
+pub use __libc_start_main::{__libc_start_main, __init_libc};
+// _start / _start_c 仅在 rusl 模式下由 global_asm! 导出；链接 musl 时由 Scrt1.o 提供
+#[cfg(feature = "rusl")]
+pub use __libc_start_main::_start_c;
+// exit / _Exit / _exit 不再由 env 模块提供
+// 应由 rusl-exit 或 rusl-unistd crate 提供
 
 // 公开导出 LIBC_SECURE 供 crate 内部使用（如 __init_libc 在启动时设置）
 pub(crate) use secure_getenv::LIBC_SECURE;

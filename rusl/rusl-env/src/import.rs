@@ -18,6 +18,18 @@ pub use rusl_errno::{__errno_location, set_errno, EINVAL};
 #[cfg(feature = "rusl")]
 pub use rusl_internal::syscall;
 
+// ---------------------------------------------------------------------------
+// exit / _Exit / _exit — 进程终止
+// 对应 musl src/exit/ + src/unistd/
+// rusl 模式 → rusl-exit / rusl-unistd crate 提供
+// 非 rusl 模式 → musl libc 提供（extern "C"）
+// ---------------------------------------------------------------------------
+
+#[cfg(feature = "rusl")]
+pub use rusl_exit::exit;
+// #[cfg(feature = "rusl")]
+// pub use rusl_unistd::_exit;
+
 // ============================================================================
 // rusl feature 关闭时：提供 extern "C" / 手动定义 fallback
 // ============================================================================
@@ -353,3 +365,32 @@ mod string_ffi {
 
 #[cfg(not(feature = "rusl"))]
 pub use string_ffi::strchrnul;
+
+// ---------------------------------------------------------------------------
+// exit / _Exit / _exit — 链接 musl 时由 musl 提供
+// ---------------------------------------------------------------------------
+
+#[cfg(not(feature = "rusl"))]
+mod exit_ffi {
+    use core::ffi::c_int;
+    extern "C" {
+        #[link_name = "_Exit"]
+        fn musl_Exit(code: c_int) -> !;
+        #[link_name = "exit"]
+        fn musl_exit(code: c_int) -> !;
+        #[link_name = "_exit"]
+        fn musl__exit(code: c_int) -> !;
+    }
+    pub fn _Exit(code: c_int) -> ! {
+        unsafe { musl_Exit(code) }
+    }
+    pub fn exit(code: c_int) -> ! {
+        unsafe { musl_exit(code) }
+    }
+    pub fn _exit(code: c_int) -> ! {
+        unsafe { musl__exit(code) }
+    }
+}
+
+#[cfg(not(feature = "rusl"))]
+pub use exit_ffi::{_Exit, exit, _exit};

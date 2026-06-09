@@ -31,11 +31,12 @@ use crate::import::syscall::{SYS_exit, SYS_exit_group, SYS_open};
 // _start — per-arch entry point (global_asm!)
 // ============================================================================
 
+#[cfg(feature = "rusl")]
 unsafe extern "C" {
     pub unsafe fn _start(argc: i32, argv: *const *const u8) -> i32;
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(feature = "rusl", target_arch = "x86_64"))]
 core::arch::global_asm!(
     ".section .text._start,\"ax\",@progbits",
     ".global _start",
@@ -47,19 +48,6 @@ core::arch::global_asm!(
     "and rsp, -16",         // 16-byte align for SSE ABI
     "call _start_c",        // never returns
     ".att_syntax prefix",
-    ".size _start, .-_start",
-);
-
-#[cfg(target_arch = "aarch64")]
-core::arch::global_asm!(
-    ".section .text._start,\"ax\",%progbits",
-    ".global _start",
-    ".type _start,%function",
-    "_start:",
-    "mov x29, #0",          // zero frame pointer
-    "mov x0, sp",           // arg1 = stack pointer (→ _start_c)
-    "and sp, sp, #-16",     // 16-byte align
-    "b _start_c",           // tail call (never returns)
     ".size _start, .-_start",
 );
 
@@ -145,6 +133,7 @@ extern "C" {
 }
 
 /// 由 _start 汇编调用，传递 rsp (栈指针) 作为参数。
+#[cfg(feature = "rusl")]
 #[no_mangle]
 pub unsafe extern "C" fn _start_c(sp: *const i64) -> ! {
     let argc = *sp as c_int;
@@ -363,38 +352,5 @@ unsafe fn libc_start_main_stage2(
     let envp = unsafe { argv.add(argc as usize + 1) };
     libc_start_init();
     let ret = main_fn(argc, argv, envp);
-    exit(ret);
-}
-
-// ============================================================================
-// exit / _Exit / _exit — 进程终止
-// ============================================================================
-
-/// POSIX _Exit — 立即终止进程，不执行任何清理。
-#[no_mangle]
-pub extern "C" fn _Exit(code: c_int) -> ! {
-    let c = code as i64;
-    // SAFETY: 系统调用终止进程，无内存安全性影响
-    unsafe {
-        // exit_group 终止线程组中所有线程
-        raw_syscall1(SYS_exit_group, c);
-        // 回退：exit 仅终止当前线程
-        raw_syscall1(SYS_exit, c);
-    }
-    loop {
-        core::hint::spin_loop();
-    }
-}
-
-/// ISO C exit — 调用 atexit 处理函数后终止进程。
-/// 当前为最小实现：直接委托给 _Exit（atexit 尚未支持）。
-#[no_mangle]
-pub extern "C" fn exit(code: c_int) -> ! {
-    _Exit(code)
-}
-
-/// POSIX _exit — _Exit 的同义词。
-#[no_mangle]
-pub extern "C" fn _exit(code: c_int) -> ! {
-    _Exit(code)
+    crate::import::exit(ret);
 }

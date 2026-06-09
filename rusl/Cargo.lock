@@ -44,10 +44,12 @@ version = "0.1.0"
 dependencies = [
  "rusl-core",
  "rusl-errno",
+ "rusl-exit",
  "rusl-internal",
  "rusl-malloc",
  "rusl-string",
  "rusl-syscall",
+ "rusl-unistd",
 ]
 
 [[package]]
