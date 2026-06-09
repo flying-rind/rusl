@@ -69,22 +69,22 @@ test!("test_locale_t_size" {
 
 // `isxdigit` 当前为 `todo!()`, 调用应 panic。
 test!("test_isxdigit_panics_on_todo" {
-    unsafe { isxdigit(b'5' as c_int); }
+    { isxdigit(b'5' as c_int); }
 });
 
 // `isxdigit_l` 当前为 `todo!()`, 调用应 panic。
 test!("test_isxdigit_l_panics_on_todo" {
-    unsafe { isxdigit_l(b'5' as c_int, core::ptr::null_mut()); }
+    { isxdigit_l(b'5' as c_int, core::ptr::null_mut()); }
 });
 
 // `isxdigit` 传入 EOF 也应 panic (尚未实现)。
 test!("test_isxdigit_eof_panics" {
-    unsafe { isxdigit(EOF); }
+    { isxdigit(EOF); }
 });
 
 // `isxdigit_l` 传入非法 locale 指针应 panic (尚未实现)。
 test!("test_isxdigit_l_invalid_locale_panics" {
-    unsafe { isxdigit_l(0x00, 0xdead_beef as locale_t); }
+    { isxdigit_l(0x00, 0xdead_beef as locale_t); }
 });
 
 // ============================================================================
@@ -93,27 +93,27 @@ test!("test_isxdigit_l_invalid_locale_panics" {
 
 // 推测: '0' 是十六进制数字。
 test!("test_isxdigit_0" {
-    unsafe { isxdigit(b'0' as c_int); }
+    { isxdigit(b'0' as c_int); }
 });
 
 // 推测: '9' 是十六进制数字。
 test!("test_isxdigit_9" {
-    unsafe { isxdigit(b'9' as c_int); }
+    { isxdigit(b'9' as c_int); }
 });
 
 // 推测: '5' 是十六进制数字 (数字区间中段)。
 test!("test_isxdigit_5" {
-    unsafe { isxdigit(b'5' as c_int); }
+    { isxdigit(b'5' as c_int); }
 });
 
 // 推测: '/' ('0' 前一字符) 不是十六进制数字。
 test!("test_isxdigit_slash" {
-    unsafe { isxdigit(b'/' as c_int); }
+    { isxdigit(b'/' as c_int); }
 });
 
 // 推测: ':' ('9' 后一字符) 不是十六进制数字。
 test!("test_isxdigit_colon" {
-    unsafe { isxdigit(b':' as c_int); }
+    { isxdigit(b':' as c_int); }
 });
 
 // ============================================================================
@@ -122,27 +122,27 @@ test!("test_isxdigit_colon" {
 
 // 推测: 'A' 是十六进制数字。
 test!("test_isxdigit_A" {
-    unsafe { isxdigit(b'A' as c_int); }
+    { isxdigit(b'A' as c_int); }
 });
 
 // 推测: 'F' 是十六进制数字。
 test!("test_isxdigit_F" {
-    unsafe { isxdigit(b'F' as c_int); }
+    { isxdigit(b'F' as c_int); }
 });
 
 // 推测: 'C' 是十六进制数字 (字母区间中段)。
 test!("test_isxdigit_C" {
-    unsafe { isxdigit(b'C' as c_int); }
+    { isxdigit(b'C' as c_int); }
 });
 
 // 推测: '@' ('A' 前一字符) 不是十六进制数字。
 test!("test_isxdigit_at_sign" {
-    unsafe { isxdigit(b'@' as c_int); }
+    { isxdigit(b'@' as c_int); }
 });
 
 // 推测: 'G' ('F' 后一字符) 不是十六进制数字。
 test!("test_isxdigit_G" {
-    unsafe { isxdigit(b'G' as c_int); }
+    { isxdigit(b'G' as c_int); }
 });
 
 // ============================================================================
@@ -151,27 +151,27 @@ test!("test_isxdigit_G" {
 
 // 推测: 'a' 是十六进制数字。
 test!("test_isxdigit_a" {
-    unsafe { isxdigit(b'a' as c_int); }
+    { isxdigit(b'a' as c_int); }
 });
 
 // 推测: 'f' 是十六进制数字。
 test!("test_isxdigit_f" {
-    unsafe { isxdigit(b'f' as c_int); }
+    { isxdigit(b'f' as c_int); }
 });
 
 // 推测: 'e' 是十六进制数字 (字母区间中段)。
 test!("test_isxdigit_e" {
-    unsafe { isxdigit(b'e' as c_int); }
+    { isxdigit(b'e' as c_int); }
 });
 
 // 推测: '`' ('a' 前一字符) 不是十六进制数字。
 test!("test_isxdigit_backtick" {
-    unsafe { isxdigit(b'`' as c_int); }
+    { isxdigit(b'`' as c_int); }
 });
 
 // 推测: 'g' ('f' 后一字符) 不是十六进制数字。
 test!("test_isxdigit_g" {
-    unsafe { isxdigit(b'g' as c_int); }
+    { isxdigit(b'g' as c_int); }
 });
 
 // ============================================================================
@@ -180,32 +180,32 @@ test!("test_isxdigit_g" {
 
 // 推测: 'z' 不是十六进制数字。
 test!("test_isxdigit_z" {
-    unsafe { isxdigit(b'z' as c_int); }
+    { isxdigit(b'z' as c_int); }
 });
 
 // 推测: 'Z' 不是十六进制数字。
 test!("test_isxdigit_Z" {
-    unsafe { isxdigit(b'Z' as c_int); }
+    { isxdigit(b'Z' as c_int); }
 });
 
 // 推测: '!' 不是十六进制数字。
 test!("test_isxdigit_exclamation" {
-    unsafe { isxdigit(b'!' as c_int); }
+    { isxdigit(b'!' as c_int); }
 });
 
 // 推测: 空格 (0x20) 不是十六进制数字。
 test!("test_isxdigit_space" {
-    unsafe { isxdigit(b' ' as c_int); }
+    { isxdigit(b' ' as c_int); }
 });
 
 // 推测: 换行符 (0x0A) 不是十六进制数字。
 test!("test_isxdigit_newline" {
-    unsafe { isxdigit(b'\n' as c_int); }
+    { isxdigit(b'\n' as c_int); }
 });
 
 // 推测: NUL (0x00) 不是十六进制数字。
 test!("test_isxdigit_nul" {
-    unsafe { isxdigit(0x00); }
+    { isxdigit(0x00); }
 });
 
 // ============================================================================
@@ -214,7 +214,7 @@ test!("test_isxdigit_nul" {
 
 // 推测: EOF (-1) 不是十六进制数字。
 test!("test_isxdigit_eof" {
-    unsafe { isxdigit(EOF); }
+    { isxdigit(EOF); }
 });
 
 // ============================================================================
@@ -223,17 +223,17 @@ test!("test_isxdigit_eof" {
 
 // 推测: 0x80 不是十六进制数字。
 test!("test_isxdigit_high_bit_0x80" {
-    unsafe { isxdigit(0x80); }
+    { isxdigit(0x80); }
 });
 
 // 推测: 0xFF 不是十六进制数字。
 test!("test_isxdigit_0xFF" {
-    unsafe { isxdigit(0xFF); }
+    { isxdigit(0xFF); }
 });
 
 // 推测: 0xA0 不是十六进制数字。
 test!("test_isxdigit_0xA0" {
-    unsafe { isxdigit(0xA0); }
+    { isxdigit(0xA0); }
 });
 
 // ============================================================================
@@ -242,28 +242,28 @@ test!("test_isxdigit_0xA0" {
 
 // 推测: `isxdigit_l(NULL)` 与 `isxdigit` 行为一致 (locale 被忽略)。
 test!("test_isxdigit_l_null_equals_isxdigit" {
-    unsafe {
+    {
         isxdigit_l(b'A' as c_int, core::ptr::null_mut());
     }
 });
 
 // 推测: `isxdigit_l` 对非 hex 字符返回 0。
 test!("test_isxdigit_l_non_hex" {
-    unsafe {
+    {
         isxdigit_l(b'g' as c_int, core::ptr::null_mut());
     }
 });
 
 // 推测: `isxdigit_l` 对数字返回非零。
 test!("test_isxdigit_l_digit" {
-    unsafe {
+    {
         isxdigit_l(b'3' as c_int, core::ptr::null_mut());
     }
 });
 
 // 推测: `isxdigit_l` 对 EOF 返回 0。
 test!("test_isxdigit_l_eof" {
-    unsafe {
+    {
         isxdigit_l(EOF, core::ptr::null_mut());
     }
 });
@@ -274,7 +274,7 @@ test!("test_isxdigit_l_eof" {
 
 // 推测: `isxdigit_l` 与 `isxdigit` 遍历 0..=255 行为完全一致。
 test!("test_isxdigit_l_consistency" {
-    unsafe {
+    {
         // 实现完成后遍历全部 256 个值验证一致性
         for ch in [b'0', b'9', b'A', b'F', b'a', b'f', b'G', b'z'] {
             isxdigit_l(ch as c_int, core::ptr::null_mut());
@@ -288,7 +288,7 @@ test!("test_isxdigit_l_consistency" {
 
 // 推测: isxdigit 是纯函数，多次调用返回相同结果。
 test!("test_isxdigit_idempotent" {
-    unsafe {
+    {
         let _r1 = isxdigit(b'A' as c_int);
         let _r2 = isxdigit(b'A' as c_int);
     }
@@ -296,7 +296,7 @@ test!("test_isxdigit_idempotent" {
 
 // 推测: isxdigit 返回值仅 0 或 1。
 test!("test_isxdigit_returns_zero_or_one" {
-    unsafe {
+    {
         // 验证所有 ASCII 字符返回值都在 {0, 1} 中
         for ch in [b'0', b'9', b'A', b'F', b'a', b'f', b'G', b'z'] {
             isxdigit(ch as c_int);

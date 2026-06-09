@@ -12,7 +12,7 @@ test!("test_found" {
 });
 
 test!("test_not_found" {
-    unsafe {
+    {
         let s = [97u32, 98, 99, 0];
         let r = wcschr(s.as_ptr(), 120);
         assert!(r.is_null());

@@ -12,7 +12,7 @@ test!("test_found" {
 });
 
 test!("test_not_found" {
-    unsafe {
+    {
         let buf = [10u32, 20, 30];
         let r = wmemchr(buf.as_ptr(), 99, 3);
         assert!(r.is_null());

@@ -70,4 +70,5 @@ pub use rusl_core::errno::__errno_location;
 #[cfg(feature = "rusl")]
 pub use rusl_string::memset;
 #[cfg(feature = "rusl")]
+#[allow(unused)]
 pub use rusl_internal::libc::__libc;

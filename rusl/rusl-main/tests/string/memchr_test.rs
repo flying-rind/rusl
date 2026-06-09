@@ -13,7 +13,7 @@ test!("test_found" {
 });
 
 test!("test_not_found" {
-    unsafe {
+    {
         let buf = [10u8, 20, 30];
         let r = memchr(buf.as_ptr() as *const c_void, 99, 3);
         assert!(r.is_null());
@@ -21,7 +21,7 @@ test!("test_not_found" {
 });
 
 test!("test_zero_length" {
-    unsafe {
+    {
         let buf = [10u8];
         let r = memchr(buf.as_ptr() as *const c_void, 10, 0);
         assert!(r.is_null());

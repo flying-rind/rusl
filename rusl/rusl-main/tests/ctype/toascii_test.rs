@@ -56,17 +56,17 @@ test!("test_return_type_size" {
 
 // `toascii` 当前为 `todo!()`, 调用应 panic。
 test!("test_toascii_panics_on_todo" {
-    unsafe { toascii(65); }
+    { toascii(65); }
 });
 
 // `toascii` 传入 0 也应 panic (尚未实现)。
 test!("test_toascii_zero_panics" {
-    unsafe { toascii(0); }
+    { toascii(0); }
 });
 
 // `toascii` 传入负值也应 panic (尚未实现)。
 test!("test_toascii_negative_panics" {
-    unsafe { toascii(-1); }
+    { toascii(-1); }
 });
 
 // ============================================================================
@@ -75,27 +75,27 @@ test!("test_toascii_negative_panics" {
 
 // 推测: toascii(0) = 0。
 test!("test_toascii_zero" {
-    unsafe { toascii(0); }
+    { toascii(0); }
 });
 
 // 推测: toascii(127) = 127 (ASCII 最大值，保持不变)。
 test!("test_toascii_max_ascii" {
-    unsafe { toascii(127); }
+    { toascii(127); }
 });
 
 // 推测: toascii(65) = 65 ('A' 保持不变)。
 test!("test_toascii_uppercase_a" {
-    unsafe { toascii(b'A' as c_int); }
+    { toascii(b'A' as c_int); }
 });
 
 // 推测: toascii(97) = 97 ('a' 保持不变)。
 test!("test_toascii_lowercase_a" {
-    unsafe { toascii(b'a' as c_int); }
+    { toascii(b'a' as c_int); }
 });
 
 // 推测: toascii(48) = 48 ('0' 保持不变)。
 test!("test_toascii_digit_0" {
-    unsafe { toascii(b'0' as c_int); }
+    { toascii(b'0' as c_int); }
 });
 
 // ============================================================================
@@ -104,34 +104,34 @@ test!("test_toascii_digit_0" {
 
 // 推测: toascii(128) = 0 (高位被清除, 128 & 0x7F = 0)。
 test!("test_toascii_first_non_ascii" {
-    unsafe { toascii(128); }
+    { toascii(128); }
 });
 
 // 推测: toascii(255) = 127 (0xFF & 0x7F = 0x7F = 127)。
 test!("test_toascii_255" {
-    unsafe { toascii(255); }
+    { toascii(255); }
 });
 
 // 推测: toascii(0xC1) = 0x41 = 65 ('A')。
 //
 // 0xC1 (193) & 0x7F = 0x41 = 65 = 'A'。
 test!("test_toascii_strips_high_bit" {
-    unsafe { toascii(0xC1); }
+    { toascii(0xC1); }
 });
 
 // 推测: toascii(0xE9) = 0x69 = 105 ('i')。
 test!("test_toascii_e_acute" {
-    unsafe { toascii(0xE9); }
+    { toascii(0xE9); }
 });
 
 // 推测: toascii(0x80) = 0 (仅设置第7位)。
 test!("test_toascii_only_high_bit" {
-    unsafe { toascii(0x80); }
+    { toascii(0x80); }
 });
 
 // 推测: toascii(0x7F) = 0x7F (127, 最高有效位之前)。
 test!("test_toascii_max_seven_bit" {
-    unsafe { toascii(0x7F); }
+    { toascii(0x7F); }
 });
 
 // ============================================================================
@@ -142,38 +142,38 @@ test!("test_toascii_max_seven_bit" {
 //
 // -1 在 32 位补码下为 0xFFFF_FFFF, & 0x7F = 0x7F = 127。
 test!("test_toascii_negative_one" {
-    unsafe { toascii(-1); }
+    { toascii(-1); }
 });
 
 // 推测: toascii(EOF) = toascii(-1) = 127。
 test!("test_toascii_eof" {
-    unsafe { toascii(EOF); }
+    { toascii(EOF); }
 });
 
 // 推测: toascii(-128) = 0。
 //
 // -128 = 0xFFFF_FF80, & 0x7F = 0x00 = 0。
 test!("test_toascii_negative_128" {
-    unsafe { toascii(-128); }
+    { toascii(-128); }
 });
 
 // 推测: toascii(-127) = 1。
 //
 // -127 = 0xFFFF_FF81, & 0x7F = 0x01 = 1。
 test!("test_toascii_negative_127" {
-    unsafe { toascii(-127); }
+    { toascii(-127); }
 });
 
 // 推测: toascii(-129) = 127。
 //
 // -129 = 0xFFFF_FF7F, & 0x7F = 0x7F = 127。
 test!("test_toascii_negative_129" {
-    unsafe { toascii(-129); }
+    { toascii(-129); }
 });
 
 // 推测: toascii(-2) = 126。
 test!("test_toascii_negative_two" {
-    unsafe { toascii(-2); }
+    { toascii(-2); }
 });
 
 // ============================================================================
@@ -182,19 +182,19 @@ test!("test_toascii_negative_two" {
 
 // 推测: toascii(1000) = 1000 & 0x7F = 0x68 = 104。
 test!("test_toascii_large_positive" {
-    unsafe { toascii(1000); }
+    { toascii(1000); }
 });
 
 // 推测: toascii(0x1FF) = 0x7F = 127。
 //
 // 0x1FF = 511, 511 & 0x7F = 0x7F = 127。
 test!("test_toascii_multiple_high_bits" {
-    unsafe { toascii(0x1FF); }
+    { toascii(0x1FF); }
 });
 
 // 推测: toascii(-256) = 0 (所有低位为 0)。
 test!("test_toascii_negative_256" {
-    unsafe { toascii(-256); }
+    { toascii(-256); }
 });
 
 // ============================================================================
@@ -203,7 +203,7 @@ test!("test_toascii_negative_256" {
 
 // 推测: toascii 返回值始终在 [0, 127] 范围内。
 test!("test_toascii_output_range" {
-    unsafe {
+    {
         // 实现完成后遍历各种输入验证输出范围
         let _r = toascii(65);
     }
@@ -215,7 +215,7 @@ test!("test_toascii_output_range" {
 
 // 推测: toascii(0) 到 toascii(127) 全部不变。
 test!("test_toascii_identity_range" {
-    unsafe {
+    {
         // 0..=127 范围内的值应保持不变
         let _r = toascii(0x41);
     }
@@ -223,7 +223,7 @@ test!("test_toascii_identity_range" {
 
 // 推测: toascii(128) 到 toascii(255) 清除高位映射到 0..=127。
 test!("test_toascii_non_ascii_range" {
-    unsafe {
+    {
         let _r = toascii(0x80);
     }
 });
@@ -234,7 +234,7 @@ test!("test_toascii_non_ascii_range" {
 
 // 推测: toascii 是纯函数，多次调用返回相同结果。
 test!("test_toascii_idempotent" {
-    unsafe {
+    {
         let _r1 = toascii(65);
         let _r2 = toascii(65);
         let _r3 = toascii(65);
@@ -243,7 +243,7 @@ test!("test_toascii_idempotent" {
 
 // 推测: toascii(toascii(x)) = toascii(x) (幂等性, 因为结果已在 [0,127])。
 test!("test_toascii_idempotent_double_apply" {
-    unsafe {
+    {
         let _r1 = toascii(0xC1);
         let _r2 = toascii(0xC1);
     }

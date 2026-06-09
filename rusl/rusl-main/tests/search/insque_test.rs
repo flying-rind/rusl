@@ -16,7 +16,7 @@ struct QueNode {
 
 test!("test_insque_after_pred" {
     // 测试将 element 插入到 pred 之后（链表中部）。
-    unsafe {
+    {
         let mut head = QueNode { next: ptr::null_mut(), prev: ptr::null_mut() };
         let mut mid  = QueNode { next: ptr::null_mut(), prev: ptr::null_mut() };
         let mut tail = QueNode { next: ptr::null_mut(), prev: ptr::null_mut() };
@@ -40,7 +40,7 @@ test!("test_insque_after_pred" {
 
 test!("test_insque_at_end" {
     // 测试在链表末尾插入（pred 为 tail）。
-    unsafe {
+    {
         let mut head = QueNode { next: ptr::null_mut(), prev: ptr::null_mut() };
         let mut node = QueNode { next: ptr::null_mut(), prev: ptr::null_mut() };
 
@@ -57,7 +57,7 @@ test!("test_insque_at_end" {
 
 test!("test_insque_null_pred" {
     // 测试 pred 为 null 时 element 成为独立节点。
-    unsafe {
+    {
         let mut node = QueNode { next: ptr::null_mut(), prev: ptr::null_mut() };
         insque(
             &mut node as *mut QueNode as *mut c_void,
@@ -71,7 +71,7 @@ test!("test_insque_null_pred" {
 
 test!("test_remque_middle" {
     // 测试从链表中间摘除节点。
-    unsafe {
+    {
         let mut a = QueNode { next: ptr::null_mut(), prev: ptr::null_mut() };
         let mut b = QueNode { next: ptr::null_mut(), prev: ptr::null_mut() };
         let mut c = QueNode { next: ptr::null_mut(), prev: ptr::null_mut() };
@@ -92,7 +92,7 @@ test!("test_remque_middle" {
 
 test!("test_remque_head" {
     // 测试摘除链表头节点。
-    unsafe {
+    {
         let mut head = QueNode { next: ptr::null_mut(), prev: ptr::null_mut() };
         let mut tail = QueNode { next: ptr::null_mut(), prev: ptr::null_mut() };
 
@@ -108,7 +108,7 @@ test!("test_remque_head" {
 
 test!("test_remque_tail" {
     // 测试摘除链表尾节点。
-    unsafe {
+    {
         let mut head = QueNode { next: ptr::null_mut(), prev: ptr::null_mut() };
         let mut tail = QueNode { next: ptr::null_mut(), prev: ptr::null_mut() };
 
@@ -124,7 +124,7 @@ test!("test_remque_tail" {
 
 test!("test_remque_solo" {
     // 测试摘除链表中唯一节点。
-    unsafe {
+    {
         let mut solo = QueNode { next: ptr::null_mut(), prev: ptr::null_mut() };
         remque(&mut solo as *mut QueNode as *mut c_void);
         // 摘除唯一节点不应崩溃
@@ -133,7 +133,7 @@ test!("test_remque_solo" {
 
 test!("test_insque_chain" {
     // 测试连续 insque 构建链表并验证链接正确性。
-    unsafe {
+    {
         let mut nodes: [QueNode; 5] = [
             QueNode { next: ptr::null_mut(), prev: ptr::null_mut() },
             QueNode { next: ptr::null_mut(), prev: ptr::null_mut() },

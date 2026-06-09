@@ -118,22 +118,22 @@ test!("test_spaces_no_duplicates" {
 
 // `iswspace` 当前为 `todo!()`, 调用应 panic。
 test!("test_iswspace_panics_on_todo" {
-    unsafe { iswspace(b' ' as wint_t); }
+    { iswspace(b' ' as wint_t); }
 });
 
 // `iswspace_l` 当前为 `todo!()`, 调用应 panic。
 test!("test_iswspace_l_panics_on_todo" {
-    unsafe { iswspace_l(b' ' as wint_t, core::ptr::null_mut()); }
+    { iswspace_l(b' ' as wint_t, core::ptr::null_mut()); }
 });
 
 // `iswspace` 传入 WEOF 也应 panic (尚未实现)。
 test!("test_iswspace_weof_panics" {
-    unsafe { iswspace(wint_t::MAX); }
+    { iswspace(wint_t::MAX); }
 });
 
 // `iswspace_l` 传入非法 locale 指针应 panic (尚未实现)。
 test!("test_iswspace_l_invalid_locale_panics" {
-    unsafe { iswspace_l(0x00, 0xdead_beef as locale_t); }
+    { iswspace_l(0x00, 0xdead_beef as locale_t); }
 });
 
 // ============================================================================
@@ -142,32 +142,32 @@ test!("test_iswspace_l_invalid_locale_panics" {
 
 // 推测: 空格 (U+0020) 是空白字符。
 test!("test_iswspace_space" {
-    unsafe { iswspace(b' ' as wint_t); }
+    { iswspace(b' ' as wint_t); }
 });
 
 // 推测: 水平制表符 (U+0009) 是空白字符。
 test!("test_iswspace_tab" {
-    unsafe { iswspace(b'\t' as wint_t); }
+    { iswspace(b'\t' as wint_t); }
 });
 
 // 推测: 换行符 (U+000A) 是空白字符。
 test!("test_iswspace_newline" {
-    unsafe { iswspace(b'\n' as wint_t); }
+    { iswspace(b'\n' as wint_t); }
 });
 
 // 推测: 回车符 (U+000D) 是空白字符。
 test!("test_iswspace_carriage_return" {
-    unsafe { iswspace(b'\r' as wint_t); }
+    { iswspace(b'\r' as wint_t); }
 });
 
 // 推测: 垂直制表符 (U+000B) 是空白字符。
 test!("test_iswspace_vertical_tab" {
-    unsafe { iswspace(0x0B); }
+    { iswspace(0x0B); }
 });
 
 // 推测: 换页符 (U+000C) 是空白字符。
 test!("test_iswspace_form_feed" {
-    unsafe { iswspace(0x0C); }
+    { iswspace(0x0C); }
 });
 
 // ============================================================================
@@ -176,22 +176,22 @@ test!("test_iswspace_form_feed" {
 
 // 推测: 'A' (U+0041) 不是空白字符。
 test!("test_iswspace_letter_a" {
-    unsafe { iswspace(b'A' as wint_t); }
+    { iswspace(b'A' as wint_t); }
 });
 
 // 推测: '0' (U+0030) 不是空白字符。
 test!("test_iswspace_digit_0" {
-    unsafe { iswspace(b'0' as wint_t); }
+    { iswspace(b'0' as wint_t); }
 });
 
 // 推测: '!' (U+0021) 不是空白字符。
 test!("test_iswspace_exclamation" {
-    unsafe { iswspace(b'!' as wint_t); }
+    { iswspace(b'!' as wint_t); }
 });
 
 // 推测: 中文字符 U+4E2D 不是空白字符。
 test!("test_iswspace_cjk" {
-    unsafe { iswspace(0x4E2Du32); }
+    { iswspace(0x4E2Du32); }
 });
 
 // ============================================================================
@@ -200,7 +200,7 @@ test!("test_iswspace_cjk" {
 
 // 推测: wc == 0 必须返回 0（防止误匹配数组终止符）。
 test!("test_iswspace_null_char" {
-    unsafe { iswspace(0); }
+    { iswspace(0); }
 });
 
 // ============================================================================
@@ -209,22 +209,22 @@ test!("test_iswspace_null_char" {
 
 // 推测: U+00A0 (NO-BREAK SPACE) 不是空白字符。
 test!("test_iswspace_excluded_nbsp" {
-    unsafe { iswspace(0x00A0u32); }
+    { iswspace(0x00A0u32); }
 });
 
 // 推测: U+2007 (FIGURE SPACE) 不是空白字符 (被排除)。
 test!("test_iswspace_excluded_figure_space" {
-    unsafe { iswspace(0x2007u32); }
+    { iswspace(0x2007u32); }
 });
 
 // 推测: U+202F (NARROW NO-BREAK SPACE) 不是空白字符 (被排除)。
 test!("test_iswspace_excluded_narrow_nbsp" {
-    unsafe { iswspace(0x202Fu32); }
+    { iswspace(0x202Fu32); }
 });
 
 // 推测: U+1680 (OGHAM SPACE MARK) 不是空白字符 (被排除)。
 test!("test_iswspace_excluded_ogham" {
-    unsafe { iswspace(0x1680u32); }
+    { iswspace(0x1680u32); }
 });
 
 // ============================================================================
@@ -233,57 +233,57 @@ test!("test_iswspace_excluded_ogham" {
 
 // 推测: U+0085 (NEL) 是空白字符。
 test!("test_iswspace_nel" {
-    unsafe { iswspace(0x0085u32); }
+    { iswspace(0x0085u32); }
 });
 
 // 推测: U+2000 (En Quad) 是空白字符。
 test!("test_iswspace_en_quad" {
-    unsafe { iswspace(0x2000u32); }
+    { iswspace(0x2000u32); }
 });
 
 // 推测: U+2001 (Em Quad) 是空白字符。
 test!("test_iswspace_em_quad" {
-    unsafe { iswspace(0x2001u32); }
+    { iswspace(0x2001u32); }
 });
 
 // 推测: U+2002 (En Space) 是空白字符。
 test!("test_iswspace_en_space" {
-    unsafe { iswspace(0x2002u32); }
+    { iswspace(0x2002u32); }
 });
 
 // 推测: U+2006 (Six-Per-Em Space) 是空白字符。
 test!("test_iswspace_six_per_em" {
-    unsafe { iswspace(0x2006u32); }
+    { iswspace(0x2006u32); }
 });
 
 // 推测: U+2008 (Punctuation Space) 是空白字符。
 test!("test_iswspace_punctuation_space" {
-    unsafe { iswspace(0x2008u32); }
+    { iswspace(0x2008u32); }
 });
 
 // 推测: U+200A (Hair Space) 是空白字符。
 test!("test_iswspace_hair_space" {
-    unsafe { iswspace(0x200Au32); }
+    { iswspace(0x200Au32); }
 });
 
 // 推测: U+2028 (Line Separator) 是空白字符。
 test!("test_iswspace_line_separator" {
-    unsafe { iswspace(0x2028u32); }
+    { iswspace(0x2028u32); }
 });
 
 // 推测: U+2029 (Paragraph Separator) 是空白字符。
 test!("test_iswspace_paragraph_separator" {
-    unsafe { iswspace(0x2029u32); }
+    { iswspace(0x2029u32); }
 });
 
 // 推测: U+205F (Medium Mathematical Space) 是空白字符。
 test!("test_iswspace_mm_space" {
-    unsafe { iswspace(0x205Fu32); }
+    { iswspace(0x205Fu32); }
 });
 
 // 推测: U+3000 (Ideographic Space) 是空白字符。
 test!("test_iswspace_ideographic_space" {
-    unsafe { iswspace(0x3000u32); }
+    { iswspace(0x3000u32); }
 });
 
 // ============================================================================
@@ -292,7 +292,7 @@ test!("test_iswspace_ideographic_space" {
 
 // 推测: WEOF (0xFFFF_FFFF) 不是空白字符。
 test!("test_iswspace_weof" {
-    unsafe { iswspace(wint_t::MAX); }
+    { iswspace(wint_t::MAX); }
 });
 
 // ============================================================================
@@ -301,14 +301,14 @@ test!("test_iswspace_weof" {
 
 // 推测: `iswspace_l(NULL)` 与 `iswspace` 行为一致 (C locale)。
 test!("test_iswspace_l_null_equals_iswspace" {
-    unsafe {
+    {
         iswspace_l(b' ' as wint_t, core::ptr::null_mut());
     }
 });
 
 // 推测: `iswspace_l` 对非空白字符返回 0。
 test!("test_iswspace_l_non_space" {
-    unsafe {
+    {
         iswspace_l(b'A' as wint_t, core::ptr::null_mut());
     }
 });
@@ -319,7 +319,7 @@ test!("test_iswspace_l_non_space" {
 
 // 推测: iswspace 是纯函数，多次调用返回相同结果。
 test!("test_iswspace_idempotent" {
-    unsafe {
+    {
         let _r1 = iswspace(b' ' as wint_t);
         let _r2 = iswspace(b' ' as wint_t);
     }

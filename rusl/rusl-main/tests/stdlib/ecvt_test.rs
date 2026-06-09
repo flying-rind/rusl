@@ -8,7 +8,7 @@ use test_framework::test;
 
 test!("test_ecvt_positive" {
     // 测试 ecvt 转换正数。
-    unsafe {
+    {
         let mut dp: i32 = 0;
         let mut sign: i32 = 1;
         let result = ecvt(3.14159, 6, &mut dp as *mut i32, &mut sign as *mut i32);
@@ -22,7 +22,7 @@ test!("test_ecvt_positive" {
 
 test!("test_ecvt_negative" {
     // 测试 ecvt 转换负数。
-    unsafe {
+    {
         let mut dp: i32 = 0;
         let mut sign: i32 = 0;
         let result = ecvt(-3.14, 4, &mut dp as *mut i32, &mut sign as *mut i32);
@@ -34,7 +34,7 @@ test!("test_ecvt_negative" {
 
 test!("test_ecvt_zero" {
     // 测试 ecvt 转换零。
-    unsafe {
+    {
         let mut dp: i32 = 0;
         let mut sign: i32 = 1;
         let result = ecvt(0.0, 3, &mut dp as *mut i32, &mut sign as *mut i32);
@@ -45,7 +45,7 @@ test!("test_ecvt_zero" {
 
 test!("test_ecvt_large" {
     // 测试 ecvt 转换非常大的数字。
-    unsafe {
+    {
         let mut dp: i32 = 0;
         let mut sign: i32 = 0;
         let result = ecvt(1e10, 6, &mut dp as *mut i32, &mut sign as *mut i32);
@@ -57,7 +57,7 @@ test!("test_ecvt_large" {
 
 test!("test_ecvt_small" {
     // 测试 ecvt 转换非常小的数字。
-    unsafe {
+    {
         let mut dp: i32 = 0;
         let mut sign: i32 = 0;
         let result = ecvt(0.00123, 4, &mut dp as *mut i32, &mut sign as *mut i32);
@@ -71,7 +71,7 @@ test!("test_ecvt_small" {
 
 test!("test_fcvt_positive" {
     // 测试 fcvt 转换正数。
-    unsafe {
+    {
         let mut dp: i32 = 0;
         let mut sign: i32 = 1;
         let result = fcvt(3.14159, 3, &mut dp as *mut i32, &mut sign as *mut i32);
@@ -82,7 +82,7 @@ test!("test_fcvt_positive" {
 
 test!("test_fcvt_negative" {
     // 测试 fcvt 转换负数。
-    unsafe {
+    {
         let mut dp: i32 = 0;
         let mut sign: i32 = 0;
         let result = fcvt(-2.718, 2, &mut dp as *mut i32, &mut sign as *mut i32);
@@ -93,7 +93,7 @@ test!("test_fcvt_negative" {
 
 test!("test_fcvt_zero" {
     // 测试 fcvt 转换零。
-    unsafe {
+    {
         let mut dp: i32 = 0;
         let mut sign: i32 = 1;
         let result = fcvt(0.0, 5, &mut dp as *mut i32, &mut sign as *mut i32);
@@ -104,7 +104,7 @@ test!("test_fcvt_zero" {
 
 test!("test_fcvt_many_leading_zeros" {
     // 测试 fcvt 大量前导零的情况。
-    unsafe {
+    {
         let mut dp: i32 = 0;
         let mut sign: i32 = 0;
         // 非常小的正数，产生大量前导零
@@ -118,7 +118,7 @@ test!("test_fcvt_many_leading_zeros" {
 
 test!("test_gcvt_basic" {
     // 测试 gcvt 基本转换。
-    unsafe {
+    {
         let mut buf = [0i8; 64];
         let result = gcvt(3.14159, 6, buf.as_mut_ptr());
         assert_eq!(result, buf.as_mut_ptr());
@@ -127,7 +127,7 @@ test!("test_gcvt_basic" {
 
 test!("test_gcvt_integer" {
     // 测试 gcvt 转换整数。
-    unsafe {
+    {
         let mut buf = [0i8; 64];
         let result = gcvt(42.0, 6, buf.as_mut_ptr());
         assert_eq!(result, buf.as_mut_ptr());
@@ -136,7 +136,7 @@ test!("test_gcvt_integer" {
 
 test!("test_gcvt_negative" {
     // 测试 gcvt 转换负数。
-    unsafe {
+    {
         let mut buf = [0i8; 64];
         let result = gcvt(-3.14, 4, buf.as_mut_ptr());
         assert_eq!(result, buf.as_mut_ptr());
@@ -145,7 +145,7 @@ test!("test_gcvt_negative" {
 
 test!("test_gcvt_zero" {
     // 测试 gcvt 转换零。
-    unsafe {
+    {
         let mut buf = [0i8; 64];
         let result = gcvt(0.0, 4, buf.as_mut_ptr());
         assert_eq!(result, buf.as_mut_ptr());

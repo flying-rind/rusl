@@ -13,7 +13,7 @@ test!("test_found" {
 });
 
 test!("test_not_found" {
-    unsafe {
+    {
         let s = b"hello\0";
         let r = strchr(s.as_ptr() as *const c_char, 'x' as i32);
         assert!(r.is_null());

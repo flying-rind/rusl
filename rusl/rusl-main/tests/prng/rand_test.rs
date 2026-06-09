@@ -6,7 +6,7 @@ use super::*;
 
 test!("test_rand_range" {
     // rand 返回值在 [0, RAND_MAX] 范围内。
-    unsafe {
+    {
         let val = rand();
         assert!(val >= 0 && val <= RAND_MAX);
     }
@@ -14,7 +14,7 @@ test!("test_rand_range" {
 
 test!("test_srand_rand_sequence" {
     // srand(1) 后 rand 应产生可预测的序列。
-    unsafe {
+    {
         srand(1);
         let v1 = rand();
         let v2 = rand();
@@ -27,7 +27,7 @@ test!("test_srand_rand_sequence" {
 
 test!("test_srand_rand_reproducible" {
     // srand + rand 可复现：相同种子产生相同第一个值。
-    unsafe {
+    {
         srand(42);
         let a = rand();
         srand(42);
@@ -38,7 +38,7 @@ test!("test_srand_rand_reproducible" {
 
 test!("test_srand_different_seeds" {
     // 不同种子通常产生不同的序列。
-    unsafe {
+    {
         srand(1);
         let _a = rand();
         srand(2);
@@ -49,7 +49,7 @@ test!("test_srand_different_seeds" {
 
 test!("test_srand_zero_seed" {
     // srand(0) 的特殊情况：seed = (0 - 1) as u64 = 0xFFFFFFFFFFFFFFFF。
-    unsafe {
+    {
         srand(0);
         let val = rand();
         assert!(val >= 0 && val <= RAND_MAX);
@@ -58,7 +58,7 @@ test!("test_srand_zero_seed" {
 
 test!("test_rand_multiple_calls" {
     // srand 后连续多次 rand 调用均不 panic。
-    unsafe {
+    {
         srand(123);
         for _ in 0..100 {
             let val = rand();
@@ -69,7 +69,7 @@ test!("test_rand_multiple_calls" {
 
 test!("test_rand_not_constant" {
     // 重复调用 rand 不应始终返回相同值。
-    unsafe {
+    {
         srand(42);
         let v1 = rand();
         let v2 = rand();

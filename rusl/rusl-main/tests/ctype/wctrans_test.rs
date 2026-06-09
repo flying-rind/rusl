@@ -131,7 +131,7 @@ test!("test_towctrans_l_extern_c_signature" {
 
 // `wctrans` 当前为 `todo!()`, 调用应 panic。
 test!("test_wctrans_panics_on_todo" {
-    unsafe {
+    {
         let name = b"toupper\0".as_ptr() as *const c_char;
         wctrans(name);
     }
@@ -139,14 +139,14 @@ test!("test_wctrans_panics_on_todo" {
 
 // `towctrans` 当前为 `todo!()`, 调用应 panic。
 test!("test_towctrans_panics_on_todo" {
-    unsafe {
+    {
         towctrans(b'A' as wint_t, 1);
     }
 });
 
 // `wctrans_l` 当前为 `todo!()`, 调用应 panic。
 test!("test_wctrans_l_panics_on_todo" {
-    unsafe {
+    {
         let name = b"toupper\0".as_ptr() as *const c_char;
         wctrans_l(name, core::ptr::null_mut());
     }
@@ -154,14 +154,14 @@ test!("test_wctrans_l_panics_on_todo" {
 
 // `towctrans_l` 当前为 `todo!()`, 调用应 panic。
 test!("test_towctrans_l_panics_on_todo" {
-    unsafe {
+    {
         towctrans_l(b'A' as wint_t, 1, core::ptr::null_mut());
     }
 });
 
 // `wctrans` 传入空字符串也应 panic (尚未实现)。
 test!("test_wctrans_empty_string_panics" {
-    unsafe {
+    {
         let name = b"\0".as_ptr() as *const c_char;
         wctrans(name);
     }
@@ -169,7 +169,7 @@ test!("test_wctrans_empty_string_panics" {
 
 // `towctrans` 传入无效 trans 值也应 panic (尚未实现)。
 test!("test_towctrans_invalid_trans_panics" {
-    unsafe {
+    {
         towctrans(b'A' as wint_t, 99);
     }
 });
@@ -184,7 +184,7 @@ test!("test_towctrans_invalid_trans_panics" {
 //
 // spec: "toupper" 映射为 `(wctrans_t)1`
 test!("test_wctrans_spec_toupper_returns_1" {
-    unsafe {
+    {
         let name = b"toupper\0".as_ptr() as *const c_char;
         let result = wctrans(name);
         assert_eq!(result, 1, "wctrans(\"toupper\") 应返回 1");
@@ -195,7 +195,7 @@ test!("test_wctrans_spec_toupper_returns_1" {
 //
 // spec: "tolower" 映射为 `(wctrans_t)2`
 test!("test_wctrans_spec_tolower_returns_2" {
-    unsafe {
+    {
         let name = b"tolower\0".as_ptr() as *const c_char;
         let result = wctrans(name);
         assert_eq!(result, 2, "wctrans(\"tolower\") 应返回 2");
@@ -204,7 +204,7 @@ test!("test_wctrans_spec_tolower_returns_2" {
 
 // 推测: `wctrans("unknown")` 返回 0 (无效描述符)。
 test!("test_wctrans_spec_invalid_name_returns_0" {
-    unsafe {
+    {
         let name = b"unknown\0".as_ptr() as *const c_char;
         let result = wctrans(name);
         assert_eq!(result, 0, "wctrans(\"unknown\") 应返回 0");
@@ -213,7 +213,7 @@ test!("test_wctrans_spec_invalid_name_returns_0" {
 
 // 推测: `wctrans("Toupper")` 返回 0 (大小写敏感, 不支持大写)。
 test!("test_wctrans_spec_case_sensitive_toupper" {
-    unsafe {
+    {
         let name = b"Toupper\0".as_ptr() as *const c_char;
         let result = wctrans(name);
         assert_eq!(result, 0, "wctrans(\"Toupper\") 应返回 0");
@@ -222,7 +222,7 @@ test!("test_wctrans_spec_case_sensitive_toupper" {
 
 // 推测: `wctrans("TOLOWER")` 返回 0 (大小写敏感)。
 test!("test_wctrans_spec_case_sensitive_tolower" {
-    unsafe {
+    {
         let name = b"TOLOWER\0".as_ptr() as *const c_char;
         let result = wctrans(name);
         assert_eq!(result, 0, "wctrans(\"TOLOWER\") 应返回 0");
@@ -231,7 +231,7 @@ test!("test_wctrans_spec_case_sensitive_tolower" {
 
 // 推测: `wctrans("")` (空字符串) 返回 0。
 test!("test_wctrans_spec_empty_string_returns_0" {
-    unsafe {
+    {
         let name = b"\0".as_ptr() as *const c_char;
         let result = wctrans(name);
         assert_eq!(result, 0, "wctrans(\"\") 应返回 0");
@@ -240,7 +240,7 @@ test!("test_wctrans_spec_empty_string_returns_0" {
 
 // 推测: `wctrans("towctrans")` (同名但无效) 返回 0。
 test!("test_wctrans_spec_towctrans_name_returns_0" {
-    unsafe {
+    {
         let name = b"towctrans\0".as_ptr() as *const c_char;
         let result = wctrans(name);
         assert_eq!(result, 0, "wctrans(\"towctrans\") 应返回 0");
@@ -249,7 +249,7 @@ test!("test_wctrans_spec_towctrans_name_returns_0" {
 
 // 推测: 相同输入多次调用返回一致。
 test!("test_wctrans_spec_idempotent" {
-    unsafe {
+    {
         let name = b"toupper\0".as_ptr() as *const c_char;
         let r1 = wctrans(name);
         let r2 = wctrans(name);
@@ -261,7 +261,7 @@ test!("test_wctrans_spec_idempotent" {
 
 // 推测: wctrans 返回值类型为 `wctrans_t` (unsigned long)。
 test!("test_wctrans_spec_return_type_unsigned" {
-    unsafe {
+    {
         let name = b"toupper\0".as_ptr() as *const c_char;
         let result = wctrans(name);
         assert!(result <= wctrans_t::MAX, "返回值不应超出 wctrans_t 范围");
@@ -278,7 +278,7 @@ test!("test_wctrans_spec_return_type_unsigned" {
 //
 // spec: trans==1 -> towupper(wc)
 test!("test_towctrans_spec_ascii_a_to_upper" {
-    unsafe {
+    {
         let result = towctrans(b'a' as wint_t, 1);
         assert_eq!(result, b'A' as wint_t, "towctrans('a', 1) 应返回 'A'");
     }
@@ -288,7 +288,7 @@ test!("test_towctrans_spec_ascii_a_to_upper" {
 //
 // spec: trans==2 -> towlower(wc)
 test!("test_towctrans_spec_ascii_A_to_lower" {
-    unsafe {
+    {
         let result = towctrans(b'A' as wint_t, 2);
         assert_eq!(result, b'a' as wint_t, "towctrans('A', 2) 应返回 'a'");
     }
@@ -296,7 +296,7 @@ test!("test_towctrans_spec_ascii_A_to_lower" {
 
 // 推测: `towctrans('Z', 1)` 返回 'Z' (已是大写, toupper 不变)。
 test!("test_towctrans_spec_upper_unchanged" {
-    unsafe {
+    {
         let result = towctrans(b'Z' as wint_t, 1);
         assert_eq!(result, b'Z' as wint_t, "towctrans('Z', 1) 应返回 'Z'");
     }
@@ -304,7 +304,7 @@ test!("test_towctrans_spec_upper_unchanged" {
 
 // 推测: `towctrans('z', 2)` 返回 'z' (已是小写, tolower 不变)。
 test!("test_towctrans_spec_lower_unchanged" {
-    unsafe {
+    {
         let result = towctrans(b'z' as wint_t, 2);
         assert_eq!(result, b'z' as wint_t, "towctrans('z', 2) 应返回 'z'");
     }
@@ -316,7 +316,7 @@ test!("test_towctrans_spec_lower_unchanged" {
 //
 // spec: 非 1、2 的 trans 值返回 wc
 test!("test_towctrans_spec_trans_0_returns_original" {
-    unsafe {
+    {
         assert_eq!(
             towctrans(b'A' as wint_t, 0),
             b'A' as wint_t,
@@ -332,7 +332,7 @@ test!("test_towctrans_spec_trans_0_returns_original" {
 
 // 推测: `towctrans(wc, 3)` (无效 trans) 返回 wc 原值。
 test!("test_towctrans_spec_trans_3_returns_original" {
-    unsafe {
+    {
         assert_eq!(
             towctrans(b'A' as wint_t, 3),
             b'A' as wint_t,
@@ -343,7 +343,7 @@ test!("test_towctrans_spec_trans_3_returns_original" {
 
 // 推测: `towctrans(wc, 99)` (无效 trans) 返回 wc 原值。
 test!("test_towctrans_spec_trans_99_returns_original" {
-    unsafe {
+    {
         assert_eq!(
             towctrans(b'a' as wint_t, 99),
             b'a' as wint_t,
@@ -354,7 +354,7 @@ test!("test_towctrans_spec_trans_99_returns_original" {
 
 // 推测: `towctrans(wc, u64::MAX)` (trans 最大值) 返回 wc 原值。
 test!("test_towctrans_spec_trans_max_returns_original" {
-    unsafe {
+    {
         assert_eq!(
             towctrans(b'X' as wint_t, wctrans_t::MAX),
             b'X' as wint_t,
@@ -367,7 +367,7 @@ test!("test_towctrans_spec_trans_max_returns_original" {
 
 // 推测: `towctrans` 对数字 '0' 返回 '0' (不受大小写变换影响)。
 test!("test_towctrans_spec_digit_unchanged_toupper" {
-    unsafe {
+    {
         assert_eq!(
             towctrans(b'0' as wint_t, 1),
             b'0' as wint_t,
@@ -378,7 +378,7 @@ test!("test_towctrans_spec_digit_unchanged_toupper" {
 
 // 推测: `towctrans` 对空格 ' ' 返回 ' ' (不受大小写变换影响)。
 test!("test_towctrans_spec_space_unchanged" {
-    unsafe {
+    {
         assert_eq!(
             towctrans(b' ' as wint_t, 1),
             b' ' as wint_t,
@@ -398,7 +398,7 @@ test!("test_towctrans_spec_space_unchanged" {
 //
 // 注意: WEOF 经过 toupper/tolower 的行为由 towupper/towlower 定义。
 test!("test_towctrans_spec_weof_invalid_trans" {
-    unsafe {
+    {
         let weof = WEOF;
         assert_eq!(towctrans(weof, 0), weof, "towctrans(WEOF, 0) 应返回 WEOF");
     }
@@ -414,7 +414,7 @@ test!("test_towctrans_spec_weof_invalid_trans" {
 //
 // spec: locale_t 参数在当前单 locale 实现中忽略
 test!("test_wctrans_l_spec_same_as_wctrans" {
-    unsafe {
+    {
         let name = b"toupper\0".as_ptr() as *const c_char;
         let null_locale = core::ptr::null_mut();
         assert_eq!(
@@ -427,7 +427,7 @@ test!("test_wctrans_l_spec_same_as_wctrans" {
 
 // 推测: `wctrans_l` 对 "tolower" 与 `wctrans` 一致。
 test!("test_wctrans_l_spec_tolower_same_as_wctrans" {
-    unsafe {
+    {
         let name = b"tolower\0".as_ptr() as *const c_char;
         let null_locale = core::ptr::null_mut();
         assert_eq!(
@@ -442,7 +442,7 @@ test!("test_wctrans_l_spec_tolower_same_as_wctrans" {
 //
 // spec: 当前单 locale 实现中忽略 locale_t 参数
 test!("test_wctrans_l_spec_ignores_locale" {
-    unsafe {
+    {
         let name = b"toupper\0".as_ptr() as *const c_char;
         let dummy: u32 = 0xDEAD_BEEF;
         let dummy_ptr = &dummy as *const u32 as locale_t;
@@ -454,7 +454,7 @@ test!("test_wctrans_l_spec_ignores_locale" {
 
 // 推测: `wctrans_l` 对无效名称返回 0, 与 locale 无关。
 test!("test_wctrans_l_spec_invalid_name_returns_0" {
-    unsafe {
+    {
         let name = b"unknown\0".as_ptr() as *const c_char;
         let result = wctrans_l(name, core::ptr::null_mut());
         assert_eq!(result, 0, "wctrans_l(\"unknown\") 应返回 0");
@@ -467,7 +467,7 @@ test!("test_wctrans_l_spec_invalid_name_returns_0" {
 //
 // spec: locale_t 参数在当前单 locale 实现中忽略
 test!("test_towctrans_l_spec_same_as_towctrans" {
-    unsafe {
+    {
         let null_locale = core::ptr::null_mut();
         assert_eq!(
             towctrans_l(b'a' as wint_t, 1, null_locale),
@@ -479,7 +479,7 @@ test!("test_towctrans_l_spec_same_as_towctrans" {
 
 // 推测: `towctrans_l` 忽略 locale — 不同 locale 值返回相同结果。
 test!("test_towctrans_l_spec_ignores_locale" {
-    unsafe {
+    {
         let dummy: u32 = 0xBEEF_FEED;
         let dummy_ptr = &dummy as *const u32 as locale_t;
         let r1 = towctrans_l(b'A' as wint_t, 2, core::ptr::null_mut());
@@ -490,7 +490,7 @@ test!("test_towctrans_l_spec_ignores_locale" {
 
 // 推测: `towctrans_l` 对无效 trans 返回原值, 与 `towctrans` 一致。
 test!("test_towctrans_l_spec_invalid_trans_returns_original" {
-    unsafe {
+    {
         let null_locale = core::ptr::null_mut();
         assert_eq!(
             towctrans_l(b'A' as wint_t, 0, null_locale),
@@ -502,7 +502,7 @@ test!("test_towctrans_l_spec_invalid_trans_returns_original" {
 
 // 推测: `towctrans_l` 对 WEOF + 无效 trans 返回 WEOF。
 test!("test_towctrans_l_spec_weof_invalid_trans" {
-    unsafe {
+    {
         let weof = WEOF;
         let null_locale = core::ptr::null_mut();
         assert_eq!(
@@ -542,7 +542,7 @@ test!("test_wint_t_alignment" {
 
 // 推测: wctrans 返回的描述符值只可能是 0、1、2。
 test!("test_wctrans_spec_descriptor_range" {
-    unsafe {
+    {
         let valid_descriptors: [wctrans_t; 3] = [0, 1, 2];
         let test_names: &[&[u8]] = &[b"toupper\0", b"tolower\0", b"unknown\0", b"\0"];
         for name_bytes in test_names {
@@ -559,7 +559,7 @@ test!("test_wctrans_spec_descriptor_range" {
 
 // 推测: wctrans 的 1 和 2 值互不相同 (描述符唯一性)。
 test!("test_wctrans_spec_descriptors_distinct" {
-    unsafe {
+    {
         let toupper = b"toupper\0".as_ptr() as *const c_char;
         let tolower = b"tolower\0".as_ptr() as *const c_char;
         let r1 = wctrans(toupper);

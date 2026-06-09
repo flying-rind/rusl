@@ -16,7 +16,7 @@ unsafe extern "C" fn cmp_int(a: *const c_void, b: *const c_void) -> i32 {
 
 test!("test_lfind_finds_existing" {
     // 测试 lfind 找到已存在的元素。
-    unsafe {
+    {
         let arr = [10i32, 20, 30, 40, 50];
         let mut n: usize = 5;
         let key: i32 = 30;
@@ -34,7 +34,7 @@ test!("test_lfind_finds_existing" {
 
 test!("test_lfind_not_found" {
     // 测试 lfind 在元素不存在时返回 null。
-    unsafe {
+    {
         let arr = [1i32, 2, 3];
         let mut n: usize = 3;
         let key: i32 = 99;
@@ -51,7 +51,7 @@ test!("test_lfind_not_found" {
 
 test!("test_lfind_empty" {
     // 测试 lfind 在空数组中始终返回 null。
-    unsafe {
+    {
         let arr: [i32; 0] = [];
         let mut n: usize = 0;
         let key: i32 = 1;
@@ -69,7 +69,7 @@ test!("test_lfind_empty" {
 
 test!("test_lsearch_finds_existing" {
     // 测试 lsearch 找到已存在的元素（不追加）。
-    unsafe {
+    {
         let mut arr = [10i32, 20, 30, 40, 50];
         let mut n: usize = 5;
         let key: i32 = 20;
@@ -88,7 +88,7 @@ test!("test_lsearch_finds_existing" {
 
 test!("test_lsearch_adds_new" {
     // 测试 lsearch 在未找到时将 key 追加到数组末尾。
-    unsafe {
+    {
         // 预留空间给新元素
         let mut storage = [10i32, 20, 30, 0];
         let mut n: usize = 3;
@@ -108,7 +108,7 @@ test!("test_lsearch_adds_new" {
 
 test!("test_lsearch_empty" {
     // 测试 lsearch 在空数组中追加。
-    unsafe {
+    {
         let mut storage = [0i32];
         let mut n: usize = 0;
         let key: i32 = 42;
@@ -127,7 +127,7 @@ test!("test_lsearch_empty" {
 
 test!("test_lsearch_then_lfind" {
     // 测试 lsearch 与 lfind 配合使用（先追加再查找）。
-    unsafe {
+    {
         let mut storage = [1i32, 2, 3, 0];
         let mut n: usize = 3;
 
@@ -155,7 +155,7 @@ test!("test_lsearch_then_lfind" {
 
 test!("test_lfind_first_match" {
     // 测试具有相同值的多个元素（返回第一个匹配）。
-    unsafe {
+    {
         let arr = [5i32, 5, 5];
         let mut n: usize = 3;
         let key: i32 = 5;
@@ -185,7 +185,7 @@ test!("test_lsearch_struct" {
         if pa.x < pb.x { -1 } else if pa.x > pb.x { 1 } else { 0 }
     }
 
-    unsafe {
+    {
         let mut storage = [
             Pair { x: 1, y: 10 },
             Pair { x: 2, y: 20 },

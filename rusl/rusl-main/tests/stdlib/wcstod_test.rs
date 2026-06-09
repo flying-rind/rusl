@@ -28,7 +28,7 @@ macro_rules! wide_str {
 // ---- wcstod 测试 ----
 
 test!("test_wcstod_basic" {
-    unsafe {
+    {
         let ws = wide_str!("3.14159");
         let mut endptr: *mut wchar_t = core::ptr::null_mut();
         let result = wcstod(ws.as_ptr(), &mut endptr as *mut *mut wchar_t);
@@ -37,7 +37,7 @@ test!("test_wcstod_basic" {
 });
 
 test!("test_wcstod_negative" {
-    unsafe {
+    {
         let ws = wide_str!("-2.5");
         let result = wcstod(ws.as_ptr(), core::ptr::null_mut());
         assert!((result - (-2.5)).abs() < 1e-10);
@@ -45,7 +45,7 @@ test!("test_wcstod_negative" {
 });
 
 test!("test_wcstod_scientific" {
-    unsafe {
+    {
         let ws = wide_str!("1.5e2");
         let result = wcstod(ws.as_ptr(), core::ptr::null_mut());
         assert!((result - 150.0).abs() < 1e-10);
@@ -53,7 +53,7 @@ test!("test_wcstod_scientific" {
 });
 
 test!("test_wcstod_inf" {
-    unsafe {
+    {
         let ws = wide_str!("inf");
         let result = wcstod(ws.as_ptr(), core::ptr::null_mut());
         assert!(result.is_infinite());
@@ -61,7 +61,7 @@ test!("test_wcstod_inf" {
 });
 
 test!("test_wcstod_nan" {
-    unsafe {
+    {
         let ws = wide_str!("nan");
         let result = wcstod(ws.as_ptr(), core::ptr::null_mut());
         assert!(result.is_nan());
@@ -69,7 +69,7 @@ test!("test_wcstod_nan" {
 });
 
 test!("test_wcstod_no_conversion" {
-    unsafe {
+    {
         let ws = wide_str!("abc");
         let mut endptr: *mut wchar_t = core::ptr::null_mut();
         let result = wcstod(ws.as_ptr(), &mut endptr as *mut *mut wchar_t);
@@ -89,7 +89,7 @@ test!("test_wcstod_endptr" {
 });
 
 test!("test_wcstod_zero" {
-    unsafe {
+    {
         let ws = wide_str!("0.0");
         let result = wcstod(ws.as_ptr(), core::ptr::null_mut());
         assert_eq!(result, 0.0);
@@ -97,7 +97,7 @@ test!("test_wcstod_zero" {
 });
 
 test!("test_wcstod_leading_whitespace" {
-    unsafe {
+    {
         let ws = wide_str!("  \t\n-1.5");
         let result = wcstod(ws.as_ptr(), core::ptr::null_mut());
         assert!((result - (-1.5)).abs() < 1e-10);
@@ -107,7 +107,7 @@ test!("test_wcstod_leading_whitespace" {
 // ---- wcstof 测试 ----
 
 test!("test_wcstof_basic" {
-    unsafe {
+    {
         let ws = wide_str!("3.14");
         let result = wcstof(ws.as_ptr(), core::ptr::null_mut());
         assert!((result - 3.14f32).abs() < 1e-6);
@@ -115,7 +115,7 @@ test!("test_wcstof_basic" {
 });
 
 test!("test_wcstof_inf" {
-    unsafe {
+    {
         let ws = wide_str!("-inf");
         let result = wcstof(ws.as_ptr(), core::ptr::null_mut());
         assert!(result.is_infinite());
@@ -124,7 +124,7 @@ test!("test_wcstof_inf" {
 });
 
 test!("test_wcstof_no_conversion" {
-    unsafe {
+    {
         let ws = wide_str!("xyz");
         let mut endptr: *mut wchar_t = core::ptr::null_mut();
         let result = wcstof(ws.as_ptr(), &mut endptr as *mut *mut wchar_t);
@@ -134,7 +134,7 @@ test!("test_wcstof_no_conversion" {
 });
 
 test!("test_wcstof_zero" {
-    unsafe {
+    {
         let ws = wide_str!("0");
         let result = wcstof(ws.as_ptr(), core::ptr::null_mut());
         assert_eq!(result, 0.0);

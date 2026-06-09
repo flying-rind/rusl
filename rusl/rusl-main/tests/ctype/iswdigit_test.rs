@@ -49,12 +49,12 @@ test!("test_c_int_size" {
 
 // `iswdigit` 当前为 `todo!()`, 调用应 panic。
 test!("test_iswdigit_panics" {
-    unsafe { iswdigit(0x30); }
+    { iswdigit(0x30); }
 });
 
 // `iswdigit_l` 当前为 `todo!()`, 调用应 panic。
 test!("test_iswdigit_l_panics" {
-    unsafe { iswdigit_l(0x30, core::ptr::null_mut()); }
+    { iswdigit_l(0x30, core::ptr::null_mut()); }
 });
 
 // ============================================================================
@@ -63,50 +63,50 @@ test!("test_iswdigit_l_panics" {
 
 // 推测: '0' (U+0030) 是数字。
 test!("test_iswdigit_zero" {
-    unsafe { iswdigit(0x30); }
+    { iswdigit(0x30); }
 });
 
 // 推测: '9' (U+0039) 是数字。
 test!("test_iswdigit_nine" {
-    unsafe { iswdigit(0x39); }
+    { iswdigit(0x39); }
 });
 
 // 推测: '5' (U+0035) 是数字。
 test!("test_iswdigit_five" {
-    unsafe { iswdigit(0x35); }
+    { iswdigit(0x35); }
 });
 
 // 推测: '/' (U+002F, '0' 前一字符) 不是数字。
 test!("test_iswdigit_slash" {
-    unsafe { iswdigit(0x2F); }
+    { iswdigit(0x2F); }
 });
 
 // 推测: ':' (U+003A, '9' 后一字符) 不是数字。
 test!("test_iswdigit_colon" {
-    unsafe { iswdigit(0x3A); }
+    { iswdigit(0x3A); }
 });
 
 // 推测: 'A' (U+0041) 不是数字。
 test!("test_iswdigit_letter" {
-    unsafe { iswdigit(0x41); }
+    { iswdigit(0x41); }
 });
 
 // 推测: 阿拉伯数字 U+0660 在 C locale 下不是数字。
 test!("test_iswdigit_arabic_zero" {
-    unsafe { iswdigit(0x0660); }
+    { iswdigit(0x0660); }
 });
 
 // 推测: WEOF 不是数字。
 test!("test_iswdigit_weof" {
-    unsafe { iswdigit(wint_t::MAX); }
+    { iswdigit(wint_t::MAX); }
 });
 
 // 推测: 空格 (U+0020) 不是数字。
 test!("test_iswdigit_space" {
-    unsafe { iswdigit(0x20); }
+    { iswdigit(0x20); }
 });
 
 // 推测: `iswdigit_l(NULL)` 与 `iswdigit` 行为等价。
 test!("test_iswdigit_l_null" {
-    unsafe { iswdigit_l(0x30, core::ptr::null_mut()); }
+    { iswdigit_l(0x30, core::ptr::null_mut()); }
 });

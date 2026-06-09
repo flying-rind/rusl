@@ -37,12 +37,12 @@ test!("test_iswgraph_l_linkage" {
 
 // `iswgraph` 当前为 `todo!()`, 调用应 panic。
 test!("test_iswgraph_panics" {
-    unsafe { iswgraph(0x41); }
+    { iswgraph(0x41); }
 });
 
 // `iswgraph_l` 当前为 `todo!()`, 调用应 panic。
 test!("test_iswgraph_l_panics" {
-    unsafe { iswgraph_l(0x41, core::ptr::null_mut()); }
+    { iswgraph_l(0x41, core::ptr::null_mut()); }
 });
 
 // ============================================================================
@@ -51,50 +51,50 @@ test!("test_iswgraph_l_panics" {
 
 // 推测: 字母 'A' 是图形字符。
 test!("test_iswgraph_letter" {
-    unsafe { iswgraph(0x41); }
+    { iswgraph(0x41); }
 });
 
 // 推测: 数字 '0' 是图形字符。
 test!("test_iswgraph_digit" {
-    unsafe { iswgraph(0x30); }
+    { iswgraph(0x30); }
 });
 
 // 推测: 标点 '!' 是图形字符。
 test!("test_iswgraph_punctuation" {
-    unsafe { iswgraph(0x21); }
+    { iswgraph(0x21); }
 });
 
 // 推测: 空格 (U+0020) 不是图形字符 (虽然可打印但是空白)。
 test!("test_iswgraph_space" {
-    unsafe { iswgraph(0x20); }
+    { iswgraph(0x20); }
 });
 
 // 推测: 制表符 (U+0009) 不是图形字符 (控制字符)。
 test!("test_iswgraph_tab" {
-    unsafe { iswgraph(0x09); }
+    { iswgraph(0x09); }
 });
 
 // 推测: 换行符 (U+000A) 不是图形字符。
 test!("test_iswgraph_newline" {
-    unsafe { iswgraph(0x0A); }
+    { iswgraph(0x0A); }
 });
 
 // 推测: DEL (U+007F) 不是图形字符。
 test!("test_iswgraph_del" {
-    unsafe { iswgraph(0x7F); }
+    { iswgraph(0x7F); }
 });
 
 // 推测: WEOF 不是图形字符。
 test!("test_iswgraph_weof" {
-    unsafe { iswgraph(wint_t::MAX); }
+    { iswgraph(wint_t::MAX); }
 });
 
 // 推测: 中文字符 U+4E2D 是图形字符。
 test!("test_iswgraph_cjk" {
-    unsafe { iswgraph(0x4E2D); }
+    { iswgraph(0x4E2D); }
 });
 
 // 推测: `iswgraph_l(NULL)` 与 `iswgraph` 等价。
 test!("test_iswgraph_l_null" {
-    unsafe { iswgraph_l(0x41, core::ptr::null_mut()); }
+    { iswgraph_l(0x41, core::ptr::null_mut()); }
 });

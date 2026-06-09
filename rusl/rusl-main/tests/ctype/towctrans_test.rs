@@ -11,7 +11,7 @@ use super::*;
 
 // 测试: ASCII 大写字母 'A'-'Z' 正确转换为小写
 test!("integration_test_towlower_ascii_uppercase_to_lowercase" {
-    unsafe {
+    {
         for ch in b'A'..=b'Z' {
             let expected = (ch + 32) as wint_t;
             assert_eq!(
@@ -27,7 +27,7 @@ test!("integration_test_towlower_ascii_uppercase_to_lowercase" {
 
 // 测试: ASCII 小写字母 'a'-'z' 保持不变
 test!("integration_test_towlower_ascii_lowercase_unchanged" {
-    unsafe {
+    {
         for ch in b'a'..=b'z' {
             assert_eq!(
                 towlower(ch as wint_t),
@@ -41,7 +41,7 @@ test!("integration_test_towlower_ascii_lowercase_unchanged" {
 
 // 测试: 数字 '0'-'9' 保持不变
 test!("integration_test_towlower_digits_unchanged" {
-    unsafe {
+    {
         for ch in b'0'..=b'9' {
             assert_eq!(
                 towlower(ch as wint_t),
@@ -55,14 +55,14 @@ test!("integration_test_towlower_digits_unchanged" {
 
 // 测试: WEOF 保持不变
 test!("integration_test_towlower_weof_unchanged" {
-    unsafe {
+    {
         assert_eq!(towlower(WEOF), WEOF);
     }
 });
 
 // 测试: null 字符 (0) 保持不变
 test!("integration_test_towlower_null_char" {
-    unsafe {
+    {
         assert_eq!(towlower(0), 0);
     }
 });
@@ -70,7 +70,7 @@ test!("integration_test_towlower_null_char" {
 // 测试: Unicode Latin 扩展大写字母转换
 // 例如 U+00C0 (LATIN CAPITAL LETTER A WITH GRAVE) -> U+00E0
 test!("integration_test_towlower_latin_extended" {
-    unsafe {
+    {
         // LATIN CAPITAL LETTER A WITH GRAVE (U+00C0) -> U+00E0
         assert_eq!(towlower(0x00C0), 0x00E0,
             "towlower(U+00C0) 应返回 U+00E0");
@@ -86,7 +86,7 @@ test!("integration_test_towlower_latin_extended" {
 
 // 测试: ASCII 小写字母 'a'-'z' 正确转换为大写
 test!("integration_test_towupper_ascii_lowercase_to_uppercase" {
-    unsafe {
+    {
         for ch in b'a'..=b'z' {
             let expected = (ch - 32) as wint_t;
             assert_eq!(
@@ -102,7 +102,7 @@ test!("integration_test_towupper_ascii_lowercase_to_uppercase" {
 
 // 测试: ASCII 大写字母 'A'-'Z' 保持不变
 test!("integration_test_towupper_ascii_uppercase_unchanged" {
-    unsafe {
+    {
         for ch in b'A'..=b'Z' {
             assert_eq!(
                 towupper(ch as wint_t),
@@ -116,14 +116,14 @@ test!("integration_test_towupper_ascii_uppercase_unchanged" {
 
 // 测试: WEOF 保持不变
 test!("integration_test_towupper_weof_unchanged" {
-    unsafe {
+    {
         assert_eq!(towupper(WEOF), WEOF);
     }
 });
 
 // 测试: null 字符 (0) 保持不变
 test!("integration_test_towupper_null_char" {
-    unsafe {
+    {
         assert_eq!(towupper(0), 0);
     }
 });
@@ -131,7 +131,7 @@ test!("integration_test_towupper_null_char" {
 // 测试: Unicode Latin 扩展小写字母转换
 // 例如 U+00E0 (LATIN SMALL LETTER A WITH GRAVE) -> U+00C0
 test!("integration_test_towupper_latin_extended" {
-    unsafe {
+    {
         // LATIN SMALL LETTER A WITH GRAVE (U+00E0) -> U+00C0
         assert_eq!(towupper(0x00E0), 0x00C0,
             "towupper(U+00E0) 应返回 U+00C0");
@@ -147,7 +147,7 @@ test!("integration_test_towupper_latin_extended" {
 
 // 测试: towlower_l 与 towlower 对 ASCII 大写字母行为一致
 test!("integration_test_towlower_l_uppercase" {
-    unsafe {
+    {
         let null_locale: *mut c_void = core::ptr::null_mut();
         for ch in b'A'..=b'Z' {
             let expected = (ch + 32) as wint_t;
@@ -164,7 +164,7 @@ test!("integration_test_towlower_l_uppercase" {
 
 // 测试: towlower_l 对 WEOF 保持不变
 test!("integration_test_towlower_l_weof" {
-    unsafe {
+    {
         let null_locale: *mut c_void = core::ptr::null_mut();
         assert_eq!(towlower_l(WEOF, null_locale), WEOF);
     }
@@ -172,7 +172,7 @@ test!("integration_test_towlower_l_weof" {
 
 // 测试: towupper_l 与 towupper 对 ASCII 小写字母行为一致
 test!("integration_test_towupper_l_lowercase" {
-    unsafe {
+    {
         let null_locale: *mut c_void = core::ptr::null_mut();
         for ch in b'a'..=b'z' {
             let expected = (ch - 32) as wint_t;
@@ -189,7 +189,7 @@ test!("integration_test_towupper_l_lowercase" {
 
 // 测试: towupper_l 对 WEOF 保持不变
 test!("integration_test_towupper_l_weof" {
-    unsafe {
+    {
         let null_locale: *mut c_void = core::ptr::null_mut();
         assert_eq!(towupper_l(WEOF, null_locale), WEOF);
     }
@@ -197,7 +197,7 @@ test!("integration_test_towupper_l_weof" {
 
 // 测试: towlower_l 忽略 locale 参数
 test!("integration_test_towlower_l_ignores_locale" {
-    unsafe {
+    {
         let dummy: u32 = 0xDEAD;
         let dummy_ptr: *mut c_void = &dummy as *const u32 as *mut c_void;
         let result_null = towlower_l(b'A' as wint_t, core::ptr::null_mut());
@@ -208,7 +208,7 @@ test!("integration_test_towlower_l_ignores_locale" {
 
 // 测试: towupper_l 忽略 locale 参数
 test!("integration_test_towupper_l_ignores_locale" {
-    unsafe {
+    {
         let dummy: u32 = 0xBEEF;
         let dummy_ptr: *mut c_void = &dummy as *const u32 as *mut c_void;
         let result_null = towupper_l(b'a' as wint_t, core::ptr::null_mut());
@@ -223,7 +223,7 @@ test!("integration_test_towupper_l_ignores_locale" {
 
 // 测试: towlower 是幂等的（对已经是小写的字符再次调用不变）
 test!("integration_test_towlower_idempotent" {
-    unsafe {
+    {
         for ch in b'A'..=b'Z' {
             let lower = towlower(ch as wint_t);
             let lower_again = towlower(lower);
@@ -236,7 +236,7 @@ test!("integration_test_towlower_idempotent" {
 
 // 测试: towupper 是幂等的
 test!("integration_test_towupper_idempotent" {
-    unsafe {
+    {
         for ch in b'a'..=b'z' {
             let upper = towupper(ch as wint_t);
             let upper_again = towupper(upper);
@@ -249,7 +249,7 @@ test!("integration_test_towupper_idempotent" {
 
 // 测试: towlower 后 towupper 应还原大写字母
 test!("integration_test_towlower_towupper_roundtrip" {
-    unsafe {
+    {
         for ch in b'A'..=b'Z' {
             let lower = towlower(ch as wint_t);
             let back = towupper(lower);
@@ -262,7 +262,7 @@ test!("integration_test_towlower_towupper_roundtrip" {
 
 // 测试: CJK Extension B 及以上码点无大小写
 test!("integration_test_towlower_towupper_cjk_ext_b" {
-    unsafe {
+    {
         // CJK Extension B 起始: U+20000
         let cjk: wint_t = 0x20000;
         assert_eq!(towlower(cjk), cjk,

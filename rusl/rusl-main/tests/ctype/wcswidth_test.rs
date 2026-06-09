@@ -84,7 +84,7 @@ test!("test_wcswidth_fn_ptr_callable" {
 
 // `wcswidth` 当前为 `todo!()`, 调用应 panic。
 test!("test_wcswidth_panics_on_todo" {
-    unsafe {
+    {
         let wcs: [wchar_t; 1] = [0];
         wcswidth(wcs.as_ptr(), 1);
     }
@@ -92,7 +92,7 @@ test!("test_wcswidth_panics_on_todo" {
 
 // `wcswidth` 传入空字符串也应 panic (尚未实现)。
 test!("test_wcswidth_empty_string_panics" {
-    unsafe {
+    {
         let wcs: [wchar_t; 1] = [0];
         wcswidth(wcs.as_ptr(), 10);
     }
@@ -100,7 +100,7 @@ test!("test_wcswidth_empty_string_panics" {
 
 // `wcswidth` 传入 n=0 也应 panic (尚未实现)。
 test!("test_wcswidth_zero_limit_panics" {
-    unsafe {
+    {
         let wcs: [wchar_t; 3] = [0x41, 0x42, 0]; // "AB"
         wcswidth(wcs.as_ptr(), 0);
     }
@@ -116,7 +116,7 @@ test!("test_wcswidth_zero_limit_panics" {
 //
 // C 标准: wcswidth(L"", 10) -> 0
 test!("test_wcswidth_spec_empty_string" {
-    unsafe {
+    {
         let wcs: [wchar_t; 1] = [0];
         let result = wcswidth(wcs.as_ptr(), 10);
         assert_eq!(result, 0, "空字符串应返回 0");
@@ -125,7 +125,7 @@ test!("test_wcswidth_spec_empty_string" {
 
 // 推测: n=0 时不检查任何字符, 返回 0。
 test!("test_wcswidth_spec_zero_limit" {
-    unsafe {
+    {
         let wcs: [wchar_t; 3] = [0x41, 0x42, 0]; // "AB"
         let result = wcswidth(wcs.as_ptr(), 0);
         assert_eq!(result, 0, "n=0 时应返回 0");
@@ -134,7 +134,7 @@ test!("test_wcswidth_spec_zero_limit" {
 
 // 推测: 单个 ASCII 字符 "A" 返回 1。
 test!("test_wcswidth_spec_single_ascii" {
-    unsafe {
+    {
         let wcs: [wchar_t; 2] = [0x41, 0]; // "A"
         let result = wcswidth(wcs.as_ptr(), 10);
         assert_eq!(result, 1, "\"A\" 的列宽应为 1");
@@ -143,7 +143,7 @@ test!("test_wcswidth_spec_single_ascii" {
 
 // 推测: ASCII 字符串 "Hello" 应返回 5。
 test!("test_wcswidth_spec_hello" {
-    unsafe {
+    {
         let wcs: [wchar_t; 6] = [0x48, 0x65, 0x6C, 0x6C, 0x6F, 0]; // "Hello"
         let result = wcswidth(wcs.as_ptr(), 10);
         assert_eq!(result, 5, "\"Hello\" 的列宽应为 5");
@@ -152,7 +152,7 @@ test!("test_wcswidth_spec_hello" {
 
 // 推测: CJK 字符串 "中文" 应返回 4 (每字 2 列宽)。
 test!("test_wcswidth_spec_cjk_string" {
-    unsafe {
+    {
         // U+4E2D '中' (2 列宽), U+6587 '文' (2 列宽)
         let wcs: [wchar_t; 3] = [0x4E2D, 0x6587, 0];
         let result = wcswidth(wcs.as_ptr(), 10);
@@ -162,7 +162,7 @@ test!("test_wcswidth_spec_cjk_string" {
 
 // 推测: 混合 ASCII 和 CJK 字符串应正确累加。
 test!("test_wcswidth_spec_mixed_ascii_cjk" {
-    unsafe {
+    {
         // "A中" -> 'A' (1) + U+4E2D '中' (2) = 3
         let wcs: [wchar_t; 3] = [0x41, 0x4E2D, 0];
         let result = wcswidth(wcs.as_ptr(), 10);
@@ -172,7 +172,7 @@ test!("test_wcswidth_spec_mixed_ascii_cjk" {
 
 // 推测: n 限制字符数, 只累加前 n 个字符。
 test!("test_wcswidth_spec_limit_n_chars" {
-    unsafe {
+    {
         let wcs: [wchar_t; 4] = [0x41, 0x42, 0x43, 0]; // "ABC"
                                                        // n=2, 只数前 2 个字符
         let result = wcswidth(wcs.as_ptr(), 2);
@@ -184,7 +184,7 @@ test!("test_wcswidth_spec_limit_n_chars" {
 
 // 推测: 在 null 终止符处停止, 即使 n 更大。
 test!("test_wcswidth_spec_stops_at_null" {
-    unsafe {
+    {
         let wcs: [wchar_t; 3] = [0x41, 0, 0x42]; // "A\0B"
         let result = wcswidth(wcs.as_ptr(), 5);
         // 应在 'A' 之后遇至 null 终止符停止
@@ -194,7 +194,7 @@ test!("test_wcswidth_spec_stops_at_null" {
 
 // 推测: 首个字符就是 null 时立即返回 0。
 test!("test_wcswidth_spec_first_char_null" {
-    unsafe {
+    {
         let wcs: [wchar_t; 3] = [0, 0x41, 0x42];
         let result = wcswidth(wcs.as_ptr(), 5);
         assert_eq!(result, 0, "首个字符为 null 时应返回 0");
@@ -207,7 +207,7 @@ test!("test_wcswidth_spec_first_char_null" {
 //
 // spec: wcwidth 对控制字符返回 -1 -> wcswidth 提前终止返回 -1
 test!("test_wcswidth_spec_c0_control_returns_minus_1" {
-    unsafe {
+    {
         let wcs: [wchar_t; 2] = [0x01, 0]; // U+0001 SOH (控制字符)
         let result = wcswidth(wcs.as_ptr(), 10);
         assert_eq!(result, -1, "遇到 U+0001 应返回 -1");
@@ -216,7 +216,7 @@ test!("test_wcswidth_spec_c0_control_returns_minus_1" {
 
 // 推测: DEL 字符 (U+007F) 导致返回 -1。
 test!("test_wcswidth_spec_del_returns_minus_1" {
-    unsafe {
+    {
         let wcs: [wchar_t; 2] = [0x7F, 0];
         let result = wcswidth(wcs.as_ptr(), 10);
         assert_eq!(result, -1, "遇到 U+007F 应返回 -1");
@@ -225,7 +225,7 @@ test!("test_wcswidth_spec_del_returns_minus_1" {
 
 // 推测: C1 控制字符 (U+009F APC) 导致返回 -1。
 test!("test_wcswidth_spec_c1_control_returns_minus_1" {
-    unsafe {
+    {
         let wcs: [wchar_t; 2] = [0x9F, 0]; // U+009F APC
         let result = wcswidth(wcs.as_ptr(), 10);
         assert_eq!(result, -1, "遇到 U+009F 应返回 -1");
@@ -234,7 +234,7 @@ test!("test_wcswidth_spec_c1_control_returns_minus_1" {
 
 // 推测: 非字符码点 (U+FFFE) 导致返回 -1。
 test!("test_wcswidth_spec_nonchar_returns_minus_1" {
-    unsafe {
+    {
         let wcs: [wchar_t; 2] = [0xFFFE_i32, 0];
         let result = wcswidth(wcs.as_ptr(), 10);
         assert_eq!(result, -1, "遇到 U+FFFE 应返回 -1");
@@ -243,7 +243,7 @@ test!("test_wcswidth_spec_nonchar_returns_minus_1" {
 
 // 推测: 首个字符可打印、后继不可打印, 提前终止返回 -1。
 test!("test_wcswidth_spec_printable_then_non_printable" {
-    unsafe {
+    {
         // 'A' (可打印) 后跟 U+0001 (不可打印)
         let wcs: [wchar_t; 3] = [0x41, 0x01, 0];
         let result = wcswidth(wcs.as_ptr(), 10);
@@ -255,7 +255,7 @@ test!("test_wcswidth_spec_printable_then_non_printable" {
 
 // 推测: 组合字符 (U+0300 COMBINING GRAVE) 列宽为 0, 不影响累加。
 test!("test_wcswidth_spec_combining_char_zero_width" {
-    unsafe {
+    {
         let wcs: [wchar_t; 3] = [0x41, 0x0300, 0]; // "A" + combining grave
         let result = wcswidth(wcs.as_ptr(), 10);
         // 'A'=1 + combining grave=0 = 1
@@ -267,7 +267,7 @@ test!("test_wcswidth_spec_combining_char_zero_width" {
 
 // 推测: 全角字符 (U+FF01 FULLWIDTH EXCLAMATION MARK) 返回 2。
 test!("test_wcswidth_spec_fullwidth_returns_2" {
-    unsafe {
+    {
         let wcs: [wchar_t; 2] = [0xFF01_i32, 0];
         let result = wcswidth(wcs.as_ptr(), 10);
         assert_eq!(result, 2, "全角字符列宽应为 2");
@@ -276,7 +276,7 @@ test!("test_wcswidth_spec_fullwidth_returns_2" {
 
 // 推测: 全角数字 (U+FF10 FULLWIDTH DIGIT ZERO) 返回 2。
 test!("test_wcswidth_spec_fullwidth_digit_returns_2" {
-    unsafe {
+    {
         let wcs: [wchar_t; 2] = [0xFF10_i32, 0];
         let result = wcswidth(wcs.as_ptr(), 10);
         assert_eq!(result, 2, "全角数字列宽应为 2");
@@ -287,7 +287,7 @@ test!("test_wcswidth_spec_fullwidth_digit_returns_2" {
 
 // 推测: 返回值仅可能为 >= 0 (累加列宽) 或 -1 (遇到不可打印)。
 test!("test_wcswidth_spec_return_range" {
-    unsafe {
+    {
         // 测试典型码点的组合
         let test_strings: &[&[wchar_t]] = &[
             &[0],                   // 空字符串
@@ -313,7 +313,7 @@ test!("test_wcswidth_spec_return_range" {
 
 // 推测: 有 null 终止符时, 传入极大 n 值应安全停止。
 test!("test_wcswidth_spec_large_n_with_null" {
-    unsafe {
+    {
         let wcs: [wchar_t; 3] = [0x41, 0x42, 0];
         let result = wcswidth(wcs.as_ptr(), size_t::MAX);
         // 应在 'B' 后遇至 null 停止

@@ -4,7 +4,7 @@ use test_framework::test;
 
 
 test!("test_basic_zero" {
-    unsafe {
+    {
         let mut buf = [0xFFu8; 10];
         bzero(buf.as_mut_ptr() as *mut c_void, 10);
         assert_eq!(buf, [0u8; 10]);
@@ -12,7 +12,7 @@ test!("test_basic_zero" {
 });
 
 test!("test_zero_length" {
-    unsafe {
+    {
         let mut buf = [0xFFu8; 5];
         bzero(buf.as_mut_ptr() as *mut c_void, 0);
         assert_eq!(buf, [0xFFu8; 5]);

@@ -22,7 +22,7 @@ test!("test_strtol_decimal" {
 });
 
 test!("test_strtol_negative" {
-    unsafe {
+    {
         let s = b"-6789\0".as_ptr() as *const c_char;
         let result = strtol(s, core::ptr::null_mut(), 10);
         assert_eq!(result, -6789);
@@ -30,7 +30,7 @@ test!("test_strtol_negative" {
 });
 
 test!("test_strtol_hex" {
-    unsafe {
+    {
         let s = b"ff\0".as_ptr() as *const c_char;
         let result = strtol(s, core::ptr::null_mut(), 16);
         assert_eq!(result, 255);
@@ -38,7 +38,7 @@ test!("test_strtol_hex" {
 });
 
 test!("test_strtol_octal" {
-    unsafe {
+    {
         let s = b"77\0".as_ptr() as *const c_char;
         let result = strtol(s, core::ptr::null_mut(), 8);
         assert_eq!(result, 63);
@@ -46,7 +46,7 @@ test!("test_strtol_octal" {
 });
 
 test!("test_strtol_binary" {
-    unsafe {
+    {
         let s = b"1010\0".as_ptr() as *const c_char;
         let result = strtol(s, core::ptr::null_mut(), 2);
         assert_eq!(result, 10);
@@ -54,7 +54,7 @@ test!("test_strtol_binary" {
 });
 
 test!("test_strtol_auto_hex" {
-    unsafe {
+    {
         let s = b"0xff\0".as_ptr() as *const c_char;
         let result = strtol(s, core::ptr::null_mut(), 0);
         assert_eq!(result, 255);
@@ -62,7 +62,7 @@ test!("test_strtol_auto_hex" {
 });
 
 test!("test_strtol_auto_octal" {
-    unsafe {
+    {
         let s = b"077\0".as_ptr() as *const c_char;
         let result = strtol(s, core::ptr::null_mut(), 0);
         assert_eq!(result, 63);
@@ -70,7 +70,7 @@ test!("test_strtol_auto_octal" {
 });
 
 test!("test_strtol_auto_decimal" {
-    unsafe {
+    {
         let s = b"123\0".as_ptr() as *const c_char;
         let result = strtol(s, core::ptr::null_mut(), 0);
         assert_eq!(result, 123);
@@ -78,7 +78,7 @@ test!("test_strtol_auto_decimal" {
 });
 
 test!("test_strtol_leading_whitespace" {
-    unsafe {
+    {
         let s = b"  \t\n42\0".as_ptr() as *const c_char;
         let result = strtol(s, core::ptr::null_mut(), 10);
         assert_eq!(result, 42);
@@ -86,7 +86,7 @@ test!("test_strtol_leading_whitespace" {
 });
 
 test!("test_strtol_no_digits" {
-    unsafe {
+    {
         let s = b"abc\0".as_ptr() as *const c_char;
         let mut endptr: *mut c_char = core::ptr::null_mut();
         let result = strtol(s, &mut endptr as *mut *mut c_char, 10);
@@ -106,7 +106,7 @@ test!("test_strtol_endptr" {
 });
 
 test!("test_strtol_overflow_positive" {
-    unsafe {
+    {
         let s = b"99999999999999999999999999999\0".as_ptr() as *const c_char;
         let result = strtol(s, core::ptr::null_mut(), 10);
         assert_eq!(result, i64::MAX);
@@ -114,7 +114,7 @@ test!("test_strtol_overflow_positive" {
 });
 
 test!("test_strtol_overflow_negative" {
-    unsafe {
+    {
         let s = b"-99999999999999999999999999999\0".as_ptr() as *const c_char;
         let result = strtol(s, core::ptr::null_mut(), 10);
         assert_eq!(result, i64::MIN);
@@ -122,7 +122,7 @@ test!("test_strtol_overflow_negative" {
 });
 
 test!("test_strtol_max_value" {
-    unsafe {
+    {
         let s = b"9223372036854775807\0".as_ptr() as *const c_char;
         let result = strtol(s, core::ptr::null_mut(), 10);
         assert_eq!(result, i64::MAX);
@@ -130,7 +130,7 @@ test!("test_strtol_max_value" {
 });
 
 test!("test_strtol_min_value" {
-    unsafe {
+    {
         let s = b"-9223372036854775808\0".as_ptr() as *const c_char;
         let result = strtol(s, core::ptr::null_mut(), 10);
         assert_eq!(result, i64::MIN);
@@ -138,7 +138,7 @@ test!("test_strtol_min_value" {
 });
 
 test!("test_strtol_zero" {
-    unsafe {
+    {
         let s = b"0\0".as_ptr() as *const c_char;
         let result = strtol(s, core::ptr::null_mut(), 10);
         assert_eq!(result, 0);
@@ -146,7 +146,7 @@ test!("test_strtol_zero" {
 });
 
 test!("test_strtol_positive_sign" {
-    unsafe {
+    {
         let s = b"+42\0".as_ptr() as *const c_char;
         let result = strtol(s, core::ptr::null_mut(), 10);
         assert_eq!(result, 42);
@@ -154,7 +154,7 @@ test!("test_strtol_positive_sign" {
 });
 
 test!("test_strtol_base36" {
-    unsafe {
+    {
         let s = b"zz\0".as_ptr() as *const c_char;
         let result = strtol(s, core::ptr::null_mut(), 36);
         assert_eq!(result, 35 * 36 + 35);
@@ -162,7 +162,7 @@ test!("test_strtol_base36" {
 });
 
 test!("test_strtol_null_endptr" {
-    unsafe {
+    {
         let s = b"123\0".as_ptr() as *const c_char;
         let result = strtol(s, core::ptr::null_mut(), 10);
         assert_eq!(result, 123);
@@ -172,7 +172,7 @@ test!("test_strtol_null_endptr" {
 // ---- strtoll 测试 ----
 
 test!("test_strtoll_basic" {
-    unsafe {
+    {
         let s = b"9876543210\0".as_ptr() as *const c_char;
         let result = strtoll(s, core::ptr::null_mut(), 10);
         assert_eq!(result, 9876543210);
@@ -180,7 +180,7 @@ test!("test_strtoll_basic" {
 });
 
 test!("test_strtoll_hex" {
-    unsafe {
+    {
         let s = b"0xabcdef\0".as_ptr() as *const c_char;
         let result = strtoll(s, core::ptr::null_mut(), 16);
         assert_eq!(result, 0xabcdef);
@@ -190,7 +190,7 @@ test!("test_strtoll_hex" {
 // ---- strtoul 测试 ----
 
 test!("test_strtoul_basic" {
-    unsafe {
+    {
         let s = b"12345\0".as_ptr() as *const c_char;
         let result = strtoul(s, core::ptr::null_mut(), 10);
         assert_eq!(result, 12345);
@@ -198,7 +198,7 @@ test!("test_strtoul_basic" {
 });
 
 test!("test_strtoul_negative" {
-    unsafe {
+    {
         let s = b"-1\0".as_ptr() as *const c_char;
         let mut endptr: *mut c_char = core::ptr::null_mut();
         let result = strtoul(s, &mut endptr as *mut *mut c_char, 10);
@@ -208,7 +208,7 @@ test!("test_strtoul_negative" {
 });
 
 test!("test_strtoul_u64_max" {
-    unsafe {
+    {
         let s = b"18446744073709551615\0".as_ptr() as *const c_char;
         let result = strtoul(s, core::ptr::null_mut(), 10);
         assert_eq!(result, u64::MAX);
@@ -216,7 +216,7 @@ test!("test_strtoul_u64_max" {
 });
 
 test!("test_strtoul_overflow" {
-    unsafe {
+    {
         let s = b"99999999999999999999999999999\0".as_ptr() as *const c_char;
         let result = strtoul(s, core::ptr::null_mut(), 10);
         assert_eq!(result, u64::MAX);
@@ -226,7 +226,7 @@ test!("test_strtoul_overflow" {
 // ---- strtoull 测试 ----
 
 test!("test_strtoull_basic" {
-    unsafe {
+    {
         let s = b"42\0".as_ptr() as *const c_char;
         let result = strtoull(s, core::ptr::null_mut(), 10);
         assert_eq!(result, 42);
@@ -236,7 +236,7 @@ test!("test_strtoull_basic" {
 // ---- strtoimax 测试 ----
 
 test!("test_strtoimax_basic" {
-    unsafe {
+    {
         let s = b"-123\0".as_ptr() as *const c_char;
         let result = strtoimax(s, core::ptr::null_mut(), 10);
         assert_eq!(result, -123);
@@ -244,7 +244,7 @@ test!("test_strtoimax_basic" {
 });
 
 test!("test_strtoimax_auto_hex" {
-    unsafe {
+    {
         let s = b"0x1A2B\0".as_ptr() as *const c_char;
         let result = strtoimax(s, core::ptr::null_mut(), 0);
         assert_eq!(result, 0x1A2B);
@@ -252,7 +252,7 @@ test!("test_strtoimax_auto_hex" {
 });
 
 test!("test_strtoimax_no_digits" {
-    unsafe {
+    {
         let s = b"xyz\0".as_ptr() as *const c_char;
         let mut endptr: *mut c_char = core::ptr::null_mut();
         let result = strtoimax(s, &mut endptr as *mut *mut c_char, 10);
@@ -264,7 +264,7 @@ test!("test_strtoimax_no_digits" {
 // ---- strtoumax 测试 ----
 
 test!("test_strtoumax_basic" {
-    unsafe {
+    {
         let s = b"255\0".as_ptr() as *const c_char;
         let result = strtoumax(s, core::ptr::null_mut(), 10);
         assert_eq!(result, 255);
@@ -272,7 +272,7 @@ test!("test_strtoumax_basic" {
 });
 
 test!("test_strtoumax_hex" {
-    unsafe {
+    {
         let s = b"ff\0".as_ptr() as *const c_char;
         let result = strtoumax(s, core::ptr::null_mut(), 16);
         assert_eq!(result, 255);

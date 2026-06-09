@@ -47,7 +47,7 @@ test!("test_clearenv_returns_zero" {
 
 test!("test_clearenv_return_value_after_setenv" {
     // 在有环境变量的情况下调用 clearenv，仍需返回 0。
-    unsafe {
+    {
         // 先设置一些变量
         assert_eq!(
             setenv(c"RUSL_PRE_A".as_ptr(), c"val_a".as_ptr(), 1),
@@ -90,7 +90,7 @@ test!("test_clearenv_many_times" {
 
 test!("test_clearenv_idempotent_empty_env" {
     // 先确保环境为空(getenv 返回 NULL)，再多次调用 clearenv。
-    unsafe {
+    {
         clearenv();
         // 验证确实为空
         assert!(getenv(c"PATH".as_ptr()).is_null());
@@ -108,7 +108,7 @@ test!("test_clearenv_idempotent_empty_env" {
 
 test!("test_getenv_null_after_clearenv" {
     // 调用 clearenv 后，getenv 应返回 NULL。
-    unsafe {
+    {
         clearenv();
         let result = getenv(c"PATH".as_ptr());
         assert!(result.is_null(), "clearenv 后 getenv(\"PATH\") 应为 NULL");
@@ -117,7 +117,7 @@ test!("test_getenv_null_after_clearenv" {
 
 test!("test_all_common_vars_null_after_clearenv" {
     // 验证 clearenv 后常见环境变量全部为 NULL。
-    unsafe {
+    {
         clearenv();
         let common_vars: [&CStr; 8] = [
             c"PATH", c"HOME", c"USER", c"SHELL",
@@ -134,7 +134,7 @@ test!("test_all_common_vars_null_after_clearenv" {
 
 test!("test_getenv_custom_var_null_after_clearenv" {
     // 先 setenv 创建自定义变量，然后 clearenv 后验证它也被清除。
-    unsafe {
+    {
         let name = c"RUSL_CUSTOM_TO_CLEAR";
 
         // 设置变量
@@ -153,7 +153,7 @@ test!("test_getenv_custom_var_null_after_clearenv" {
 
 test!("test_getenv_empty_string_after_clearenv" {
     // clearenv 后用空字符串作为 name 查询 getenv，返回 NULL。
-    unsafe {
+    {
         clearenv();
         assert!(getenv(c"".as_ptr()).is_null(),
             "空 name 查询在 clearenv 后应返回 NULL");
@@ -321,7 +321,7 @@ test!("test_clear_set_clear_with_multiple_vars" {
 
 test!("test_clearenv_on_already_empty_env" {
     // 多次 clearenv 使环境为空，再调用仍然返回 0 且不崩溃。
-    unsafe {
+    {
         // 首次清除
         clearenv();
         // 确认空环境
@@ -426,7 +426,7 @@ test!("test_setenv_after_clearenv_does_not_affect_errno" {
 test!("test_clearenv_many_custom_variables" {
     // 设置大量自定义变量，然后 clearenv 全部清除。
     // 验证 spec 中"遍历旧 __environ 数组"的逻辑不会导致越界或崩溃。
-    unsafe {
+    {
         // 设置 N 个变量 — 使用显式 null 终止符保证 C 字符串安全
         for i in 0..50 {
             let name_str = alloc::format!("RUSL_S{}\0", i);
@@ -467,7 +467,7 @@ test!("test_clearenv_many_custom_variables" {
 
 test!("test_clearenv_then_environ_is_empty" {
     // clearenv 后所有 getenv 查询返回 NULL (等价于 environ 为空)。
-    unsafe {
+    {
         clearenv();
 
         // 执行多个不同查询，均应为 NULL
@@ -483,7 +483,7 @@ test!("test_clearenv_then_environ_is_empty" {
 
 test!("test_clearenv_after_partial_clear" {
     // 先 setenv 多个变量，再 unsetenv 其中部分，最后 clearenv 清除剩余。
-    unsafe {
+    {
         clearenv();
 
         // 设置三个变量

@@ -13,7 +13,7 @@ test!("test_found" {
 });
 
 test!("test_not_found" {
-    unsafe {
+    {
         let haystack = [1u8, 2, 3]; let needle = [4u8, 5];
         let r = memmem(haystack.as_ptr() as *const c_void, 3, needle.as_ptr() as *const c_void, 2);
         assert!(r.is_null());
@@ -21,7 +21,7 @@ test!("test_not_found" {
 });
 
 test!("test_empty_needle" {
-    unsafe {
+    {
         let haystack = [1u8, 2, 3];
         let r = memmem(haystack.as_ptr() as *const c_void, 3, core::ptr::null::<c_void>(), 0);
         assert_eq!(r, haystack.as_ptr() as *mut c_void);

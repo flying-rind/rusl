@@ -25,14 +25,14 @@ unsafe fn make_node(key_val: i32, left: *mut c_void, right: *mut c_void, h: i32)
 
 test!("test_twalk_null_root" {
     // 测试行走 null 树（应无操作，不崩溃）。
-    unsafe {
+    {
         twalk(ptr::null(), None);
     }
 });
 
 test!("test_twalk_null_root_with_action" {
     // 测试行走 null 树并带 action（action 不应被调用）。
-    unsafe {
+    {
         unsafe extern "C" fn count_call(_node: *const c_void, _which: VISIT, _depth: i32) {
             // 不应到达此处
         }

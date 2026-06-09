@@ -4,7 +4,7 @@ use test_framework::test;
 
 
 test!("test_copy_until_c" {
-    unsafe {
+    {
         let src = [1u8, 2, 3, 4, 5]; let mut dst = [0u8; 5];
         let r = memccpy(dst.as_mut_ptr() as *mut c_void, src.as_ptr() as *const c_void, 3, 5);
         assert!(!r.is_null());
@@ -13,7 +13,7 @@ test!("test_copy_until_c" {
 });
 
 test!("test_not_found" {
-    unsafe {
+    {
         let src = [1u8, 2, 3]; let mut dst = [0u8; 5];
         let r = memccpy(dst.as_mut_ptr() as *mut c_void, src.as_ptr() as *const c_void, 99, 3);
         assert!(r.is_null());

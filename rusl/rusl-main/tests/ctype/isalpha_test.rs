@@ -66,14 +66,14 @@ test!("integration_test_or_32_converts_to_lowercase" {
 
 // isalpha 基本调用
 test!("integration_test_isalpha_basic" {
-    unsafe {
+    {
         let _r = isalpha(b'a' as c_int);
     }
 });
 
 // isalpha 小写字母 a-z
 test!("integration_test_isalpha_lowercase_range" {
-    unsafe {
+    {
         for c in b'a'..=b'z' {
             assert_ne!(isalpha(c as c_int), 0, "isalpha('{}') != 0", c as char);
         }
@@ -82,7 +82,7 @@ test!("integration_test_isalpha_lowercase_range" {
 
 // isalpha 大写字母 A-Z
 test!("integration_test_isalpha_uppercase_range" {
-    unsafe {
+    {
         for c in b'A'..=b'Z' {
             assert_ne!(isalpha(c as c_int), 0, "isalpha('{}') != 0", c as char);
         }
@@ -91,7 +91,7 @@ test!("integration_test_isalpha_uppercase_range" {
 
 // isalpha 数字返回 0
 test!("integration_test_isalpha_digits_zero" {
-    unsafe {
+    {
         for c in b'0'..=b'9' {
             assert_eq!(isalpha(c as c_int), 0, "isalpha('{}') == 0", c as char);
         }
@@ -100,14 +100,14 @@ test!("integration_test_isalpha_digits_zero" {
 
 // isalpha EOF 返回 0
 test!("integration_test_isalpha_eof" {
-    unsafe {
+    {
         assert_eq!(isalpha(-1), 0, "isalpha(EOF) == 0");
     }
 });
 
 // isalpha 边界测试
 test!("integration_test_isalpha_boundaries" {
-    unsafe {
+    {
         assert_eq!(isalpha(b'@' as c_int), 0, "'@' 在 'A' 前");
         assert_eq!(isalpha(b'[' as c_int), 0, "'[' 在 'Z' 后");
         assert_eq!(isalpha(b'`' as c_int), 0, "'`' 在 'a' 前");

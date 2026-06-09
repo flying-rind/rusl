@@ -38,7 +38,7 @@ test!("test_wcstol_decimal" {
 });
 
 test!("test_wcstol_negative" {
-    unsafe {
+    {
         let ws = wide_str!("-6789");
         let result = wcstol(ws.as_ptr(), core::ptr::null_mut(), 10);
         assert_eq!(result, -6789);
@@ -46,7 +46,7 @@ test!("test_wcstol_negative" {
 });
 
 test!("test_wcstol_hex" {
-    unsafe {
+    {
         let ws = wide_str!("ff");
         let result = wcstol(ws.as_ptr(), core::ptr::null_mut(), 16);
         assert_eq!(result, 255);
@@ -54,7 +54,7 @@ test!("test_wcstol_hex" {
 });
 
 test!("test_wcstol_auto_hex" {
-    unsafe {
+    {
         let ws = wide_str!("0xff");
         let result = wcstol(ws.as_ptr(), core::ptr::null_mut(), 0);
         assert_eq!(result, 255);
@@ -62,7 +62,7 @@ test!("test_wcstol_auto_hex" {
 });
 
 test!("test_wcstol_auto_octal" {
-    unsafe {
+    {
         let ws = wide_str!("077");
         let result = wcstol(ws.as_ptr(), core::ptr::null_mut(), 0);
         assert_eq!(result, 63);
@@ -70,7 +70,7 @@ test!("test_wcstol_auto_octal" {
 });
 
 test!("test_wcstol_auto_decimal" {
-    unsafe {
+    {
         let ws = wide_str!("123");
         let result = wcstol(ws.as_ptr(), core::ptr::null_mut(), 0);
         assert_eq!(result, 123);
@@ -78,7 +78,7 @@ test!("test_wcstol_auto_decimal" {
 });
 
 test!("test_wcstol_leading_whitespace" {
-    unsafe {
+    {
         let ws = wide_str!("  \t\n42");
         let result = wcstol(ws.as_ptr(), core::ptr::null_mut(), 10);
         assert_eq!(result, 42);
@@ -86,7 +86,7 @@ test!("test_wcstol_leading_whitespace" {
 });
 
 test!("test_wcstol_no_digits" {
-    unsafe {
+    {
         let ws = wide_str!("abc");
         let mut endptr: *mut wchar_t = core::ptr::null_mut();
         let result = wcstol(ws.as_ptr(), &mut endptr as *mut *mut wchar_t, 10);
@@ -106,7 +106,7 @@ test!("test_wcstol_endptr" {
 });
 
 test!("test_wcstol_overflow_positive" {
-    unsafe {
+    {
         let ws = wide_str!("99999999999999999999999999999");
         let result = wcstol(ws.as_ptr(), core::ptr::null_mut(), 10);
         assert_eq!(result, i64::MAX);
@@ -114,7 +114,7 @@ test!("test_wcstol_overflow_positive" {
 });
 
 test!("test_wcstol_overflow_negative" {
-    unsafe {
+    {
         let ws = wide_str!("-99999999999999999999999999999");
         let result = wcstol(ws.as_ptr(), core::ptr::null_mut(), 10);
         assert_eq!(result, i64::MIN);
@@ -122,7 +122,7 @@ test!("test_wcstol_overflow_negative" {
 });
 
 test!("test_wcstol_max_value" {
-    unsafe {
+    {
         let ws = wide_str!("9223372036854775807");
         let result = wcstol(ws.as_ptr(), core::ptr::null_mut(), 10);
         assert_eq!(result, i64::MAX);
@@ -130,7 +130,7 @@ test!("test_wcstol_max_value" {
 });
 
 test!("test_wcstol_min_value" {
-    unsafe {
+    {
         let ws = wide_str!("-9223372036854775808");
         let result = wcstol(ws.as_ptr(), core::ptr::null_mut(), 10);
         assert_eq!(result, i64::MIN);
@@ -138,7 +138,7 @@ test!("test_wcstol_min_value" {
 });
 
 test!("test_wcstol_zero" {
-    unsafe {
+    {
         let ws = wide_str!("0");
         let result = wcstol(ws.as_ptr(), core::ptr::null_mut(), 10);
         assert_eq!(result, 0);
@@ -148,7 +148,7 @@ test!("test_wcstol_zero" {
 // ---- wcstoll 测试 ----
 
 test!("test_wcstoll_basic" {
-    unsafe {
+    {
         let ws = wide_str!("9876543210");
         let result = wcstoll(ws.as_ptr(), core::ptr::null_mut(), 10);
         assert_eq!(result, 9876543210);
@@ -158,7 +158,7 @@ test!("test_wcstoll_basic" {
 // ---- wcstoul 测试 ----
 
 test!("test_wcstoul_basic" {
-    unsafe {
+    {
         let ws = wide_str!("12345");
         let result = wcstoul(ws.as_ptr(), core::ptr::null_mut(), 10);
         assert_eq!(result, 12345);
@@ -166,7 +166,7 @@ test!("test_wcstoul_basic" {
 });
 
 test!("test_wcstoul_u64_max" {
-    unsafe {
+    {
         let ws = wide_str!("18446744073709551615");
         let result = wcstoul(ws.as_ptr(), core::ptr::null_mut(), 10);
         assert_eq!(result, u64::MAX);
@@ -174,7 +174,7 @@ test!("test_wcstoul_u64_max" {
 });
 
 test!("test_wcstoul_overflow" {
-    unsafe {
+    {
         let ws = wide_str!("99999999999999999999999999999");
         let result = wcstoul(ws.as_ptr(), core::ptr::null_mut(), 10);
         assert_eq!(result, u64::MAX);
@@ -184,7 +184,7 @@ test!("test_wcstoul_overflow" {
 // ---- wcstoull 测试 ----
 
 test!("test_wcstoull_basic" {
-    unsafe {
+    {
         let ws = wide_str!("255");
         let result = wcstoull(ws.as_ptr(), core::ptr::null_mut(), 10);
         assert_eq!(result, 255);
@@ -194,7 +194,7 @@ test!("test_wcstoull_basic" {
 // ---- wcstoimax 测试 ----
 
 test!("test_wcstoimax_basic" {
-    unsafe {
+    {
         let ws = wide_str!("-123");
         let result = wcstoimax(ws.as_ptr(), core::ptr::null_mut(), 10);
         assert_eq!(result, -123);
@@ -202,7 +202,7 @@ test!("test_wcstoimax_basic" {
 });
 
 test!("test_wcstoimax_auto_hex" {
-    unsafe {
+    {
         let ws = wide_str!("0x1A2B");
         let result = wcstoimax(ws.as_ptr(), core::ptr::null_mut(), 0);
         assert_eq!(result, 0x1A2B);
@@ -210,7 +210,7 @@ test!("test_wcstoimax_auto_hex" {
 });
 
 test!("test_wcstoimax_no_digits" {
-    unsafe {
+    {
         let ws = wide_str!("xyz");
         let mut endptr: *mut wchar_t = core::ptr::null_mut();
         let result = wcstoimax(ws.as_ptr(), &mut endptr as *mut *mut wchar_t, 10);
@@ -222,7 +222,7 @@ test!("test_wcstoimax_no_digits" {
 // ---- wcstoumax 测试 ----
 
 test!("test_wcstoumax_basic" {
-    unsafe {
+    {
         let ws = wide_str!("255");
         let result = wcstoumax(ws.as_ptr(), core::ptr::null_mut(), 10);
         assert_eq!(result, 255);
@@ -230,7 +230,7 @@ test!("test_wcstoumax_basic" {
 });
 
 test!("test_wcstoumax_hex" {
-    unsafe {
+    {
         let ws = wide_str!("ff");
         let result = wcstoumax(ws.as_ptr(), core::ptr::null_mut(), 16);
         assert_eq!(result, 255);

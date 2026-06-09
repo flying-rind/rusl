@@ -4,7 +4,7 @@ use test_framework::test;
 
 
 test!("test_first_token" {
-    unsafe {
+    {
         let mut buf = *b"hello world\0";
         let sep = b" \0";
         let mut state: *mut c_char = core::ptr::null_mut();

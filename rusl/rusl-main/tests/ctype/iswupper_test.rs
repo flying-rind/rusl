@@ -68,24 +68,24 @@ test!("test_locale_t_size" {
 
 // `iswupper` 当前为 `todo!()`, 调用应 panic。
 test!("test_iswupper_panics_on_todo" {
-    unsafe { iswupper(b'A' as wint_t); }
+    { iswupper(b'A' as wint_t); }
 });
 
 // `iswupper_l` 当前为 `todo!()`, 调用应 panic。
 test!("test_iswupper_l_panics_on_todo" {
-    unsafe { iswupper_l(b'A' as wint_t, core::ptr::null_mut()); }
+    { iswupper_l(b'A' as wint_t, core::ptr::null_mut()); }
 });
 
 // `iswupper` 传入 WEOF 也应 panic (尚未实现)。
 test!("test_iswupper_weof_panics" {
-    unsafe { iswupper(wint_t::MAX); }
+    { iswupper(wint_t::MAX); }
 });
 
 // `iswupper_l` 传入非法 locale 指针应 panic (尚未实现)。
 //
 // 注意: 实现完成后, 无效 locale 指针是 UB, 应被调用者避免。
 test!("test_iswupper_l_invalid_locale_panics" {
-    unsafe { iswupper_l(0x00, 0xdead_beef as locale_t); }
+    { iswupper_l(0x00, 0xdead_beef as locale_t); }
 });
 
 // ============================================================================
@@ -94,27 +94,27 @@ test!("test_iswupper_l_invalid_locale_panics" {
 
 // 推测: 'A' (U+0041) 是大写字母。
 test!("test_iswupper_a" {
-    unsafe { iswupper(b'A' as wint_t); }
+    { iswupper(b'A' as wint_t); }
 });
 
 // 推测: 'Z' (U+005A) 是大写字母。
 test!("test_iswupper_z" {
-    unsafe { iswupper(b'Z' as wint_t); }
+    { iswupper(b'Z' as wint_t); }
 });
 
 // 推测: 'M' (U+004D) 是大写字母 (范围中段)。
 test!("test_iswupper_m" {
-    unsafe { iswupper(b'M' as wint_t); }
+    { iswupper(b'M' as wint_t); }
 });
 
 // 推测: '@' (U+0040, 'A' 前一字符) 不是大写字母。
 test!("test_iswupper_at_sign" {
-    unsafe { iswupper(b'@' as wint_t); }
+    { iswupper(b'@' as wint_t); }
 });
 
 // 推测: '[' (U+005B, 'Z' 后一字符) 不是大写字母。
 test!("test_iswupper_left_bracket" {
-    unsafe { iswupper(b'[' as wint_t); }
+    { iswupper(b'[' as wint_t); }
 });
 
 // ============================================================================
@@ -123,12 +123,12 @@ test!("test_iswupper_left_bracket" {
 
 // 推测: 'a' (U+0061) 不是大写字母。
 test!("test_iswupper_lower_a" {
-    unsafe { iswupper(b'a' as wint_t); }
+    { iswupper(b'a' as wint_t); }
 });
 
 // 推测: 'z' (U+007A) 不是大写字母。
 test!("test_iswupper_lower_z" {
-    unsafe { iswupper(b'z' as wint_t); }
+    { iswupper(b'z' as wint_t); }
 });
 
 // ============================================================================
@@ -137,27 +137,27 @@ test!("test_iswupper_lower_z" {
 
 // 推测: '0' (U+0030) 不是大写字母。
 test!("test_iswupper_digit_0" {
-    unsafe { iswupper(b'0' as wint_t); }
+    { iswupper(b'0' as wint_t); }
 });
 
 // 推测: '!' (U+0021) 不是大写字母。
 test!("test_iswupper_exclamation" {
-    unsafe { iswupper(b'!' as wint_t); }
+    { iswupper(b'!' as wint_t); }
 });
 
 // 推测: 空格 (U+0020) 不是大写字母。
 test!("test_iswupper_space" {
-    unsafe { iswupper(b' ' as wint_t); }
+    { iswupper(b' ' as wint_t); }
 });
 
 // 推测: 换行符 (U+000A) 不是大写字母。
 test!("test_iswupper_newline" {
-    unsafe { iswupper(b'\n' as wint_t); }
+    { iswupper(b'\n' as wint_t); }
 });
 
 // 推测: NUL (U+0000) 不是大写字母。
 test!("test_iswupper_nul" {
-    unsafe { iswupper(0); }
+    { iswupper(0); }
 });
 
 // ============================================================================
@@ -166,27 +166,27 @@ test!("test_iswupper_nul" {
 
 // 推测: U+00C0 (Latin Capital Letter A with Grave) 是大写字母。
 test!("test_iswupper_agrave" {
-    unsafe { iswupper(0x00C0u32); }
+    { iswupper(0x00C0u32); }
 });
 
 // 推测: U+00C1 (Latin Capital Letter A with Acute) 是大写字母。
 test!("test_iswupper_aacute" {
-    unsafe { iswupper(0x00C1u32); }
+    { iswupper(0x00C1u32); }
 });
 
 // 推测: U+0391 (Greek Capital Letter Alpha) 是大写字母。
 test!("test_iswupper_greek_alpha" {
-    unsafe { iswupper(0x0391u32); }
+    { iswupper(0x0391u32); }
 });
 
 // 推测: U+0410 (Cyrillic Capital Letter A) 是大写字母。
 test!("test_iswupper_cyrillic_a" {
-    unsafe { iswupper(0x0410u32); }
+    { iswupper(0x0410u32); }
 });
 
 // 推测: U+0531 (Armenian Capital Letter Ayb) 是大写字母。
 test!("test_iswupper_armenian_ayb" {
-    unsafe { iswupper(0x0531u32); }
+    { iswupper(0x0531u32); }
 });
 
 // ============================================================================
@@ -195,17 +195,17 @@ test!("test_iswupper_armenian_ayb" {
 
 // 推测: U+00E0 (Latin Small Letter a with Grave) 不是大写字母。
 test!("test_iswupper_agrave_small" {
-    unsafe { iswupper(0x00E0u32); }
+    { iswupper(0x00E0u32); }
 });
 
 // 推测: U+03B1 (Greek Small Letter Alpha) 不是大写字母。
 test!("test_iswupper_greek_alpha_small" {
-    unsafe { iswupper(0x03B1u32); }
+    { iswupper(0x03B1u32); }
 });
 
 // 推测: U+0430 (Cyrillic Small Letter A) 不是大写字母。
 test!("test_iswupper_cyrillic_a_small" {
-    unsafe { iswupper(0x0430u32); }
+    { iswupper(0x0430u32); }
 });
 
 // ============================================================================
@@ -214,12 +214,12 @@ test!("test_iswupper_cyrillic_a_small" {
 
 // 推测: 中文字符 U+4E2D 不是大写字母 (无大小写之分)。
 test!("test_iswupper_cjk" {
-    unsafe { iswupper(0x4E2Du32); }
+    { iswupper(0x4E2Du32); }
 });
 
 // 推测: 中文字符 U+6587 不是大写字母。
 test!("test_iswupper_cjk_2" {
-    unsafe { iswupper(0x6587u32); }
+    { iswupper(0x6587u32); }
 });
 
 // ============================================================================
@@ -228,7 +228,7 @@ test!("test_iswupper_cjk_2" {
 
 // 推测: WEOF (0xFFFF_FFFF) 不是大写字母。
 test!("test_iswupper_weof" {
-    unsafe { iswupper(wint_t::MAX); }
+    { iswupper(wint_t::MAX); }
 });
 
 // ============================================================================
@@ -237,14 +237,14 @@ test!("test_iswupper_weof" {
 
 // 推测: `iswupper_l(NULL)` 与 `iswupper` 行为一致 (C locale)。
 test!("test_iswupper_l_null_equals_iswupper" {
-    unsafe {
+    {
         iswupper_l(b'A' as wint_t, core::ptr::null_mut());
     }
 });
 
 // 推测: `iswupper_l` 对小写字母返回 0。
 test!("test_iswupper_l_lowercase" {
-    unsafe {
+    {
         iswupper_l(b'a' as wint_t, core::ptr::null_mut());
     }
 });
@@ -255,7 +255,7 @@ test!("test_iswupper_l_lowercase" {
 
 // 推测: iswupper 是纯函数，多次调用返回相同结果。
 test!("test_iswupper_idempotent" {
-    unsafe {
+    {
         let _r1 = iswupper(b'A' as wint_t);
         let _r2 = iswupper(b'A' as wint_t);
     }

@@ -52,11 +52,11 @@ test!("integration_test_bitmask" {
 // ============================================================================
 
 test!("integration_test_isascii_basic" {
-    unsafe { let _ = isascii(b'A' as c_int); }
+    { let _ = isascii(b'A' as c_int); }
 });
 
 test!("integration_test_ascii_range_true" {
-    unsafe {
+    {
         for c in 0..128i32 {
             assert_ne!(isascii(c), 0, "isascii({}) != 0", c);
         }
@@ -64,7 +64,7 @@ test!("integration_test_ascii_range_true" {
 });
 
 test!("integration_test_extended_ascii_false" {
-    unsafe {
+    {
         for c in 128..256i32 {
             assert_eq!(isascii(c), 0, "isascii({}) == 0", c);
         }
@@ -72,23 +72,23 @@ test!("integration_test_extended_ascii_false" {
 });
 
 test!("integration_test_boundary_0" {
-    unsafe { assert_ne!(isascii(0), 0); }
+    { assert_ne!(isascii(0), 0); }
 });
 
 test!("integration_test_boundary_127" {
-    unsafe { assert_ne!(isascii(127), 0); }
+    { assert_ne!(isascii(127), 0); }
 });
 
 test!("integration_test_boundary_128" {
-    unsafe { assert_eq!(isascii(128), 0); }
+    { assert_eq!(isascii(128), 0); }
 });
 
 test!("integration_test_boundary_255" {
-    unsafe { assert_eq!(isascii(255), 0); }
+    { assert_eq!(isascii(255), 0); }
 });
 
 test!("integration_test_negative_values" {
-    unsafe {
+    {
         for c in [-1, -2, -10, -128, -255].iter() {
             assert_eq!(isascii(*c), 0, "isascii({}) == 0", c);
         }
@@ -96,11 +96,11 @@ test!("integration_test_negative_values" {
 });
 
 test!("integration_test_eof" {
-    unsafe { assert_eq!(isascii(-1), 0, "isascii(EOF) == 0"); }
+    { assert_eq!(isascii(-1), 0, "isascii(EOF) == 0"); }
 });
 
 test!("integration_test_large_values" {
-    unsafe {
+    {
         assert_eq!(isascii(256), 0);
         assert_eq!(isascii(1024), 0);
         assert_eq!(isascii(i32::MAX), 0);

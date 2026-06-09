@@ -66,24 +66,24 @@ test!("test_locale_t_size" {
 
 // `iswcntrl` 当前为 `todo!()`, 调用应 panic。
 test!("test_iswcntrl_panics_on_todo" {
-    unsafe { iswcntrl(0x00); }
+    { iswcntrl(0x00); }
 });
 
 // `iswcntrl_l` 当前为 `todo!()`, 调用应 panic。
 test!("test_iswcntrl_l_panics_on_todo" {
-    unsafe { iswcntrl_l(0x00, core::ptr::null_mut()); }
+    { iswcntrl_l(0x00, core::ptr::null_mut()); }
 });
 
 // `iswcntrl` 传入 WEOF 也应 panic (尚未实现)。
 test!("test_iswcntrl_weof_panics" {
-    unsafe { iswcntrl(wint_t::MAX); }
+    { iswcntrl(wint_t::MAX); }
 });
 
 // `iswcntrl_l` 传入非法 locale 指针应 panic (尚未实现)。
 //
 // 注意: 实现完成后, 无效 locale 指针是 UB, 应被调用者避免。
 test!("test_iswcntrl_l_invalid_locale_panics" {
-    unsafe { iswcntrl_l(0x00, 0xdead_beef as locale_t); }
+    { iswcntrl_l(0x00, 0xdead_beef as locale_t); }
 });
 
 // ============================================================================
@@ -92,74 +92,74 @@ test!("test_iswcntrl_l_invalid_locale_panics" {
 
 // 推测: NUL (U+0000) 是控制字符。
 test!("test_iswcntrl_nul" {
-    unsafe { iswcntrl(0x00); }
+    { iswcntrl(0x00); }
 });
 
 // 推测: DEL (U+007F) 是控制字符。
 test!("test_iswcntrl_del" {
-    unsafe { iswcntrl(0x7F); }
+    { iswcntrl(0x7F); }
 });
 
 // 推测: 空格 (U+0020) 不是控制字符。
 test!("test_iswcntrl_space" {
-    unsafe { iswcntrl(0x20); }
+    { iswcntrl(0x20); }
 });
 
 // 推测: 'A' (U+0041) 不是控制字符。
 test!("test_iswcntrl_letter_a" {
-    unsafe { iswcntrl(0x41); }
+    { iswcntrl(0x41); }
 });
 
 // 推测: C1 控制字符 U+009F 是控制字符。
 test!("test_iswcntrl_c1_apc" {
-    unsafe { iswcntrl(0x9F); }
+    { iswcntrl(0x9F); }
 });
 
 // 推测: NBSP U+00A0 不是控制字符 (C1 范围之后)。
 test!("test_iswcntrl_nbsp" {
-    unsafe { iswcntrl(0xA0); }
+    { iswcntrl(0xA0); }
 });
 
 // 推测: LINE SEPARATOR U+2028 是控制字符。
 test!("test_iswcntrl_line_separator" {
-    unsafe { iswcntrl(0x2028); }
+    { iswcntrl(0x2028); }
 });
 
 // 推测: PARAGRAPH SEPARATOR U+2029 是控制字符。
 test!("test_iswcntrl_paragraph_separator" {
-    unsafe { iswcntrl(0x2029); }
+    { iswcntrl(0x2029); }
 });
 
 // 推测: U+2027 (行分隔符之前) 不是控制字符。
 test!("test_iswcntrl_before_line_separator" {
-    unsafe { iswcntrl(0x2027); }
+    { iswcntrl(0x2027); }
 });
 
 // 推测: ANCHOR U+FFF9 是控制字符。
 test!("test_iswcntrl_anchor" {
-    unsafe { iswcntrl(0xFFF9); }
+    { iswcntrl(0xFFF9); }
 });
 
 // 推测: TERMINATOR U+FFFB 是控制字符。
 test!("test_iswcntrl_terminator" {
-    unsafe { iswcntrl(0xFFFB); }
+    { iswcntrl(0xFFFB); }
 });
 
 // 推测: U+FFF8 (锚点之前) 不是控制字符。
 test!("test_iswcntrl_before_anchor" {
-    unsafe { iswcntrl(0xFFF8); }
+    { iswcntrl(0xFFF8); }
 });
 
 // 推测: 中文字符 U+4E2D 不是控制字符。
 test!("test_iswcntrl_cjk" {
-    unsafe { iswcntrl(0x4E2D); }
+    { iswcntrl(0x4E2D); }
 });
 
 // 验证 `iswcntrl_l(NULL)` 与 `iswcntrl` 行为一致 (C locale)。
 //
 // 注意: 此测试待实现完成后验证两条路径的等价性。
 test!("test_iswcntrl_l_null_equals_iswcntrl" {
-    unsafe {
+    {
         iswcntrl_l(0x00, core::ptr::null_mut());
     }
 });

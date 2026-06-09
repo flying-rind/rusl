@@ -12,7 +12,7 @@ use super::*;
 
 // 测试: 所有大写字母 'A'-'Z' 正确转换为对应小写字母
 test!("integration_test_tolower_uppercase_range" {
-    unsafe {
+    {
         for ch in b'A'..=b'Z' {
             let expected = (ch + 32) as c_int;
             assert_eq!(
@@ -28,7 +28,7 @@ test!("integration_test_tolower_uppercase_range" {
 
 // 测试: 小写字母 'a'-'z' 保持不变
 test!("integration_test_tolower_lowercase_unchanged" {
-    unsafe {
+    {
         for ch in b'a'..=b'z' {
             assert_eq!(
                 rusl::tolower(ch as c_int),
@@ -42,7 +42,7 @@ test!("integration_test_tolower_lowercase_unchanged" {
 
 // 测试: 数字 '0'-'9' 保持不变
 test!("integration_test_tolower_digits_unchanged" {
-    unsafe {
+    {
         for ch in b'0'..=b'9' {
             assert_eq!(
                 rusl::tolower(ch as c_int),
@@ -56,35 +56,35 @@ test!("integration_test_tolower_digits_unchanged" {
 
 // 测试: 边界值 '@' (A-1) 保持不变
 test!("integration_test_tolower_boundary_below_a" {
-    unsafe {
+    {
         assert_eq!(rusl::tolower(b'@' as c_int), b'@' as c_int);
     }
 });
 
 // 测试: 边界值 'A' 正确转换
 test!("integration_test_tolower_boundary_a" {
-    unsafe {
+    {
         assert_eq!(rusl::tolower(b'A' as c_int), b'a' as c_int);
     }
 });
 
 // 测试: 边界值 'Z' 正确转换
 test!("integration_test_tolower_boundary_z" {
-    unsafe {
+    {
         assert_eq!(rusl::tolower(b'Z' as c_int), b'z' as c_int);
     }
 });
 
 // 测试: 边界值 '[' (Z+1) 保持不变
 test!("integration_test_tolower_boundary_above_z" {
-    unsafe {
+    {
         assert_eq!(rusl::tolower(b'[' as c_int), b'[' as c_int);
     }
 });
 
 // 测试: EOF (-1) 保持不变
 test!("integration_test_tolower_eof_unchanged" {
-    unsafe {
+    {
         let eof: c_int = -1;
         assert_eq!(rusl::tolower(eof), eof);
     }
@@ -92,14 +92,14 @@ test!("integration_test_tolower_eof_unchanged" {
 
 // 测试: null 字符 (0) 保持不变
 test!("integration_test_tolower_null_char" {
-    unsafe {
+    {
         assert_eq!(rusl::tolower(0), 0);
     }
 });
 
 // 测试: 最大值 0xFF 保持不变
 test!("integration_test_tolower_max_unsigned_char" {
-    unsafe {
+    {
         assert_eq!(rusl::tolower(0xFF), 0xFF);
     }
 });
@@ -110,7 +110,7 @@ test!("integration_test_tolower_max_unsigned_char" {
 
 // 测试: tolower_l 与 tolower 对大小写字母行为一致
 test!("integration_test_tolower_l_uppercase" {
-    unsafe {
+    {
         let null_locale: *mut c_void = core::ptr::null_mut();
         for ch in b'A'..=b'Z' {
             let expected = (ch + 32) as c_int;
@@ -127,7 +127,7 @@ test!("integration_test_tolower_l_uppercase" {
 
 // 测试: tolower_l 对非大写字符保持不变
 test!("integration_test_tolower_l_non_uppercase" {
-    unsafe {
+    {
         let null_locale: *mut c_void = core::ptr::null_mut();
         for ch in b'a'..=b'z' {
             assert_eq!(
@@ -142,7 +142,7 @@ test!("integration_test_tolower_l_non_uppercase" {
 
 // 测试: tolower_l 对 EOF 保持不变
 test!("integration_test_tolower_l_eof" {
-    unsafe {
+    {
         let null_locale: *mut c_void = core::ptr::null_mut();
         let eof: c_int = -1;
         assert_eq!(rusl::tolower_l(eof, null_locale), eof);
@@ -151,7 +151,7 @@ test!("integration_test_tolower_l_eof" {
 
 // 测试: tolower_l 忽略 locale 参数（传入非空指针验证）
 test!("integration_test_tolower_l_ignores_locale" {
-    unsafe {
+    {
         let dummy: c_int = 0xDEAD;
         let dummy_ptr: *mut c_void = &dummy as *const c_int as *mut c_void;
         let result_null = rusl::tolower_l(b'A' as c_int, core::ptr::null_mut());

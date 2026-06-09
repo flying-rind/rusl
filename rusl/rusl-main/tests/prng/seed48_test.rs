@@ -6,7 +6,7 @@ use test_framework::test;
 
 test!("test_seed48_returns_non_null" {
     // seed48 返回非空指针。
-    unsafe {
+    {
         let new_seed = [0x1234u16, 0x5678, 0x9abc];
         let old = seed48(new_seed.as_ptr());
         assert!(!old.is_null());
@@ -31,7 +31,7 @@ test!("test_seed48_only_modifies_seed" {
     // seed48 仅修改种子部分，不修改乘数和加数（musl 行为）。
     // 通过 API 验证：lcong48 设定乘数/加数后，seed48 改变种子
     // 重新恢复相同状态应产生相同序列。
-    unsafe {
+    {
         // 先用 lcong48 设置非默认参数
         let custom_params = [1u16, 0, 0, 2, 0, 0, 3]; // 种子=1, 乘数=2, 加数=3
         lcong48(custom_params.as_ptr());

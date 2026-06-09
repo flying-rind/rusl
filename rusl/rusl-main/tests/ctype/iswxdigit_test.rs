@@ -68,22 +68,22 @@ test!("test_locale_t_size" {
 
 // `iswxdigit` 当前为 `todo!()`, 调用应 panic。
 test!("test_iswxdigit_panics_on_todo" {
-    unsafe { iswxdigit(b'5' as wint_t); }
+    { iswxdigit(b'5' as wint_t); }
 });
 
 // `iswxdigit_l` 当前为 `todo!()`, 调用应 panic。
 test!("test_iswxdigit_l_panics_on_todo" {
-    unsafe { iswxdigit_l(b'5' as wint_t, core::ptr::null_mut()); }
+    { iswxdigit_l(b'5' as wint_t, core::ptr::null_mut()); }
 });
 
 // `iswxdigit` 传入 WEOF 也应 panic (尚未实现)。
 test!("test_iswxdigit_weof_panics" {
-    unsafe { iswxdigit(wint_t::MAX); }
+    { iswxdigit(wint_t::MAX); }
 });
 
 // `iswxdigit_l` 传入非法 locale 指针应 panic (尚未实现)。
 test!("test_iswxdigit_l_invalid_locale_panics" {
-    unsafe { iswxdigit_l(0x00, 0xdead_beef as locale_t); }
+    { iswxdigit_l(0x00, 0xdead_beef as locale_t); }
 });
 
 // ============================================================================
@@ -92,27 +92,27 @@ test!("test_iswxdigit_l_invalid_locale_panics" {
 
 // 推测: '0' (U+0030) 是十六进制数字。
 test!("test_iswxdigit_0" {
-    unsafe { iswxdigit(b'0' as wint_t); }
+    { iswxdigit(b'0' as wint_t); }
 });
 
 // 推测: '9' (U+0039) 是十六进制数字。
 test!("test_iswxdigit_9" {
-    unsafe { iswxdigit(b'9' as wint_t); }
+    { iswxdigit(b'9' as wint_t); }
 });
 
 // 推测: '5' (U+0035) 是十六进制数字 (数字区间中段)。
 test!("test_iswxdigit_5" {
-    unsafe { iswxdigit(b'5' as wint_t); }
+    { iswxdigit(b'5' as wint_t); }
 });
 
 // 推测: '/' (U+002F, '0' 前一字符) 不是十六进制数字。
 test!("test_iswxdigit_slash" {
-    unsafe { iswxdigit(b'/' as wint_t); }
+    { iswxdigit(b'/' as wint_t); }
 });
 
 // 推测: ':' (U+003A, '9' 后一字符) 不是十六进制数字。
 test!("test_iswxdigit_colon" {
-    unsafe { iswxdigit(b':' as wint_t); }
+    { iswxdigit(b':' as wint_t); }
 });
 
 // ============================================================================
@@ -121,27 +121,27 @@ test!("test_iswxdigit_colon" {
 
 // 推测: 'A' (U+0041) 是十六进制数字。
 test!("test_iswxdigit_A" {
-    unsafe { iswxdigit(b'A' as wint_t); }
+    { iswxdigit(b'A' as wint_t); }
 });
 
 // 推测: 'F' (U+0046) 是十六进制数字。
 test!("test_iswxdigit_F" {
-    unsafe { iswxdigit(b'F' as wint_t); }
+    { iswxdigit(b'F' as wint_t); }
 });
 
 // 推测: 'C' (U+0043) 是十六进制数字 (字母区间中段)。
 test!("test_iswxdigit_C" {
-    unsafe { iswxdigit(b'C' as wint_t); }
+    { iswxdigit(b'C' as wint_t); }
 });
 
 // 推测: '@' (U+0040, 'A' 前一字符) 不是十六进制数字。
 test!("test_iswxdigit_at_sign" {
-    unsafe { iswxdigit(b'@' as wint_t); }
+    { iswxdigit(b'@' as wint_t); }
 });
 
 // 推测: 'G' (U+0047, 'F' 后一字符) 不是十六进制数字。
 test!("test_iswxdigit_G" {
-    unsafe { iswxdigit(b'G' as wint_t); }
+    { iswxdigit(b'G' as wint_t); }
 });
 
 // ============================================================================
@@ -150,27 +150,27 @@ test!("test_iswxdigit_G" {
 
 // 推测: 'a' (U+0061) 是十六进制数字。
 test!("test_iswxdigit_a" {
-    unsafe { iswxdigit(b'a' as wint_t); }
+    { iswxdigit(b'a' as wint_t); }
 });
 
 // 推测: 'f' (U+0066) 是十六进制数字。
 test!("test_iswxdigit_f" {
-    unsafe { iswxdigit(b'f' as wint_t); }
+    { iswxdigit(b'f' as wint_t); }
 });
 
 // 推测: 'd' (U+0064) 是十六进制数字 (字母区间中段)。
 test!("test_iswxdigit_d" {
-    unsafe { iswxdigit(b'd' as wint_t); }
+    { iswxdigit(b'd' as wint_t); }
 });
 
 // 推测: '`' (U+0060, 'a' 前一字符) 不是十六进制数字。
 test!("test_iswxdigit_backtick" {
-    unsafe { iswxdigit(b'`' as wint_t); }
+    { iswxdigit(b'`' as wint_t); }
 });
 
 // 推测: 'g' (U+0067, 'f' 后一字符) 不是十六进制数字。
 test!("test_iswxdigit_g" {
-    unsafe { iswxdigit(b'g' as wint_t); }
+    { iswxdigit(b'g' as wint_t); }
 });
 
 // ============================================================================
@@ -179,27 +179,27 @@ test!("test_iswxdigit_g" {
 
 // 推测: 'z' (U+007A) 不是十六进制数字。
 test!("test_iswxdigit_z" {
-    unsafe { iswxdigit(b'z' as wint_t); }
+    { iswxdigit(b'z' as wint_t); }
 });
 
 // 推测: 'Z' (U+005A) 不是十六进制数字。
 test!("test_iswxdigit_Z" {
-    unsafe { iswxdigit(b'Z' as wint_t); }
+    { iswxdigit(b'Z' as wint_t); }
 });
 
 // 推测: 空格 (U+0020) 不是十六进制数字。
 test!("test_iswxdigit_space" {
-    unsafe { iswxdigit(b' ' as wint_t); }
+    { iswxdigit(b' ' as wint_t); }
 });
 
 // 推测: 换行符 (U+000A) 不是十六进制数字。
 test!("test_iswxdigit_newline" {
-    unsafe { iswxdigit(b'\n' as wint_t); }
+    { iswxdigit(b'\n' as wint_t); }
 });
 
 // 推测: NUL (U+0000) 不是十六进制数字。
 test!("test_iswxdigit_nul" {
-    unsafe { iswxdigit(0); }
+    { iswxdigit(0); }
 });
 
 // ============================================================================
@@ -208,7 +208,7 @@ test!("test_iswxdigit_nul" {
 
 // 推测: WEOF (0xFFFF_FFFF) 不是十六进制数字。
 test!("test_iswxdigit_weof" {
-    unsafe { iswxdigit(wint_t::MAX); }
+    { iswxdigit(wint_t::MAX); }
 });
 
 // ============================================================================
@@ -217,17 +217,17 @@ test!("test_iswxdigit_weof" {
 
 // 推测: 全角数字 U+FF10 ('０') 不是 ASCII 十六进制数字。
 test!("test_iswxdigit_fullwidth_zero" {
-    unsafe { iswxdigit(0xFF10u32); }
+    { iswxdigit(0xFF10u32); }
 });
 
 // 推测: 全角字母 U+FF21 ('Ａ') 不是 ASCII 十六进制数字。
 test!("test_iswxdigit_fullwidth_A" {
-    unsafe { iswxdigit(0xFF21u32); }
+    { iswxdigit(0xFF21u32); }
 });
 
 // 推测: 中文字符 U+4E2D 不是十六进制数字。
 test!("test_iswxdigit_cjk" {
-    unsafe { iswxdigit(0x4E2Du32); }
+    { iswxdigit(0x4E2Du32); }
 });
 
 // ============================================================================
@@ -236,21 +236,21 @@ test!("test_iswxdigit_cjk" {
 
 // 推测: `iswxdigit_l(NULL)` 与 `iswxdigit` 行为一致 (locale 被忽略)。
 test!("test_iswxdigit_l_null_equals_iswxdigit" {
-    unsafe {
+    {
         iswxdigit_l(b'F' as wint_t, core::ptr::null_mut());
     }
 });
 
 // 推测: `iswxdigit_l` 对非 hex 字符返回 0。
 test!("test_iswxdigit_l_non_hex" {
-    unsafe {
+    {
         iswxdigit_l(b'z' as wint_t, core::ptr::null_mut());
     }
 });
 
 // 推测: `iswxdigit_l` 对小写 hex 字母返回非零。
 test!("test_iswxdigit_l_lower_hex" {
-    unsafe {
+    {
         iswxdigit_l(b'b' as wint_t, core::ptr::null_mut());
     }
 });
@@ -261,7 +261,7 @@ test!("test_iswxdigit_l_lower_hex" {
 
 // 推测: iswxdigit 是纯函数，多次调用返回相同结果。
 test!("test_iswxdigit_idempotent" {
-    unsafe {
+    {
         let _r1 = iswxdigit(b'A' as wint_t);
         let _r2 = iswxdigit(b'A' as wint_t);
     }

@@ -56,14 +56,14 @@ test!("integration_test_valid_return_values" {
 
 // 验证调用安全（仅 panic）。
 test!("integration_test_ctype_get_mb_cur_max_call_safe" {
-    unsafe {
+    {
         let _result = __ctype_get_mb_cur_max();
     }
 });
 
 // 验证实现完成后返回值在合法范围内。
 test!("integration_test_returns_valid_value" {
-    unsafe {
+    {
         let val = __ctype_get_mb_cur_max();
         assert!(val == 1 || val == 4, "返回值只能是 1 或 4，实际: {}", val);
     }
@@ -71,7 +71,7 @@ test!("integration_test_returns_valid_value" {
 
 // 验证默认 C locale 返回 1。
 test!("integration_test_default_returns_1" {
-    unsafe {
+    {
         let val = __ctype_get_mb_cur_max();
         assert_eq!(val, 1, "默认 C locale 下应返回 1");
     }
@@ -79,7 +79,7 @@ test!("integration_test_default_returns_1" {
 
 // 验证多次调用一致性。
 test!("integration_test_consistency" {
-    unsafe {
+    {
         let v1 = __ctype_get_mb_cur_max();
         let v2 = __ctype_get_mb_cur_max();
         let v3 = __ctype_get_mb_cur_max();

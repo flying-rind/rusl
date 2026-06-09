@@ -31,7 +31,7 @@ test!("test_find_existing" {
 
 test!("test_not_found" {
     // 测试 bsearch 查找不存在的元素。
-    unsafe {
+    {
         let arr = [1i32, 3, 5, 7, 9];
         let key = 4i32;
         let result = bsearch(
@@ -47,7 +47,7 @@ test!("test_not_found" {
 
 test!("test_empty_array" {
     // 测试 bsearch 在空数组中查找（nel=0）。
-    unsafe {
+    {
         let key = 42i32;
         let result = bsearch(
             &key as *const i32 as *const c_void,
@@ -79,7 +79,7 @@ test!("test_single_element_found" {
 
 test!("test_single_element_not_found" {
     // 测试 bsearch 查找单元素数组中的不存在的值。
-    unsafe {
+    {
         let arr = [42i32];
         let key = 1i32;
         let result = bsearch(

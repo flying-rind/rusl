@@ -87,21 +87,21 @@ test!("test_wcwidth_fn_ptr_callable" {
 
 // `wcwidth` 当前为 `todo!()`, 调用应 panic。
 test!("test_wcwidth_panics_on_todo" {
-    unsafe {
+    {
         wcwidth(0x41);
     }
 });
 
 // `wcwidth` 传入 null 字符也应 panic (尚未实现)。
 test!("test_wcwidth_null_panics" {
-    unsafe {
+    {
         wcwidth(0);
     }
 });
 
 // `wcwidth` 传入 CJK 汉字也应 panic (尚未实现)。
 test!("test_wcwidth_cjk_panics" {
-    unsafe {
+    {
         wcwidth(0x4E00);
     }
 });
@@ -114,7 +114,7 @@ test!("test_wcwidth_cjk_panics" {
 //
 // spec: Case 1 — wc 是 null 字符 -> 返回 0
 test!("test_wcwidth_spec_null_returns_0" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0), 0, "wcwidth(0) 应返回 0");
     }
 });
@@ -127,7 +127,7 @@ test!("test_wcwidth_spec_null_returns_0" {
 //
 // spec: wc < 0xff 且 (wc+1 & 0x7f) >= 0x21 (即 ASCII 可打印 0x20-0x7E)
 test!("test_wcwidth_spec_ascii_space_returns_1" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0x20), 1, "wcwidth(' ') 应返回 1");
     }
 });
@@ -138,7 +138,7 @@ test!("test_wcwidth_spec_ascii_space_returns_1" {
 // 约束为: wc < 0xff 且 (wc+1 & 0x7f) >= 0x21 -> 返回 1。
 // 但 0x7F 是 DEL (控制字符), 不在此范围。
 test!("test_wcwidth_spec_ascii_printable_range_returns_1" {
-    unsafe {
+    {
         for wc in 0x21u32..=0x7Eu32 {
             let result = wcwidth(wc as wchar_t);
             assert_eq!(
@@ -154,7 +154,7 @@ test!("test_wcwidth_spec_ascii_printable_range_returns_1" {
 
 // 推测: ASCII 字母 'A'-'Z' 全部返回 1。
 test!("test_wcwidth_spec_ascii_uppercase_returns_1" {
-    unsafe {
+    {
         for wc in b'A'..=b'Z' {
             assert_eq!(
                 wcwidth(wc as wchar_t),
@@ -168,7 +168,7 @@ test!("test_wcwidth_spec_ascii_uppercase_returns_1" {
 
 // 推测: ASCII 字母 'a'-'z' 全部返回 1。
 test!("test_wcwidth_spec_ascii_lowercase_returns_1" {
-    unsafe {
+    {
         for wc in b'a'..=b'z' {
             assert_eq!(
                 wcwidth(wc as wchar_t),
@@ -182,7 +182,7 @@ test!("test_wcwidth_spec_ascii_lowercase_returns_1" {
 
 // 推测: ASCII 数字 '0'-'9' 全部返回 1。
 test!("test_wcwidth_spec_ascii_digit_returns_1" {
-    unsafe {
+    {
         for wc in b'0'..=b'9' {
             assert_eq!(
                 wcwidth(wc as wchar_t),
@@ -196,7 +196,7 @@ test!("test_wcwidth_spec_ascii_digit_returns_1" {
 
 // 推测: ASCII 标点符号也返回 1。
 test!("test_wcwidth_spec_ascii_punctuation_returns_1" {
-    unsafe {
+    {
         let puncts: &[u32] = &[
             0x21, // '!'
             0x2E, // '.'
@@ -221,35 +221,35 @@ test!("test_wcwidth_spec_ascii_punctuation_returns_1" {
 
 // 推测: Latin-1 补充字符 (U+00C0, LATIN CAPITAL LETTER A WITH GRAVE) 返回 1。
 test!("test_wcwidth_spec_latin_extended_a_grave_returns_1" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0x00C0), 1, "wcwidth(U+00C0) 应返回 1");
     }
 });
 
 // 推测: Latin-1 补充字符 (U+00E9, LATIN SMALL LETTER E WITH ACUTE) 返回 1。
 test!("test_wcwidth_spec_latin_extended_e_acute_returns_1" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0x00E9), 1, "wcwidth(U+00E9) 应返回 1");
     }
 });
 
 // 推测: 希腊字母 (U+03B1, GREEK SMALL LETTER ALPHA) 返回 1。
 test!("test_wcwidth_spec_greek_alpha_returns_1" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0x03B1), 1, "wcwidth(U+03B1) 应返回 1");
     }
 });
 
 // 推测: 西里尔字母 (U+0410, CYRILLIC CAPITAL LETTER A) 返回 1。
 test!("test_wcwidth_spec_cyrillic_a_returns_1" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0x0410), 1, "wcwidth(U+0410) 应返回 1");
     }
 });
 
 // 推测: Unicode BMP 普通范围 (U+0100-U+2FFF 不含 CJK/宽字符) 返回 1。
 test!("test_wcwidth_spec_bmp_normal_range_returns_1" {
-    unsafe {
+    {
         // 抽样测试: 非宽字符、非控制字符的 BMP 码点
         let sample_codepoints: &[u32] = &[
             0x00C0, // Latin Extended
@@ -281,21 +281,21 @@ test!("test_wcwidth_spec_bmp_normal_range_returns_1" {
 
 // 推测: CJK 统一汉字 U+4E00 (一) 返回 2。
 test!("test_wcwidth_spec_cjk_han_4e00_returns_2" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0x4E00), 2, "wcwidth(U+4E00 '一') 应返回 2");
     }
 });
 
 // 推测: CJK 统一汉字 U+9AD8 (高) 返回 2。
 test!("test_wcwidth_spec_cjk_han_9ad8_returns_2" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0x9AD8), 2, "wcwidth(U+9AD8 '高') 应返回 2");
     }
 });
 
 // 推测: 多个常用 CJK 汉字均返回 2。
 test!("test_wcwidth_spec_cjk_common_han_returns_2" {
-    unsafe {
+    {
         // 常用 CJK 统一汉字抽样
         let common_han: &[u32] = &[
             0x4E00, // 一
@@ -317,35 +317,35 @@ test!("test_wcwidth_spec_cjk_common_han_returns_2" {
 
 // 推测: CJK 统一汉字扩展 A 区 (U+3400) 返回 2。
 test!("test_wcwidth_spec_cjk_ext_a_3400_returns_2" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0x3400), 2, "wcwidth(U+3400) 应返回 2");
     }
 });
 
 // 推测: 全角空格 U+3000 (IDEOGRAPHIC SPACE) 返回 2。
 test!("test_wcwidth_spec_ideographic_space_returns_2" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0x3000), 2, "wcwidth(U+3000) 应返回 2");
     }
 });
 
 // 推测: 全角标点 U+FF01 (FULLWIDTH EXCLAMATION MARK) 返回 2。
 test!("test_wcwidth_spec_fullwidth_exclamation_returns_2" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0xFF01_i32), 2, "wcwidth(U+FF01) 应返回 2");
     }
 });
 
 // 推测: 全角数字 U+FF10 (FULLWIDTH DIGIT ZERO) 返回 2。
 test!("test_wcwidth_spec_fullwidth_digit_zero_returns_2" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0xFF10_i32), 2, "wcwidth(U+FF10) 应返回 2");
     }
 });
 
 // 推测: 全角大写字母 U+FF21 (FULLWIDTH LATIN CAPITAL LETTER A) 返回 2。
 test!("test_wcwidth_spec_fullwidth_a_returns_2" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0xFF21_i32), 2, "wcwidth(U+FF21) 应返回 2");
     }
 });
@@ -354,14 +354,14 @@ test!("test_wcwidth_spec_fullwidth_a_returns_2" {
 //
 // spec: wcwidth 对 CJK Extension B 的码点 (在 WIDE_TABLE 位图中) 返回 2
 test!("test_wcwidth_spec_cjk_ext_b_20000_returns_2" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0x20000_i32), 2, "wcwidth(U+20000) 应返回 2");
     }
 });
 
 // 推测: CJK Extension B 其他码点 (U+2A6D6) 返回 2。
 test!("test_wcwidth_spec_cjk_ext_b_2a6d6_returns_2" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0x2A6D6_i32), 2, "wcwidth(U+2A6D6) 应返回 2");
     }
 });
@@ -374,28 +374,28 @@ test!("test_wcwidth_spec_cjk_ext_b_2a6d6_returns_2" {
 //
 // spec: Case 3 — wc 是组合字符 (nonspacing mark, 在 NS_TABLE 位图中) -> 返回 0
 test!("test_wcwidth_spec_combining_grave_returns_0" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0x0300), 0, "wcwidth(U+0300) 应返回 0");
     }
 });
 
 // 推测: 组合急音符 U+0301 (COMBINING ACUTE ACCENT) 返回 0。
 test!("test_wcwidth_spec_combining_acute_returns_0" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0x0301), 0, "wcwidth(U+0301) 应返回 0");
     }
 });
 
 // 推测: 组合分音符 U+0308 (COMBINING DIAERESIS) 返回 0。
 test!("test_wcwidth_spec_combining_diaeresis_returns_0" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0x0308), 0, "wcwidth(U+0308) 应返回 0");
     }
 });
 
 // 推测: 多个组合字符均返回 0。
 test!("test_wcwidth_spec_combining_marks_range_returns_0" {
-    unsafe {
+    {
         // 抽样测试: Unicode 组合字符区段 0300-036F
         let marks: &[u32] = &[
             0x0300, // COMBINING GRAVE ACCENT
@@ -431,7 +431,7 @@ test!("test_wcwidth_spec_combining_marks_range_returns_0" {
 //
 // spec: Case 4 — wc 在 0x01-0x1F 或 0x7F-0x9F 范围内 (C0/C1 控制字符) -> 返回 -1
 test!("test_wcwidth_spec_c0_control_range_returns_minus_1" {
-    unsafe {
+    {
         for wc in 0x01u32..=0x1Fu32 {
             assert_eq!(
                 wcwidth(wc as wchar_t),
@@ -445,14 +445,14 @@ test!("test_wcwidth_spec_c0_control_range_returns_minus_1" {
 
 // 推测: DEL 字符 (U+007F) 返回 -1 (C0 控制字符的最高位)。
 test!("test_wcwidth_spec_del_returns_minus_1" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0x7F), -1, "wcwidth(U+007F) DEL 应返回 -1");
     }
 });
 
 // 推测: C1 控制字符范围 0x80-0x9F 全部返回 -1。
 test!("test_wcwidth_spec_c1_control_range_returns_minus_1" {
-    unsafe {
+    {
         for wc in 0x80u32..=0x9Fu32 {
             assert_eq!(
                 wcwidth(wc as wchar_t),
@@ -470,7 +470,7 @@ test!("test_wcwidth_spec_c1_control_range_returns_minus_1" {
 // 说 "0x01-0x1F" -> -1。这里 0x00 被排除在 -1 范围外，
 // 优先走 Case 1 返回 0。此测试验证 0x00 不在 -1 范围内。
 test!("test_wcwidth_spec_nul_not_in_control_range" {
-    unsafe {
+    {
         // 0x00 已经有 Case 1 覆盖, 这里确保它不与控制字符混淆
         let result = wcwidth(0);
         assert_ne!(result, -1, "wcwidth(0) 不应返回 -1 (null 被 Case 1 覆盖)");
@@ -485,42 +485,42 @@ test!("test_wcwidth_spec_nul_not_in_control_range" {
 //
 // spec: (wc & 0xfffe) == 0xfffe (非字符码点如 U+FFFE/U+FFFF) -> 返回 -1
 test!("test_wcwidth_spec_fffe_nonchar_returns_minus_1" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0xFFFE_i32), -1, "wcwidth(U+FFFE) 应返回 -1");
     }
 });
 
 // 推测: U+FFFF (非字符码点) 返回 -1。
 test!("test_wcwidth_spec_ffff_nonchar_returns_minus_1" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0xFFFF_i32), -1, "wcwidth(U+FFFF) 应返回 -1");
     }
 });
 
 // 推测: U+1FFFE (Plane 1 非字符码点) 返回 -1。
 test!("test_wcwidth_spec_1fffe_nonchar_returns_minus_1" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0x1FFFE_i32), -1, "wcwidth(U+1FFFE) 应返回 -1");
     }
 });
 
 // 推测: U+1FFFF (Plane 1 非字符码点) 返回 -1。
 test!("test_wcwidth_spec_1ffff_nonchar_returns_minus_1" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0x1FFFF_i32), -1, "wcwidth(U+1FFFF) 应返回 -1");
     }
 });
 
 // 推测: U+2FFFE (Plane 2 非字符码点) 返回 -1。
 test!("test_wcwidth_spec_2fffe_nonchar_returns_minus_1" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0x2FFFE_i32), -1, "wcwidth(U+2FFFE) 应返回 -1");
     }
 });
 
 // 推测: Plane 0-16 中每组末尾的两个非字符码点均返回 -1。
 test!("test_wcwidth_spec_all_plane_nonchars_returns_minus_1" {
-    unsafe {
+    {
         // 测试各平面的 FFFE/FFFF
         let nonchars: &[i32] = &[
             0xFFFE, 0xFFFF, // BMP (Plane 0)
@@ -545,21 +545,21 @@ test!("test_wcwidth_spec_all_plane_nonchars_returns_minus_1" {
 //
 // spec: U+E0001 或 U+E0020-U+E00EF 范围内的标记字符 -> 返回 0
 test!("test_wcwidth_spec_e0001_returns_0" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0xE0001_i32), 0, "wcwidth(U+E0001) 应返回 0");
     }
 });
 
 // 推测: U+E0020 (TAG SPACE) 返回 0。
 test!("test_wcwidth_spec_e0020_returns_0" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0xE0020_i32), 0, "wcwidth(U+E0020) 应返回 0");
     }
 });
 
 // 推测: U+E0021-U+E007E 范围内的标记字符返回 0。
 test!("test_wcwidth_spec_tag_range_returns_0" {
-    unsafe {
+    {
         // 抽样: 标记范围内的几个字符
         let tags: &[i32] = &[
             0xE0020, // TAG SPACE
@@ -580,7 +580,7 @@ test!("test_wcwidth_spec_tag_range_returns_0" {
 // 注意: spec 只提到 U+E0020-U+E00EF 范围返回 0，U+E0080 的
 // 行为由位图查询决定。此测试仅验证它不 panic 且不返回异常值。
 test!("test_wcwidth_spec_after_tag_range" {
-    unsafe {
+    {
         let result = wcwidth(0xE0080_i32);
         // 返回值应在有效范围内 (即使不在 tag 范围中)
         let valid_returns: [c_int; 4] = [-1, 0, 1, 2];
@@ -594,7 +594,7 @@ test!("test_wcwidth_spec_after_tag_range" {
 
 // 推测: U+E00EF (TAG 范围边界) 返回 0。
 test!("test_wcwidth_spec_e00ef_returns_0" {
-    unsafe {
+    {
         assert_eq!(wcwidth(0xE00EF_i32), 0, "wcwidth(U+E00EF) 应返回 0");
     }
 });
@@ -607,7 +607,7 @@ test!("test_wcwidth_spec_e00ef_returns_0" {
 //
 // spec: 所有合法 Unicode 码点应落在这 4 种返回值之一。
 test!("test_wcwidth_spec_return_value_range" {
-    unsafe {
+    {
         let valid_returns: [c_int; 4] = [-1, 0, 1, 2];
         let test_points: &[wchar_t] = &[
             0,           // null -> 0
@@ -642,7 +642,7 @@ test!("test_wcwidth_spec_return_value_range" {
 
 // 推测: wcwidth 是纯函数，相同输入多次调用返回相同结果。
 test!("test_wcwidth_spec_idempotent" {
-    unsafe {
+    {
         let test_points: &[wchar_t] = &[0, 0x41, 0x01, 0xFFFE_i32, 0x4E00];
         for &wc in test_points {
             let r1 = wcwidth(wc);
@@ -662,7 +662,7 @@ test!("test_wcwidth_spec_idempotent" {
 //
 // 注意: U+FFFD 不是非字符码点 (0xFFFE/0xFFFF 才是), 应返回 1
 test!("test_wcwidth_spec_replacement_char_returns_1" {
-    unsafe {
+    {
         // U+FFFD = 65533, (65533 & 0xFFFE) = 65532 != 0xFFFE
         assert_eq!(wcwidth(0xFFFD_i32), 1, "wcwidth(U+FFFD) 应返回 1");
     }
@@ -685,7 +685,7 @@ test!("test_wchar_t_alignment" {
 //
 // 注意: spec 未定义负值 wchar_t 的行为, 此测试仅验证不 panic 或崩溃。
 test!("test_wcwidth_spec_negative_wchar_t" {
-    unsafe {
+    {
         // 负值在实践中不存在于合法 Unicode, 但 wchar_t 是有符号类型
         let result = wcwidth(-1_i32);
         // 不验证具体值，仅确保不崩溃

@@ -37,12 +37,12 @@ test!("test_iswlower_l_linkage" {
 
 // `iswlower` 当前为 `todo!()`, 调用应 panic。
 test!("test_iswlower_panics" {
-    unsafe { iswlower(0x61); }
+    { iswlower(0x61); }
 });
 
 // `iswlower_l` 当前为 `todo!()`, 调用应 panic。
 test!("test_iswlower_l_panics" {
-    unsafe { iswlower_l(0x61, core::ptr::null_mut()); }
+    { iswlower_l(0x61, core::ptr::null_mut()); }
 });
 
 // ============================================================================
@@ -51,55 +51,55 @@ test!("test_iswlower_l_panics" {
 
 // 推测: 'a' (U+0061) 是小写字母。
 test!("test_iswlower_a" {
-    unsafe { iswlower(0x61); }
+    { iswlower(0x61); }
 });
 
 // 推测: 'z' (U+007A) 是小写字母。
 test!("test_iswlower_z" {
-    unsafe { iswlower(0x7A); }
+    { iswlower(0x7A); }
 });
 
 // 推测: 'm' (U+006D) 是小写字母。
 test!("test_iswlower_m" {
-    unsafe { iswlower(0x6D); }
+    { iswlower(0x6D); }
 });
 
 // 推测: 'A' (U+0041) 不是小写字母 (是大写字母)。
 test!("test_iswlower_uppercase_a" {
-    unsafe { iswlower(0x41); }
+    { iswlower(0x41); }
 });
 
 // 推测: 'Z' (U+005A) 不是小写字母。
 test!("test_iswlower_uppercase_z" {
-    unsafe { iswlower(0x5A); }
+    { iswlower(0x5A); }
 });
 
 // 推测: 数字 '1' (U+0031) 不是小写字母。
 test!("test_iswlower_digit" {
-    unsafe { iswlower(0x31); }
+    { iswlower(0x31); }
 });
 
 // 推测: 空格 (U+0020) 不是小写字母。
 test!("test_iswlower_space" {
-    unsafe { iswlower(0x20); }
+    { iswlower(0x20); }
 });
 
 // 推测: WEOF 不是小写字母 (towupper(WEOF) == WEOF)。
 test!("test_iswlower_weof" {
-    unsafe { iswlower(wint_t::MAX); }
+    { iswlower(wint_t::MAX); }
 });
 
 // 推测: Unicode 小写字母 U+00E8 (e-grave) 是小写字母。
 test!("test_iswlower_unicode_lower" {
-    unsafe { iswlower(0x00E8); }
+    { iswlower(0x00E8); }
 });
 
 // 推测: Unicode 大写字母 U+00C8 (E-grave) 不是小写字母。
 test!("test_iswlower_unicode_upper" {
-    unsafe { iswlower(0x00C8); }
+    { iswlower(0x00C8); }
 });
 
 // 推测: `iswlower_l(NULL)` 与 `iswlower` 等价。
 test!("test_iswlower_l_null" {
-    unsafe { iswlower_l(0x61, core::ptr::null_mut()); }
+    { iswlower_l(0x61, core::ptr::null_mut()); }
 });

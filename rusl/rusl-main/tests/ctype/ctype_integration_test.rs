@@ -39,7 +39,7 @@ test!("test_toascii_signature" {
 // ============================================================================
 
 test!("integration_test_toascii_basic" {
-    unsafe {
+    {
         assert_eq!(toascii(0), 0);
         assert_eq!(toascii(127), 127);
         assert_eq!(toascii(128), 0);
@@ -67,7 +67,7 @@ test!("test_isxdigit_l_signature" {
 // ============================================================================
 
 test!("integration_test_isxdigit_basic" {
-    unsafe {
+    {
         for ch in b'0'..=b'9' {
             assert_ne!(isxdigit(ch as c_int), 0);
         }
@@ -98,7 +98,7 @@ test!("test_iswxdigit_l_signature" {
 // ============================================================================
 
 test!("integration_test_iswxdigit_basic" {
-    unsafe {
+    {
         for wc in (b'0' as c_uint)..=(b'9' as c_uint) {
             assert_ne!(iswxdigit(wc), 0);
         }
@@ -126,7 +126,7 @@ test!("test_iswspace_l_signature" {
 // ============================================================================
 
 test!("integration_test_iswspace_basic" {
-    unsafe {
+    {
         assert_ne!(iswspace(b' ' as c_uint), 0);
         assert_ne!(iswspace(b'\t' as c_uint), 0);
         assert_ne!(iswspace(b'\n' as c_uint), 0);
@@ -156,7 +156,7 @@ test!("test_iswpunct_l_signature" {
 // ============================================================================
 
 test!("integration_test_iswpunct_basic" {
-    unsafe {
+    {
         assert_ne!(iswpunct(b'.' as c_uint), 0);
         assert_ne!(iswpunct(b',' as c_uint), 0);
         assert_eq!(iswpunct(b'A' as c_uint), 0);
@@ -185,7 +185,7 @@ test!("test_iswupper_l_signature" {
 // ============================================================================
 
 test!("integration_test_iswupper_basic" {
-    unsafe {
+    {
         assert_ne!(iswupper(b'A' as c_uint), 0);
         assert_ne!(iswupper(b'Z' as c_uint), 0);
         assert_eq!(iswupper(b'a' as c_uint), 0);

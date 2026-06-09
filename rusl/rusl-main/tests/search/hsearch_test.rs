@@ -11,7 +11,7 @@ extern crate alloc;
 
 test!("test_hcreate_basic" {
     // 测试基本创建哈希表（成功场景）。
-    unsafe {
+    {
         let ret = hcreate(16);
         assert_ne!(ret, 0);
         hdestroy();
@@ -20,7 +20,7 @@ test!("test_hcreate_basic" {
 
 test!("test_hcreate_zero" {
     // 测试创建零容量哈希表（边界情况）。
-    unsafe {
+    {
         let ret = hcreate(0);
         // MINSIZE=8，所以 0 应该成功（会分配 8 个条目的表）
         assert_ne!(ret, 0);
@@ -30,7 +30,7 @@ test!("test_hcreate_zero" {
 
 test!("test_hcreate_large" {
     // 测试创建极大容量哈希表（边界情况）。
-    unsafe {
+    {
         let ret = hcreate(1024 * 1024);
         // 可能因内存不足返回 0
         if ret != 0 {
@@ -41,7 +41,7 @@ test!("test_hcreate_large" {
 
 test!("test_hcreate_hdestroy" {
     // 测试创建后销毁的基本流程。
-    unsafe {
+    {
         hcreate(16);
         hdestroy();
         // 再次创建-销毁应在无先前状态下正常工作
@@ -52,7 +52,7 @@ test!("test_hcreate_hdestroy" {
 
 test!("test_hdestroy_twice" {
     // 测试连续销毁（不应导致 double-free UB，函数内应有保护）。
-    unsafe {
+    {
         hcreate(8);
         hdestroy();
         // 第二次销毁：若实现正确应安全处理（空检查）
@@ -62,7 +62,7 @@ test!("test_hdestroy_twice" {
 
 test!("test_hsearch_find_missing" {
     // 测试 hsearch 查找时返回 null（空表中查找）。
-    unsafe {
+    {
         hcreate(16);
         let item = ENTRY {
             key: b"missing\0".as_ptr() as *mut c_char,
@@ -76,7 +76,7 @@ test!("test_hsearch_find_missing" {
 
 test!("test_hsearch_enter_new" {
     // 测试 hsearch ENTER 插入新条目。
-    unsafe {
+    {
         hcreate(16);
         let mut data_val: i32 = 42;
         let item = ENTRY {
@@ -162,7 +162,7 @@ test!("test_hsearch_multiple_entries" {
 
 test!("test_hcreate_return_value" {
     // 测试 hcreate 返回 0 的失败场景。
-    unsafe {
+    {
         let ret = hcreate(usize::MAX);
         // 极大规模应因内存不足返回 0
         assert_eq!(ret, 0);

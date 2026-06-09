@@ -55,7 +55,7 @@ test!("test_qsort_random" {
 
 test!("test_qsort_already_sorted" {
     // 测试 qsort 已排序数组（最佳情况）。
-    unsafe {
+    {
         let mut arr = [1i32, 2, 3, 4, 5, 6, 7, 8, 9];
         let expected = arr;
         qsort(
@@ -86,7 +86,7 @@ test!("test_qsort_reverse_sorted" {
 
 test!("test_qsort_empty" {
     // 测试 qsort 空数组（nel=0）。
-    unsafe {
+    {
         let mut arr: [i32; 0] = [];
         qsort(
             arr.as_mut_ptr() as *mut c_void,
@@ -99,7 +99,7 @@ test!("test_qsort_empty" {
 
 test!("test_qsort_single" {
     // 测试 qsort 单元素数组。
-    unsafe {
+    {
         let mut arr = [42i32];
         qsort(
             arr.as_mut_ptr() as *mut c_void,
@@ -113,7 +113,7 @@ test!("test_qsort_single" {
 
 test!("test_qsort_two" {
     // 测试 qsort 两元素数组。
-    unsafe {
+    {
         let mut arr = [2i32, 1];
         qsort(
             arr.as_mut_ptr() as *mut c_void,
@@ -127,7 +127,7 @@ test!("test_qsort_two" {
 
 test!("test_qsort_all_equal" {
     // 测试 qsort 所有元素相同。
-    unsafe {
+    {
         let mut arr = [5i32, 5, 5, 5, 5];
         qsort(
             arr.as_mut_ptr() as *mut c_void,
@@ -157,7 +157,7 @@ test!("test_qsort_negative_numbers" {
 
 test!("test_qsort_reverse_cmp" {
     // 测试 qsort 使用逆序比较函数。
-    unsafe {
+    {
         let mut arr = [1i32, 2, 3, 4, 5];
         let expected = [5, 4, 3, 2, 1];
         qsort(
@@ -172,7 +172,7 @@ test!("test_qsort_reverse_cmp" {
 
 test!("test_qsort_struct" {
     // 测试 qsort 排序大型结构体。
-    unsafe {
+    {
         #[repr(C)]
         #[derive(Debug, Clone, Copy, PartialEq)]
         struct Point {
@@ -249,7 +249,7 @@ test!("test___qsort_r_basic" {
 
 test!("test___qsort_r_single" {
     // 测试 __qsort_r 单元素直接返回。
-    unsafe {
+    {
         let mut arr = [42i32];
         qsort_r(
             arr.as_mut_ptr() as *mut c_void,
@@ -264,7 +264,7 @@ test!("test___qsort_r_single" {
 
 test!("test___qsort_r_empty" {
     // 测试 __qsort_r 空数组直接返回。
-    unsafe {
+    {
         let mut arr: [i32; 0] = [];
         qsort_r(
             arr.as_mut_ptr() as *mut c_void,

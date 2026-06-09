@@ -27,7 +27,7 @@ unsafe fn make_node(key_val: i32, left: *mut c_void, right: *mut c_void, h: i32)
 
 test!("test_tdestroy_null_root" {
     // 测试销毁 null root（应无操作，不崩溃）。
-    unsafe {
+    {
         tdestroy(ptr::null_mut(), None);
     }
 });
@@ -37,7 +37,7 @@ test!("test_tdestroy_null_root_with_freekey" {
     unsafe extern "C" fn do_free(_p: *mut c_void) {
         // 不应被调用
     }
-    unsafe {
+    {
         tdestroy(ptr::null_mut(), Some(do_free));
     }
 });
