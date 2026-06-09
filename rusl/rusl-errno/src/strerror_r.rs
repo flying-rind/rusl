@@ -97,7 +97,7 @@ mod tests {
         unsafe {
             core::ptr::copy_nonoverlapping(msg as *const u8, buf.as_mut_ptr() as *mut u8, l + 1);
         }
-        assert_eq!(unsafe { buf[0] } as u8, b'N');
+        assert_eq!( buf[0]  as u8, b'N');
     });
 
     test!("test_strerror_r_truncated" {

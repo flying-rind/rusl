@@ -206,7 +206,6 @@ mod tests {
     });
 
     test!("test_regerror_nomatch" {
-        unsafe {
             let mut buf = [0u8; 256];
             let len = regerror(
                 REG_NOMATCH,
@@ -215,11 +214,9 @@ mod tests {
                 buf.len(),
             );
             assert!(len > 0);
-        }
     });
 
     test!("test_regerror_badpat" {
-        unsafe {
             let mut buf = [0u8; 256];
             let len = regerror(
                 REG_BADPAT,
@@ -228,11 +225,9 @@ mod tests {
                 buf.len(),
             );
             assert!(len > 0);
-        }
     });
 
     test!("test_regerror_espace" {
-        unsafe {
             let mut buf = [0u8; 256];
             let len = regerror(
                 REG_ESPACE,
@@ -241,11 +236,9 @@ mod tests {
                 buf.len(),
             );
             assert!(len > 0);
-        }
     });
 
     test!("test_regerror_invalid_errcode" {
-        unsafe {
             let mut buf = [0u8; 256];
             let len = regerror(
                 999, // 越界错误码
@@ -255,11 +248,9 @@ mod tests {
             );
             // 应返回 "Unknown error" 的长度
             assert!(len > 0);
-        }
     });
 
     test!("test_regerror_negative_errcode" {
-        unsafe {
             let mut buf = [0u8; 256];
             let len = regerror(
                 REG_ENOSYS, // -1
@@ -268,11 +259,9 @@ mod tests {
                 buf.len(),
             );
             assert!(len > 0);
-        }
     });
 
     test!("test_regerror_null_buffer" {
-        unsafe {
             let len = regerror(
                 REG_BADPAT,
                 core::ptr::null(),
@@ -281,11 +270,9 @@ mod tests {
             );
             // 即使缓冲区为 null 且大小为 0，也应返回所需长度
             assert!(len > 0);
-        }
     });
 
     test!("test_regerror_zero_size" {
-        unsafe {
             let mut buf = [0u8; 256];
             let len = regerror(
                 REG_EBRACK,
@@ -296,11 +283,9 @@ mod tests {
             assert!(len > 0);
             // 缓冲区不应被写入
             assert_eq!(buf[0], 0);
-        }
     });
 
     test!("test_regerror_small_buffer" {
-        unsafe {
             let mut buf = [0u8; 4]; // 仅 4 字节
             let len = regerror(
                 REG_BADPAT,
@@ -311,11 +296,9 @@ mod tests {
             assert!(len > 0);
             // 消息被截断，但缓冲区应以 null 结尾
             // 实现后：验证 buf[3] == 0 (或 buf 的最后一字节为 null)
-        }
     });
 
     test!("test_regerror_all_valid_errcodes" {
-        unsafe {
             let mut buf = [0u8; 256];
             for errcode in 0..=13 {
                 let len = regerror(
@@ -326,17 +309,14 @@ mod tests {
                 );
                 assert!(len > 0, "errcode={} 返回了 len=0", errcode);
             }
-        }
     });
 
     test!("test_regerror_preg_ignored" {
         // musl 实现中 preg 参数被完全忽略
         // 传入各种指针值（包括 null）都应正常工作
-        unsafe {
             let mut buf = [0u8; 256];
             // 传入 null
             let len1 = regerror(REG_OK, core::ptr::null(), buf.as_mut_ptr() as *mut c_char, buf.len());
             assert!(len1 > 0);
-        }
     });
 }

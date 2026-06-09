@@ -1297,60 +1297,48 @@ mod tests {
     // ---- fnmatch 公开 API 测试 ----
 
     test!("test_fnmatch_basic_match" {
-        unsafe {
             let pat = b"abc\0" as *const u8 as *const c_char;
             let s = b"abc\0" as *const u8 as *const c_char;
             let result = fnmatch(pat, s, 0);
             assert_eq!(result, 0);
-        }
     });
 
     test!("test_fnmatch_basic_no_match" {
-        unsafe {
             let pat = b"abc\0" as *const u8 as *const c_char;
             let s = b"xyz\0" as *const u8 as *const c_char;
             let result = fnmatch(pat, s, 0);
             assert_eq!(result, FNM_NOMATCH);
-        }
     });
 
     test!("test_fnmatch_pathname_slash_not_matched" {
-        unsafe {
             let pat = b"a?b\0" as *const u8 as *const c_char;
             let s = b"a/b\0" as *const u8 as *const c_char;
             let result = fnmatch(pat, s, FNM_PATHNAME);
             // ? 不应匹配 /
             assert_eq!(result, FNM_NOMATCH);
-        }
     });
 
     test!("test_fnmatch_leading_dir" {
-        unsafe {
             let pat = b"a*\0" as *const u8 as *const c_char;
             let s = b"abc/xyz\0" as *const u8 as *const c_char;
             let result = fnmatch(pat, s, FNM_LEADING_DIR);
             // "a*" 匹配 "abc" 前缀，FNM_LEADING_DIR 应返回成功
             assert_eq!(result, 0);
-        }
     });
 
     test!("test_fnmatch_noescape" {
-        unsafe {
             let pat = b"a\\*b\0" as *const u8 as *const c_char;
             let s = b"a*b\0" as *const u8 as *const c_char;
             // NOESCAPE: \ 是字面字符，\* 是两个字符 '\' 和 '*'
             let result = fnmatch(pat, s, FNM_NOESCAPE);
             // "a\*b" vs "a*b": \ 对应 *，* 对应 b(?) — 通常不匹配
             assert_eq!(result, FNM_NOMATCH);
-        }
     });
 
     test!("test_fnmatch_zero_flags_empty_strings" {
-        unsafe {
             let pat = b"\0" as *const u8 as *const c_char;
             let s = b"\0" as *const u8 as *const c_char;
             let result = fnmatch(pat, s, 0);
             assert_eq!(result, 0);
-        }
     });
 }

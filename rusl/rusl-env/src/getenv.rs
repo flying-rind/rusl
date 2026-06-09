@@ -350,17 +350,17 @@ mod tests {
     // ---- getenv 集成风格测试 ----
 
     test!("test_getenv_null_name_logically_empty" {
-        let r = unsafe { getenv(b"\0".as_ptr() as *const c_char) };
+        let r = getenv(b"\0".as_ptr() as *const c_char) ;
         assert!(r.is_null());
     });
 
     test!("test_getenv_equals_in_name" {
-        let r = unsafe { getenv(b"FOO=BAR\0".as_ptr() as *const c_char) };
+        let r = getenv(b"FOO=BAR\0".as_ptr() as *const c_char);
         assert!(r.is_null());
     });
 
     test!("test_getenv_not_found_when_environ_null" {
-        let r = unsafe { getenv(b"ANYTHING\0".as_ptr() as *const c_char) };
+        let r = getenv(b"ANYTHING\0".as_ptr() as *const c_char);
         assert!(r.is_null());
     });
 
