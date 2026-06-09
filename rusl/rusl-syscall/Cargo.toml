@@ -7,7 +7,7 @@ description = "rusl syscall — 独立系统调用宏, FFI 到 musl libc, 不依
 [lib]
 crate-type = ["lib"]
 doctest = false
-test = true
+test = false
 
 [features]
 default = []

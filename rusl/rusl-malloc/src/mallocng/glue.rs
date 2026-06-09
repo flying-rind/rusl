@@ -534,8 +534,7 @@ macro_rules! malloc_assert {
 }
 
 pub(crate) use malloc_assert;
-use rusl_internal::do_syscall;
-
+use crate::do_syscall;
 // ============================================================================
 // futex 辅助函数 (MallocLock 的底层阻塞原语)
 // ============================================================================

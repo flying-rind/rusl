@@ -186,31 +186,31 @@ pub(crate) static mut __BUMP_LOCKPTR: *mut c_int =
 /// `simple_malloc` 的弱符号别名，是 libc 内部 malloc 实现的间接入口。
 ///
 /// 对应 C 的 `weak_alias(__simple_malloc, __libc_malloc_impl)`。
-/// 若完整 malloc 实现（mallocng）提供同名的强符号定义，则在链接时覆盖此弱符号。
+/// 委托给 mallocng 的完整分配器，确保与 `__libc_free` 使用同一套分配器。
 ///
 /// # 安全性
 ///
 /// 调用者必须确保:
 /// - `n` 为合理的请求大小（`n <= usize::MAX / 2`）
-/// - 分配的内存使用完毕后，在完整 malloc 接管前不可被释放（bump 分配器的语义限制）
 #[no_mangle]
 pub unsafe extern "C" fn __libc_malloc_impl(n: usize) -> *mut c_void {
-    bump::simple_malloc(n)
+    // 委托给 mallocng 的完整分配器，而非 bump::simple_malloc，
+    // 以保证 __libc_malloc 和 __libc_free 使用同一套分配器元数据格式。
+    super::mallocng::malloc::malloc(n)
 }
 
-/// libc 内部 malloc 统一入口，间接委托给 `__libc_malloc_impl`。
+/// libc 内部 malloc 统一入口，委托给 mallocng 完整分配器。
 ///
 /// 对应 C 的 `__libc_malloc`。
-/// 间接调用的设计使得运行时替换 malloc 实现成为可能。
+/// 与 `__libc_free` 使用同一套分配器，确保分配/释放兼容。
 ///
 /// # 安全性
 ///
 /// 调用者必须确保:
 /// - `n` 为合理的请求大小
-/// - `__libc_malloc_impl` 符号已解析（至少由 `simple_malloc` 提供弱符号定义）
 #[no_mangle]
 pub unsafe extern "C" fn __libc_malloc(n: usize) -> *mut c_void {
-    __libc_malloc_impl(n)
+    super::mallocng::malloc::malloc(n)
 }
 
 /// POSIX.1-2001 标准 malloc 函数。

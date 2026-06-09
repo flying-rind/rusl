@@ -52,6 +52,18 @@ use crate::import::pthread_impl::{
 use crate::import::libc::{__hwcap, __libc, tls_module};
 
 // ============================================================================
+// __thread_list_lock — 全局线程列表锁
+//
+// 对应 musl src/env/__init_tls.c:12 的定义。
+// 当 env 模块被替换时，必须由 rusl-env 导出此符号。
+// ============================================================================
+
+/// 线程列表自旋锁，被 `_Fork` 和 `pthread_create` 共享。
+/// musl 声明为 `extern hidden volatile int __thread_list_lock`。
+#[no_mangle]
+static mut __thread_list_lock: c_int = 0;
+
+// ============================================================================
 // ELF 常量
 // ============================================================================
 
@@ -271,6 +283,9 @@ static MAIN_TLS: SyncUnsafeCell<tls_module> = SyncUnsafeCell::new(tls_module {
 /// （链接器将地址解析为 0）。
 ///
 /// 使用 `extern "C"` 声明并通过 `link_name` 引用链接器符号。
+// _DYNAMIC 仅在动态链接时有定义；静态链接时 get_dynamic_addr() 返回 0。
+// Rust 不支持 extern static 的弱符号引用，因此通过 cfg 在 rusl 模式外直接返回 0。
+#[cfg(feature = "rusl")]
 extern "C" {
     #[link_name = "_DYNAMIC"]
     static _DYNAMIC: usize;
@@ -284,8 +299,16 @@ extern "C" {
 /// 从而允许符号地址为 0（弱符号未定义的情况）。
 #[inline]
 fn get_dynamic_addr() -> usize {
-    // SAFETY: addr_of! 只获取地址，不访问内存，安全。
-    unsafe { ptr::addr_of!(_DYNAMIC) as usize }
+    #[cfg(feature = "rusl")]
+    {
+        // SAFETY: addr_of! 只获取地址，不访问内存，安全。
+        unsafe { ptr::addr_of!(_DYNAMIC) as usize }
+    }
+    #[cfg(not(feature = "rusl"))]
+    {
+        // 静态链接时 _DYNAMIC 不存在，返回 0
+        0
+    }
 }
 
 // ============================================================================
@@ -320,8 +343,8 @@ const fn align_down(val: usize, align: usize) -> usize {
 #[cfg(target_arch = "x86_64")]
 unsafe fn arch_prctl_set_fs(addr: *mut c_void) -> c_int {
     const ARCH_SET_FS: i64 = 0x1002;
-    use rusl_internal::syscall::raw_syscall2;
-    use rusl_internal::syscall::SYS_arch_prctl;
+    use crate::import::syscall::raw_syscall2;
+    use crate::import::syscall::SYS_arch_prctl;
     raw_syscall2(SYS_arch_prctl, ARCH_SET_FS, addr as i64) as c_int
 }
 
@@ -338,8 +361,8 @@ unsafe fn set_thread_area_impl(p: *mut c_void) -> c_int {
 /// 向内核注册一个地址，当线程退出时内核将原子性地
 /// 将该地址清零并执行 `futex(FUTEX_WAKE)`。
 unsafe fn syscall_set_tid_address(ptr: *const c_int) -> i64 {
-    use rusl_internal::syscall::raw_syscall1;
-    use rusl_internal::syscall::SYS_set_tid_address;
+    use crate::import::syscall::raw_syscall1;
+    use crate::import::syscall::SYS_set_tid_address;
     raw_syscall1(SYS_set_tid_address, ptr as i64)
 }
 
@@ -348,8 +371,8 @@ unsafe fn syscall_set_tid_address(ptr: *const c_int) -> i64 {
 /// 等同于 C 的 `mmap(0, len, PROT_READ|PROT_WRITE, MAP_ANONYMOUS|MAP_PRIVATE, -1, 0)`。
 /// 返回映射区域的起始地址；失败时返回负值的 `errno`。
 unsafe fn mmap_anon(len: usize) -> *mut c_void {
-    use rusl_internal::syscall::raw_syscall6;
-    use rusl_internal::syscall::SYS_mmap;
+    use crate::import::syscall::raw_syscall6;
+    use crate::import::syscall::SYS_mmap;
     let ret = raw_syscall6(
         SYS_mmap,
         0,
@@ -437,6 +460,12 @@ pub(crate) fn init_tp(p: *mut c_void) -> c_int {
     }
 
     0
+}
+
+/// C ABI 导出：__init_tp —— 供 musl 动态链接器 dynlink.c 调用。
+#[no_mangle]
+pub extern "C" fn __init_tp(p: *mut c_void) -> c_int {
+    init_tp(p)
 }
 
 /// 复制 TLS 初始数据到指定内存区域并构造 DTV 数组。
@@ -554,6 +583,12 @@ pub(crate) fn copy_tls(mem: *mut u8) -> *mut c_void {
 
         td as *mut c_void
     }
+}
+
+/// C ABI 导出：__copy_tls —— 供 musl 动态链接器 dynlink.c 和 pthread_create 调用。
+#[no_mangle]
+pub extern "C" fn __copy_tls(mem: *mut u8) -> *mut c_void {
+    copy_tls(mem)
 }
 
 /// 主 TLS 初始化入口 — 在进程启动时由 `__libc_start_main` 调用。
@@ -746,7 +781,7 @@ pub(crate) fn init_tls(aux: *mut usize) {
         // 通过 SYS_exit_group(127) 立即终止进程，避免在 TLS 未初始化时
         // 进入可能依赖 TLS 的 panic 路径。
         unsafe {
-            rusl_internal::syscall::raw_syscall1(rusl_internal::syscall::SYS_exit_group, 127);
+            crate::import::syscall::raw_syscall1(crate::import::syscall::SYS_exit_group, 127);
             // 若 exit_group 失败，进入无限自旋作为最后兜底
             loop {
                 core::hint::spin_loop();

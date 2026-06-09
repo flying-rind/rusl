@@ -11,6 +11,7 @@
 #![no_main]
 
 extern crate rusl_core;
+extern crate rusl_syscall;
 #[cfg(feature = "rusl")]
 extern crate rusl_malloc;
 extern crate alloc;

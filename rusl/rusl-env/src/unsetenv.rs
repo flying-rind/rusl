@@ -17,10 +17,8 @@
 
 use core::ffi::{c_char, c_int, CStr};
 use core::ptr::null_mut;
-use rusl_errno::__errno_location;
+use crate::import::{__errno_location, set_errno, EINVAL};
 use crate::__environ::environ;
-use rusl_errno::set_errno;
-use rusl_errno::EINVAL;
 
 // ---------------------------------------------------------------------------
 // 回调机制 — 替代 C 的 weak_alias 弱符号

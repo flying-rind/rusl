@@ -4,23 +4,23 @@
 
 use core::ffi::c_char;
 
-/// 信号到消息的简单映射
+/// 信号到消息的简单映射（均为 null 终止的 C 字符串）
 const SIGNAL_MSGS: &[(core::ffi::c_int, &[u8])] = &[
-    (1, b"Hangup"),
-    (2, b"Interrupt"),
-    (3, b"Quit"),
-    (4, b"Illegal instruction"),
-    (5, b"Trace/breakpoint trap"),
-    (6, b"Aborted"),
-    (7, b"Bus error"),
-    (8, b"Floating point exception"),
-    (9, b"Killed"),
-    (10, b"User defined signal 1"),
-    (11, b"Segmentation fault"),
-    (12, b"User defined signal 2"),
-    (13, b"Broken pipe"),
-    (14, b"Alarm clock"),
-    (15, b"Terminated"),
+    (1, b"Hangup\0"),
+    (2, b"Interrupt\0"),
+    (3, b"Quit\0"),
+    (4, b"Illegal instruction\0"),
+    (5, b"Trace/breakpoint trap\0"),
+    (6, b"Aborted\0"),
+    (7, b"Bus error\0"),
+    (8, b"Floating point exception\0"),
+    (9, b"Killed\0"),
+    (10, b"User defined signal 1\0"),
+    (11, b"Segmentation fault\0"),
+    (12, b"User defined signal 2\0"),
+    (13, b"Broken pipe\0"),
+    (14, b"Alarm clock\0"),
+    (15, b"Terminated\0"),
 ];
 
 /// 全局静态缓冲区用于存储未知信号号的消息

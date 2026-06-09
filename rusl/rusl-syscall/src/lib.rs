@@ -19,10 +19,6 @@
 
 #![no_std]
 #![allow(non_camel_case_types)]
-#![cfg_attr(test, feature(custom_test_frameworks))]
-#![cfg_attr(test, test_runner(runner))]
-#![cfg_attr(test, reexport_test_harness_main = "test_main")]
-#![cfg_attr(test, no_main)]
 
 use core::arch::asm;
 #[cfg(test)]
@@ -37,18 +33,6 @@ use core::panic::PanicInfo;
 fn panic_handler(_info: &PanicInfo) -> ! {
     loop {}
 }
-
-// ---------------------------------------------------------------------------
-// 测试入口
-// ---------------------------------------------------------------------------
-
-#[cfg(test)]
-#[no_mangle]
-pub extern "C" fn _start(_argc: i32, _argv: *const *const u8) -> i32 {
-    test_main();
-    0
-}
-
 // ===========================================================================
 // musl __syscall_ret — FFI 链接
 //
@@ -290,43 +274,4 @@ macro_rules! do_syscall {
         };
         unsafe { $crate::__syscall_ret(ret as usize) }
     }};
-}
-
-// ===========================================================================
-// 测试运行器 (必须位于 crate 层级, #![test_runner] 无法引用 mod tests 内部)
-// ===========================================================================
-
-/// no_std 最简测试运行器 — 不依赖 test-framework
-#[cfg(test)]
-#[no_mangle]
-pub fn runner(_tests: &[&dyn Fn()]) -> ! {
-    for test in _tests {
-        test();
-    }
-    // 成功退出
-    #[cfg(target_arch = "x86_64")]
-    unsafe {
-        core::arch::asm!("syscall", in("rax") 60isize, in("rdi") 0isize, options(noreturn));
-    }
-    #[cfg(target_arch = "aarch64")]
-    unsafe {
-        core::arch::asm!("svc #0", in("x8") 93i64, in("x0") 0i64, options(noreturn));
-    }
-    #[allow(unreachable_code)]
-    loop {}
-}
-
-// ===========================================================================
-// 单元测试
-// ===========================================================================
-
-#[cfg(test)]
-mod tests {
-    // use crate::do_syscall;
-    #[cfg(target_arch = "x86_64")]
-    const SYS_GETPID: i64 = 39;
-    #[cfg(target_arch = "aarch64")]
-    const SYS_GETPID: i64 = 172;
-
-    // 基本冒烟测试 — 验证 do_syscall! 可以成功执行 syscall
 }

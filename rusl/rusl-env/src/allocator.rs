@@ -1,5 +1,5 @@
 //! 全局分配器 — 在 no_std + alloc 环境下为 Box/Vec/String 等类型提供内存分配。
-//! 此时使用musl libc的malloc模块接口
+//! 此时使用musl libc的malloc模块接口（由 mallocng 提供完整实现）。
 
 use core::alloc::{GlobalAlloc, Layout};
 use core::ffi::c_void;

@@ -97,6 +97,12 @@ pub(crate) fn __reset_tls() {
     reset_tls_core(dtv, tls_head, DTP_OFFSET);
 }
 
+/// C ABI 导出：__reset_tls —— 供 musl timer_create 调用。
+#[export_name = "__reset_tls"]
+pub extern "C" fn __reset_tls_c() {
+    __reset_tls()
+}
+
 // ---------------------------------------------------------------------------
 // 核心算法（可单独测试）
 // ---------------------------------------------------------------------------

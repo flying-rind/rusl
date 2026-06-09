@@ -1,6 +1,7 @@
 //! 声明所有依赖其他模块的接口
 //!
-//! 当不开启rusl feature时，使用musl的C接口
+//! 当开启 rusl feature 时，从其他 rusl-xx crate 导入
+//! 否则使用 extern "C" 或本地定义 fallback
 
 // ============================================================================
 // rusl feature 开启时：直接 re-export rusl crate 符号
@@ -12,6 +13,10 @@ pub use rusl_internal::{atomic, libc, pthread_impl, defsysinfo};
 pub use rusl_malloc::free::free;
 #[cfg(feature = "rusl")]
 pub use rusl_string::strchrnul;
+#[cfg(feature = "rusl")]
+pub use rusl_errno::{__errno_location, set_errno, EINVAL};
+#[cfg(feature = "rusl")]
+pub use rusl_internal::syscall;
 
 // ============================================================================
 // rusl feature 关闭时：提供 extern "C" / 手动定义 fallback
@@ -19,13 +24,18 @@ pub use rusl_string::strchrnul;
 
 #[cfg(not(feature = "rusl"))]
 pub mod atomic {
-    extern "C" {
-        #[link_name = "a_crash"]
-        fn musl_a_crash() -> !;
-    }
-
+    /// 触发崩溃 —— 对应 musl `atomic.h` 中的 `static inline void a_crash()`。
+    /// musl 中 a_crash 是内联函数，不作为外部 C 符号导出，
+    /// 因此 rusl-env 必须自行实现。
     pub fn a_crash() -> ! {
-        unsafe { musl_a_crash() }
+        // 写入空指针触发 SIGSEGV，与 musl 行为一致
+        unsafe {
+            core::ptr::write_volatile(core::ptr::null_mut::<u8>(), 0);
+        }
+        // 如果上面的写入没有触发信号，则进入无限循环
+        loop {
+            core::hint::spin_loop();
+        }
     }
 }
 
@@ -81,7 +91,7 @@ pub mod libc {
 #[cfg(not(feature = "rusl"))]
 pub mod pthread_impl {
     use core::ffi::{c_int, c_uint, c_void};
-    use core::sync::atomic::{AtomicI32, AtomicU8, Ordering};
+    use core::sync::atomic::{AtomicI32, AtomicU8};
 
     pub type pthread_t = *mut Pthread;
 
@@ -163,14 +173,31 @@ pub mod pthread_impl {
     pub static mut DEFAULT_STACKSIZE: c_uint = DEFAULT_STACK_SIZE as c_uint;
 
     extern "C" {
-        #[link_name = "__pthread_self"]
-        fn musl_pthread_self() -> pthread_t;
         #[link_name = "__set_thread_area"]
         fn musl_set_thread_area(p: *mut c_void) -> c_int;
     }
 
+    /// 获取当前线程的 Pthread 指针。
+    /// 对应 musl `pthread_impl.h` 中的内联宏：
+    /// `#define __pthread_self() ((pthread_t)(__get_tp() - sizeof(struct __pthread) - TP_OFFSET))`
+    /// musl 中 __pthread_self 是内联宏，不作为外部 C 符号导出，
+    /// 因此 rusl-env 必须用内联汇编自行实现。
     pub fn __pthread_self() -> pthread_t {
-        unsafe { musl_pthread_self() }
+        let tp: usize;
+        #[cfg(target_arch = "x86_64")]
+        unsafe {
+            core::arch::asm!("mov {}, fs:0", out(reg) tp, options(nostack, preserves_flags));
+        }
+        #[cfg(target_arch = "aarch64")]
+        unsafe {
+            core::arch::asm!("mrs {}, tpidr_el0", out(reg) tp, options(nostack, preserves_flags));
+        }
+        // TLS Below TP (x86_64): TCB 在 TP 之下
+        #[cfg(not(TLS_ABOVE_TP))]
+        { (tp - core::mem::size_of::<Pthread>()) as pthread_t }
+        // TLS Above TP (aarch64): TCB 在 TP 之上
+        #[cfg(TLS_ABOVE_TP)]
+        { tp as pthread_t }
     }
 
     pub fn set_thread_area(p: *mut c_void) -> c_int {
@@ -186,6 +213,113 @@ pub mod defsysinfo {
     pub static __SYSINFO: AtomicUsize = AtomicUsize::new(0);
 }
 
+// ---------------------------------------------------------------------------
+// errno — 线程局部 errno 访问
+// ---------------------------------------------------------------------------
+
+#[cfg(not(feature = "rusl"))]
+pub mod errno {
+    use core::ffi::c_int;
+
+    /// EINVAL — 参数无效 (Invalid argument)。
+    /// POSIX.1-2001 定义。Linux x86_64 / aarch64 上 errno 值 = 22。
+    pub const EINVAL: c_int = 22;
+
+    extern "C" {
+        #[link_name = "__errno_location"]
+        fn musl_errno_location() -> *mut c_int;
+    }
+
+    /// 返回指向当前线程 errno 变量的指针。
+    pub fn __errno_location() -> *mut c_int {
+        unsafe { musl_errno_location() }
+    }
+
+    /// 设置当前线程的 errno 值。
+    ///
+    /// # Safety
+    ///
+    /// 调用者必须确保在适当的线程上下文中调用。
+    pub unsafe fn set_errno(val: c_int) {
+        unsafe { *__errno_location() = val; }
+    }
+}
+
+#[cfg(not(feature = "rusl"))]
+pub use errno::{__errno_location, set_errno, EINVAL};
+
+// ---------------------------------------------------------------------------
+// syscall — 原始系统调用
+// ---------------------------------------------------------------------------
+
+#[cfg(not(feature = "rusl"))]
+pub mod syscall {
+    use rusl_core::arch;
+
+    // --- x86_64 syscall numbers ---
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_exit: i64 = 60;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_exit_group: i64 = 231;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_open: i64 = 2;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_poll: i64 = 7;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_ppoll: i64 = 271;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_arch_prctl: i64 = 158;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_set_tid_address: i64 = 218;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_mmap: i64 = 9;
+
+    // --- aarch64 syscall numbers ---
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_exit: i64 = 93;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_exit_group: i64 = 94;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_open: i64 = 1024; // openat on aarch64
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_ppoll: i64 = 73;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_set_tid_address: i64 = 96;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_mmap: i64 = 222;
+
+    // --- raw syscall wrappers ---
+
+    #[inline]
+    pub unsafe fn raw_syscall1(nr: i64, a1: i64) -> i64 {
+        arch::__syscall1(nr, a1)
+    }
+
+    #[inline]
+    pub unsafe fn raw_syscall2(nr: i64, a1: i64, a2: i64) -> i64 {
+        arch::__syscall2(nr, a1, a2)
+    }
+
+    #[inline]
+    pub unsafe fn raw_syscall3(nr: i64, a1: i64, a2: i64, a3: i64) -> i64 {
+        arch::__syscall3(nr, a1, a2, a3)
+    }
+
+    #[inline]
+    pub unsafe fn raw_syscall5(nr: i64, a1: i64, a2: i64, a3: i64, a4: i64, a5: i64) -> i64 {
+        arch::__syscall5(nr, a1, a2, a3, a4, a5)
+    }
+
+    #[inline]
+    pub unsafe fn raw_syscall6(nr: i64, a1: i64, a2: i64, a3: i64, a4: i64, a5: i64, a6: i64) -> i64 {
+        arch::__syscall6(nr, a1, a2, a3, a4, a5, a6)
+    }
+}
+
+// ---------------------------------------------------------------------------
+// malloc — free
+// ---------------------------------------------------------------------------
+
 #[cfg(not(feature = "rusl"))]
 mod malloc_ffi {
     use core::ffi::c_void;
@@ -199,6 +333,13 @@ mod malloc_ffi {
 }
 
 #[cfg(not(feature = "rusl"))]
+pub use malloc_ffi::free;
+
+// ---------------------------------------------------------------------------
+// string — strchrnul
+// ---------------------------------------------------------------------------
+
+#[cfg(not(feature = "rusl"))]
 mod string_ffi {
     use core::ffi::{c_char, c_int};
     extern "C" {
@@ -210,7 +351,5 @@ mod string_ffi {
     }
 }
 
-#[cfg(not(feature = "rusl"))]
-pub use malloc_ffi::free;
 #[cfg(not(feature = "rusl"))]
 pub use string_ffi::strchrnul;

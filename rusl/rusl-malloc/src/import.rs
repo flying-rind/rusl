@@ -62,9 +62,6 @@ mod internal {
         pub static mut __libc: __libc;
     }
     pub use rusl_syscall::do_syscall;
-    pub use rusl_syscall::__syscall1;
-    pub use rusl_syscall::__syscall4;
-    pub use rusl_syscall::__syscall3;
 }
 
 #[cfg(not(feature = "rusl"))]
@@ -79,7 +76,7 @@ mod errno {
 }
 
 #[cfg(not(feature = "rusl"))]
-pub use crate::import::{string::memset,  errno::__errno_location, internal::{do_syscall, __syscall1,__syscall3, __syscall4, __libc}};
+pub use crate::import::{string::memset,  errno::__errno_location, internal::{do_syscall, __libc}};
 
 #[cfg(feature = "rusl")]
 pub use rusl_internal::do_syscall;
