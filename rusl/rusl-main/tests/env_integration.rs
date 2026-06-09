@@ -9,7 +9,7 @@
 #[cfg(feature = "rusl")]
 extern crate rusl_malloc;
 
-use rusl_core::test;
+use test_framework::test;
 
 #[no_mangle]
 pub extern "C" fn main(_argc: i32, _argv: *const *const u8) -> i32 {

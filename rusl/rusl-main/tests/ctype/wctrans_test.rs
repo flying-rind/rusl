@@ -399,7 +399,7 @@ test!("test_towctrans_spec_space_unchanged" {
 // 注意: WEOF 经过 toupper/tolower 的行为由 towupper/towlower 定义。
 test!("test_towctrans_spec_weof_invalid_trans" {
     unsafe {
-        let weof = c_types::WEOF;
+        let weof = WEOF;
         assert_eq!(towctrans(weof, 0), weof, "towctrans(WEOF, 0) 应返回 WEOF");
     }
 });
@@ -503,7 +503,7 @@ test!("test_towctrans_l_spec_invalid_trans_returns_original" {
 // 推测: `towctrans_l` 对 WEOF + 无效 trans 返回 WEOF。
 test!("test_towctrans_l_spec_weof_invalid_trans" {
     unsafe {
-        let weof = c_types::WEOF;
+        let weof = WEOF;
         let null_locale = core::ptr::null_mut();
         assert_eq!(
             towctrans_l(weof, 0, null_locale),

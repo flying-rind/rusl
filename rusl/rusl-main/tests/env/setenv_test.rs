@@ -30,7 +30,7 @@
 /// | 11 | 多次 setenv/unsetenv 循环 | `test_setenv_unsetenv_cycle` |
 
 use core::ffi::{c_char, c_int, CStr};
-use rusl_core::test;
+use test_framework::test;
 use super::*;
 
 const EINVAL: c_int = 22;

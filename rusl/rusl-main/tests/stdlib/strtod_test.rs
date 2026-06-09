@@ -5,7 +5,7 @@ use core::ffi::{c_char};
 use super::imports::{strtod, strtof};
 
 // [removed alloc import: use alloc::ffi::CString;]
-use rusl_core::test;
+use test_framework::test;
 
 // ---- strtod 测试 ----
 

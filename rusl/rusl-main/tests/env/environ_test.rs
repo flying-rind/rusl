@@ -43,7 +43,7 @@
 /// - sizeof(char **) == sizeof(char *) == sizeof(usize)
 /// - environ 的地址为静态 (多次获取一致)
 
-use rusl_core::test;
+use test_framework::test;
 use core::ffi::c_char;
 use core::mem;
 

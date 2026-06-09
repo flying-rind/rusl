@@ -39,7 +39,7 @@ fn panic_handler(info: &PanicInfo) -> ! {
 
 #[cfg(feature = "rusl")]
 #[no_mangle]
-pub unsafe extern "C" fn __rusl_set_panic_hook(hook: unsafe extern "C" fn(*const PanicInfo) -> !) {
+pub fn __rusl_set_panic_hook(hook: fn(*const PanicInfo) -> !) {
     PANIC_HOOK.store(hook as *mut (), Ordering::SeqCst);
 }
 

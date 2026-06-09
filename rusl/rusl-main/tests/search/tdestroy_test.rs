@@ -8,7 +8,7 @@ use super::imports::{tdestroy};
 
 use alloc::boxed::Box;
 use core::ptr;
-use rusl_core::test;
+use test_framework::test;
 
 // Internal tree node layout (opaque in public API)
 #[repr(C)]

@@ -3,8 +3,7 @@
 //!
 //! 测试 isalpha/isdigit/isspace 等字符分类 C ABI 接口。
 
-use rusl_core::test;
-pub use rusl_core::*;
+use test_framework::test;
 pub use core::ffi::c_int;
 pub use core::ffi::c_void;
 pub use core::ffi::c_char;
@@ -52,5 +51,6 @@ mod imports {
 #[cfg(not(feature = "rusl"))]
 mod imports {
     pub use rusl::api::ctype::*;
+    pub use rusl::api::types::*;
 }
 pub use imports::*;

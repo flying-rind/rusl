@@ -78,17 +78,29 @@ pub mod ctype {
     pub fn wctype(name: *const c_char) -> u64 { unsafe { super::ctype_ffi::wctype(name) } }
 
     // wctype 常量 (matches musl iswctype constants)
+    #[allow(unused)]
     pub const WCTYPE_ALNUM: u64 = 1;
+    #[allow(unused)]
     pub const WCTYPE_ALPHA: u64 = 2;
+    #[allow(unused)]
     pub const WCTYPE_BLANK: u64 = 3;
+    #[allow(unused)]
     pub const WCTYPE_CNTRL: u64 = 4;
+    #[allow(unused)]
     pub const WCTYPE_DIGIT: u64 = 5;
+    #[allow(unused)]
     pub const WCTYPE_GRAPH: u64 = 6;
+    #[allow(unused)]
     pub const WCTYPE_LOWER: u64 = 7;
+    #[allow(unused)]
     pub const WCTYPE_PRINT: u64 = 8;
+    #[allow(unused)]
     pub const WCTYPE_PUNCT: u64 = 9;
+    #[allow(unused)]
     pub const WCTYPE_SPACE: u64 = 10;
+    #[allow(unused)]
     pub const WCTYPE_UPPER: u64 = 11;
+    #[allow(unused)]
     pub const WCTYPE_XDIGIT: u64 = 12;
 }
 

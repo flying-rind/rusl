@@ -17,7 +17,7 @@
 use core::ffi::{c_char, c_int, CStr};
 
 use rusl::api::errno::{__errno_location, strerror, strerror_l};
-use rusl_core::test;
+use test_framework::test;
 
 // ===========================================================================
 // 辅助函数

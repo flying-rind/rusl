@@ -1,5 +1,5 @@
 use super::imports::wmemcpy;
-use rusl_core::test;
+use test_framework::test;
 
 
 test!("test_basic_copy" {

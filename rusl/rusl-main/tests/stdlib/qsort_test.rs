@@ -3,7 +3,7 @@
 
 use core::ffi::{c_void};
 use super::imports::{qsort_r, qsort};
-use rusl_core::test;
+use test_framework::test;
 
 // 辅助比较函数
 unsafe extern "C" fn cmp_int(a: *const c_void, b: *const c_void) -> i32 {

@@ -1,7 +1,7 @@
 /// 模块: rand_test
 /// `rand` 集成测试
 
-use rusl_core::test;
+use test_framework::test;
 use super::*;
 
 test!("test_rand_range" {

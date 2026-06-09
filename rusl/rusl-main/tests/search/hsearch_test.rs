@@ -5,7 +5,7 @@ use core::ffi::{c_char, c_void};
 use super::imports::{ACTION, ENTRY, hcreate, hdestroy, hsearch};
 
 use core::ptr;
-use rusl_core::test;
+use test_framework::test;
 
 extern crate alloc;
 

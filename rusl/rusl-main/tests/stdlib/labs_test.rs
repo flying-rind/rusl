@@ -3,7 +3,7 @@
 
 // use core::ffi::{c_void};
 use super::imports::{labs, llabs, imaxabs};
-use rusl_core::test;
+use test_framework::test;
 
 // ---- labs 测试 ----
 

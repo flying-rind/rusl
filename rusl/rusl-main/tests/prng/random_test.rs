@@ -2,7 +2,7 @@
 /// `random` 集成测试
 
 use super::*;
-use rusl_core::test;
+use test_framework::test;
 
 // ─── 测试辅助函数 ────────────────────────────────────────────
 

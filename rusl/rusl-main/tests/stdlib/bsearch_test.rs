@@ -3,7 +3,7 @@
 
 use core::ffi::{c_void};
 use super::imports::{bsearch};
-use rusl_core::test;
+use test_framework::test;
 
 /// 辅助比较函数：比较两个 i32 值。
 unsafe extern "C" fn cmp_i32(a: *const c_void, b: *const c_void) -> i32 {

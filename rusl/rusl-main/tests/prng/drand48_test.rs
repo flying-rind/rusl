@@ -1,7 +1,7 @@
 /// 模块: drand48_test
 /// `drand48` 集成测试
 
-use rusl_core::test;
+use test_framework::test;
 use super::*;
 
 test!("test_drand48_range" {

@@ -1,6 +1,6 @@
 use core::ffi::{c_char};
 use super::imports::strstr;
-use rusl_core::test;
+use test_framework::test;
 
 
 test!("test_found" {

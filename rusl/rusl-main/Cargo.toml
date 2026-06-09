@@ -5,7 +5,8 @@ edition = "2021"
 description = "#![no_std] Rust 实现的 musl libc 兼容库 — 聚合 crate"
 
 [features]
-default = ["rusl"]
+# default = ["rusl"]
+default = []
 rusl = [
     "dep:rusl-core",
     "dep:rusl-internal",

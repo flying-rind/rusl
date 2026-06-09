@@ -1,13 +1,8 @@
 //! Ctype — 字符分类、大小写转换、宽字符辅助、locale 辅助函数
 
-use core::ffi::{c_int, c_char, c_uint, c_ulong, c_void};
+use core::ffi::{c_int, c_char};
+use crate::api::types::{wchar_t, wint_t, wctype_t, wctrans_t, locale_t};
 
-pub type wchar_t = i32;
-pub type wint_t = c_uint;
-pub type wctype_t = c_ulong;
-pub type wctrans_t = c_ulong;
-pub type locale_t = *mut c_void;
-pub const WEOF: wint_t = 0xffffffff_u32;
 
 // ---------- WCTYPE constants ----------
 

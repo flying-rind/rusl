@@ -281,7 +281,7 @@ pub fn runner(tests: &[&dyn Fn()]) -> ! {
 ///
 /// 签名: `unsafe extern "C" fn(*const PanicInfo) -> !`
 /// 通过 `__rusl_set_panic_hook` 注册到 lib,替换默认的死循环行为
-pub unsafe extern "C" fn test_panic_handler(info_ptr: *const PanicInfo) -> ! {
+pub fn test_panic_handler(info_ptr: *const PanicInfo) -> ! {
     let info = unsafe { &*info_ptr };
 
     // 打印失败标记 (与 run_test 中 "... " 拼接为 "... FAILED")
@@ -304,8 +304,8 @@ pub unsafe extern "C" fn test_panic_handler(info_ptr: *const PanicInfo) -> ! {
 
 /// 在 runner 中调用,将 lib 的 panic_handler 重定向到 test_panic_handler
 pub fn install_panic_hook() {
-    extern "C" {
-        fn __rusl_set_panic_hook(hook: unsafe extern "C" fn(*const PanicInfo) -> !);
+    extern "Rust" {
+        fn __rusl_set_panic_hook(hook: fn(*const PanicInfo) -> !);
     }
     unsafe { __rusl_set_panic_hook(test_panic_handler); }
 }

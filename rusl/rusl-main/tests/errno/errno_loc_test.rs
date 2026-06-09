@@ -16,7 +16,7 @@
 use core::ffi::c_int;
 
 use rusl::api::errno::{__errno_location, ___errno_location};
-use rusl_core::test;
+use test_framework::test;
 
 // ===========================================================================
 // 基本功能测试

@@ -1,6 +1,6 @@
 use core::ffi::{c_char};
 use super::imports::strverscmp;
-use rusl_core::test;
+use test_framework::test;
 
 
 test!("test_version_compare" {

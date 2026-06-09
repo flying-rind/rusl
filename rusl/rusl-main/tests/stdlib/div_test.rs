@@ -2,7 +2,7 @@
 /// `div` 集成测试
 
 use super::imports::{div, ldiv, lldiv, imaxdiv};
-use rusl_core::test;
+use test_framework::test;
 
 // ---- div 测试 ----
 

@@ -1,7 +1,7 @@
 use super::imports::stpncpy;
 
 use core::ffi::c_char;
-use rusl_core::test;
+use test_framework::test;
 
 
 test!("test_basic_copy" {

@@ -2,7 +2,7 @@
 /// `seed48` 集成测试
 
 use super::*;
-use rusl_core::test;
+use test_framework::test;
 
 test!("test_seed48_returns_non_null" {
     // seed48 返回非空指针。

@@ -9,7 +9,7 @@
 #[cfg(feature = "rusl")]
 extern crate alloc;
 
-use rusl_core::test;
+use test_framework::test;
 #[cfg(feature = "rusl")]
 extern crate rusl_malloc;
 #[cfg(feature = "rusl")]

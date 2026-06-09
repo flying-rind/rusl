@@ -5,7 +5,7 @@ use core::ffi::{c_char};
 use super::imports::{atof};
 
 // [removed alloc import: // [removed alloc import: use alloc::ffi::CString;]]
-use rusl_core::test;
+use test_framework::test;
 
 test!("test_basic_decimal" {
     // 测试基本的十进制字符串解析。

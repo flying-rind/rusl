@@ -5,7 +5,7 @@ use core::ffi::{c_void};
 use super::imports::{insque, remque};
 
 use core::ptr;
-use rusl_core::test;
+use test_framework::test;
 
 /// 侵入式链表节点的辅助结构（与 C 源码 `struct node` 布局一致）。
 #[repr(C)]

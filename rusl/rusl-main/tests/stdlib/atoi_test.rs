@@ -5,7 +5,7 @@ use core::ffi::{c_char};
 use super::imports::{atoi, atol, atoll};
 
 // [removed alloc import: // [removed alloc import: use alloc::ffi::CString;]]
-use rusl_core::test;
+use test_framework::test;
 
 // ---- atoi 测试 ----
 

@@ -5,7 +5,7 @@ use core::ffi::{c_void};
 use super::imports::{lsearch, lfind};
 
 use core::ptr;
-use rusl_core::test;
+use test_framework::test;
 
 /// 比较 i32 值的辅助函数。
 unsafe extern "C" fn cmp_int(a: *const c_void, b: *const c_void) -> i32 {

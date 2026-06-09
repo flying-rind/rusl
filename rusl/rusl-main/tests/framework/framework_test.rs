@@ -1,4 +1,4 @@
-use rusl_core::test;
+use test_framework::test;
 
 test!("framework_assert_true" {
     assert!(true);

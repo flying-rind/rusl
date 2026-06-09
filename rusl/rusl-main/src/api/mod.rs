@@ -15,6 +15,14 @@
 //! - `prng`   — 伪随机数生成
 
 #[cfg(feature = "rusl")]
+pub mod types {
+    pub use rusl_core::c_types::*;
+}
+#[cfg(not(feature = "rusl"))]
+#[path ="type.rs"]
+pub mod types;
+
+#[cfg(feature = "rusl")]
 pub mod ctype {
     pub use rusl_ctype::*;
 }

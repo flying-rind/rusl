@@ -20,7 +20,7 @@
 
 use core::ffi::{c_char, c_int, CStr};
 
-use rusl_core::test;
+use test_framework::test;
 use super::*;
 
 // =========================================================================
@@ -42,9 +42,7 @@ unsafe fn getenv_equals_bytes(name: &CStr, expected: &[u8]) -> bool {
 
 test!("test_clearenv_returns_zero" {
     // 验证 clearenv 始终返回 0。
-    unsafe {
         assert_eq!(clearenv(), 0, "clearenv 必须始终返回 0");
-    }
 });
 
 test!("test_clearenv_return_value_after_setenv" {
@@ -79,19 +77,15 @@ test!("test_clearenv_return_type_is_c_int" {
 
 test!("test_clearenv_twice" {
     // 连续两次调用 clearenv 均返回 0（空环境上再次清除是无害的）。
-    unsafe {
         assert_eq!(clearenv(), 0);
         assert_eq!(clearenv(), 0);
-    }
 });
 
 test!("test_clearenv_many_times" {
     // 多次连续调用，每次都应返回 0，且不崩溃。
-    unsafe {
         for _ in 0..16 {
             assert_eq!(clearenv(), 0, "每次 clearenv 都应返回 0");
         }
-    }
 });
 
 test!("test_clearenv_idempotent_empty_env" {
@@ -346,13 +340,11 @@ test!("test_clearenv_on_already_empty_env" {
 
 test!("test_clearenv_after_clearenv_no_crash" {
     // 最短路径: clearenv 紧接 clearenv，验证不会崩溃。
-    unsafe {
         clearenv();
         clearenv();
         clearenv();
         // 如果以上三行未触发 SIGSEGV/panic，则认为通过
         assert_eq!(clearenv(), 0);
-    }
 });
 
 // =========================================================================

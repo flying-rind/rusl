@@ -4,7 +4,7 @@
 use super::imports::{wcstol, wcstoll, wcstoul, wcstoull, wcstoimax, wcstoumax};
 
 // [removed alloc import: // [removed alloc import: ]]
-use rusl_core::test;
+use test_framework::test;
 
 #[allow(non_camel_case_types)]
 type wchar_t = i32;

@@ -35,7 +35,7 @@
 use core::ffi::{c_char, c_int};
 use core::ffi::CStr;
 
-use rusl_core::test;
+use test_framework::test;
 
 // ============================================================================
 // 常量

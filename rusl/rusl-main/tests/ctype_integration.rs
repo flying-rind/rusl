@@ -6,7 +6,7 @@
 #![test_runner(test_framework::runner)]
 #![reexport_test_harness_main = "test_main"]
 
-use rusl_core::test;
+use test_framework::test;
 #[cfg(feature = "rusl")]
 extern crate rusl_malloc;
 

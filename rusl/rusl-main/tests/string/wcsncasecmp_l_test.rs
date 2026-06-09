@@ -1,5 +1,5 @@
 use super::imports::wcsncasecmp_l;
-use rusl_core::test;
+use test_framework::test;
 
 
 test!("test_equal" {

@@ -2,7 +2,7 @@
 /// `rand_r` 集成测试
 
 use super::*;
-use rusl_core::test;
+use test_framework::test;
 
 test!("test_rand_r_updates_seed" {
     // rand_r 更新种子指针指向的值。

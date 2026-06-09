@@ -1,5 +1,5 @@
 use super::imports::strsignal;
-use rusl_core::test;
+use test_framework::test;
 
 
 test!("test_valid_signal" {

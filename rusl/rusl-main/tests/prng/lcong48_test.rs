@@ -2,7 +2,7 @@
 /// `lcong48` 集成测试
 
 use super::*;
-use rusl_core::test;
+use test_framework::test;
 
 test!("test_lcong48_sets_params" {
     // lcong48 设置自定义参数后，lrand48 应产生确定性输出。

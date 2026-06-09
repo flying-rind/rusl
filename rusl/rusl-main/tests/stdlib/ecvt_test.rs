@@ -2,7 +2,7 @@
 /// `ecvt` / `fcvt` / `gcvt` 集成测试
 
 use super::imports::{ecvt, fcvt, gcvt};
-use rusl_core::test;
+use test_framework::test;
 
 // ---- ecvt 测试 ----
 

@@ -18,7 +18,7 @@ extern crate rusl_malloc;
 // 需要 panic_handler; 该符号定义于 rusl-main/src/lib.rs (cfg(not(feature="rusl"))).
 extern crate rusl;
 
-use rusl_core::test;
+use test_framework::test;
 
 #[no_mangle]
 pub extern "C" fn main(_argc: i32, _argv: *const *const u8) -> i32 {

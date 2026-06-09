@@ -7,7 +7,7 @@ extern crate alloc;
 use core::ffi::{c_char};
 use super::imports::{strtol, strtoll, strtoul, strtoull, strtoimax, strtoumax};
 // [removed alloc import: use alloc::ffi::CString;]
-use rusl_core::test;
+use test_framework::test;
 
 // ---- strtol 测试 ----
 

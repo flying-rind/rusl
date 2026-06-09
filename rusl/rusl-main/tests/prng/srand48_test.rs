@@ -2,7 +2,7 @@
 /// `srand48` 集成测试
 
 use super::*;
-use rusl_core::test;
+use test_framework::test;
 
 test!("test_srand48_no_panic" {
     // srand48 调用后不应 panic。

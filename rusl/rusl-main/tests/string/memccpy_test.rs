@@ -1,6 +1,6 @@
 use core::ffi::{c_void};
 use super::imports::memccpy;
-use rusl_core::test;
+use test_framework::test;
 
 
 test!("test_copy_until_c" {
