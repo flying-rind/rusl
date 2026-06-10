@@ -11,6 +11,8 @@
 
 extern crate rusl_core;
 
+pub(crate) mod import;
+
 #[path = "internal_inner.rs"]
 mod internal_inner;
 

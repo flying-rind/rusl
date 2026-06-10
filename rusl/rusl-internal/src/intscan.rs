@@ -9,18 +9,8 @@
 //! `pub(crate)` — 仅在 rusl crate 内部使用。
 
 use core::ffi::{c_int, c_uint, c_ulonglong};
-use rusl_errno::__errno_location;
-
-/// 内部 FILE 类型的占位符声明。
-///
-/// 完整定义位于 `crate::stdio` 模块。此占位符允许 intscan
-/// 模块在 stdio 模块尚未完全实现时即可编译。
-///
-/// TODO: 当 stdio 模块就绪后，替换为 `use crate::stdio::File;`
-#[repr(C)]
-pub struct File {
-    _private: [u8; 0], // 零大小占位，实际布局由 stdio 模块定义
-}
+use crate::import::__errno_location;
+use crate::file::FILE;
 
 /// EINVAL — 无效参数错误码 (musl: 22)
 const EINVAL: c_int = 22;
@@ -349,24 +339,204 @@ fn parse_generic(cur: &mut Cursor, first_c: u8, base: u32) -> (u64, bool) {
 }
 
 // ---------------------------------------------------------------------------
-// __intscan — File 流版本（占位实现）
+// FILE 流辅助函数
+// ---------------------------------------------------------------------------
+
+/// `shunget(f)` — 回退一个字符。
+/// 对应 C 宏: `#define shunget(f) ((f)->shlim >= 0 ? (void)(f)->rpos-- : (void)0)`
+#[inline]
+pub(crate) unsafe fn shunget(f: *mut FILE) {
+    if (*f).shlim >= 0 {
+        (*f).rpos = (*f).rpos.sub(1);
+    }
+}
+
+/// `shgetc(f)` 宏 — 快速路径 + 慢速路径。
+///
+/// 对应 C 宏: `#define shgetc(f) (((f)->rpos != (f)->shend) ? *(f)->rpos++ : __shgetc(f))`
+#[inline]
+pub(crate) unsafe fn shgetc(f: *mut FILE) -> u8 {
+    if (*f).rpos != (*f).shend {
+        let c = *(*f).rpos;
+        (*f).rpos = (*f).rpos.add(1);
+        c
+    } else {
+        crate::shgetc::__shgetc(f) as u8
+    }
+}
+
+// ---------------------------------------------------------------------------
+// __intscan — FILE 流版本
 // ---------------------------------------------------------------------------
 
 /// 内部整数流解析引擎（File 流版本）。
-pub fn __intscan(
-    _f: *mut File,
+/// 对应 musl `unsigned long long __intscan(FILE *f, unsigned base, int pok, unsigned long long lim)`
+#[no_mangle]
+pub unsafe extern "C" fn __intscan(
+    f: *mut FILE,
     base: c_uint,
-    _pok: c_int,
+    pok: c_int,
     lim: c_ulonglong,
 ) -> c_ulonglong {
-    let _ = (_f, _pok);
-    if (base as u32) > 36 || base == 1 {
-        unsafe { *__errno_location() = EINVAL; }
-        return 0;
+    unsafe {
+        let base_val = base as u32;
+        if base_val > 36 || base_val == 1 {
+            *__errno_location() = EINVAL;
+            return 0;
+        }
+
+        // 跳过空白
+        let mut c: u8 = 0;
+        loop {
+            c = shgetc(f);
+            if !is_space(c) { break; }
+        }
+
+        // 正负号
+        let mut neg: u64 = 0;
+        if c == b'+' || c == b'-' {
+            neg = if c == b'-' { u64::MAX } else { 0 };
+            c = shgetc(f);
+        }
+
+        // 进制前缀检测
+        let actual_base: u32;
+        if (base_val == 0 || base_val == 16) && c == b'0' {
+            c = shgetc(f);
+            if (c | 32) == b'x' {
+                c = shgetc(f);
+                if val(c) >= 16 {
+                    shunget(f);
+                    if pok != 0 { shunget(f); }
+                    *__errno_location() = EINVAL;
+                    return 0;
+                }
+                actual_base = 16;
+            } else if base_val == 0 {
+                actual_base = 8;
+            } else {
+                actual_base = base_val;
+            }
+        } else {
+            if base_val == 0 { actual_base = 10; }
+            else { actual_base = base_val; }
+            if val(c) >= actual_base as u8 {
+                shunget(f);
+                *__errno_location() = EINVAL;
+                return 0;
+            }
+        }
+
+        // 按进制分派解析
+        let (y, overflow) = if actual_base == 10 {
+            parse_decimal_stream(f, c)
+        } else if (actual_base & (actual_base - 1)) == 0 {
+            parse_power_of_two_stream(f, c, actual_base, shift_bits(actual_base))
+        } else {
+            parse_generic_stream(f, c, actual_base)
+        };
+
+        // 溢出
+        let mut y = y;
+        if overflow {
+            *__errno_location() = ERANGE;
+            y = lim;
+            if (lim & 1) != 0 { neg = 0; }
+        }
+
+        // 上限检查
+        if y >= lim {
+            if (lim & 1) == 0 && neg == 0 {
+                *__errno_location() = ERANGE;
+                return lim - 1;
+            } else if y > lim {
+                *__errno_location() = ERANGE;
+                return lim;
+            }
+        }
+
+        // 取反
+        (y ^ neg).wrapping_sub(neg)
     }
-    let _ = lim;
-    unsafe { *__errno_location() = EINVAL; }
-    0
+}
+
+// ---------------------------------------------------------------------------
+// FILE 流解析路径
+// ---------------------------------------------------------------------------
+
+unsafe fn parse_decimal_stream(f: *mut FILE, first_c: u8) -> (u64, bool) {
+    unsafe {
+        let mut c = first_c;
+        let mut x: u32 = 0;
+        while c.wrapping_sub(b'0') < 10 && x <= u32::MAX / 10 - 1 {
+            x = x * 10 + (c - b'0') as u32;
+            c = shgetc(f);
+        }
+        let mut y = x as u64;
+        while c.wrapping_sub(b'0') < 10
+            && y <= u64::MAX / 10
+            && 10u64 * y <= u64::MAX - (c - b'0') as u64
+        {
+            y = y * 10 + (c - b'0') as u64;
+            c = shgetc(f);
+        }
+        if c.wrapping_sub(b'0') < 10 {
+            while c.wrapping_sub(b'0') < 10 { c = shgetc(f); }
+            shunget(f);
+            return (y, true);
+        }
+        shunget(f);
+        (y, false)
+    }
+}
+
+unsafe fn parse_power_of_two_stream(f: *mut FILE, first_c: u8, base: u32, bs: u32) -> (u64, bool) {
+    unsafe {
+        let mut c = first_c;
+        let mut x: u32 = 0;
+        while val(c) < base as u8 && x <= u32::MAX / 32 {
+            x = x << bs | (val(c) as u32);
+            c = shgetc(f);
+        }
+        let mut y = x as u64;
+        while val(c) < base as u8 && y <= u64::MAX >> bs {
+            y = y << bs | (val(c) as u64);
+            c = shgetc(f);
+        }
+        if val(c) < base as u8 {
+            while val(c) < base as u8 { c = shgetc(f); }
+            shunget(f);
+            return (y, true);
+        }
+        shunget(f);
+        (y, false)
+    }
+}
+
+unsafe fn parse_generic_stream(f: *mut FILE, first_c: u8, base: u32) -> (u64, bool) {
+    unsafe {
+        let mut c = first_c;
+        let mut x: u32 = 0;
+        while val(c) < base as u8 && x <= u32::MAX / 36 - 1 {
+            x = x * base + (val(c) as u32);
+            c = shgetc(f);
+        }
+        let mut y = x as u64;
+        while val(c) < base as u8
+            && y <= u64::MAX / (base as u64)
+            && (base as u64) * y <= u64::MAX - (val(c) as u64)
+        {
+            y = y * (base as u64) + (val(c) as u64);
+            c = shgetc(f);
+        }
+        if val(c) < base as u8 {
+            while val(c) < base as u8 { c = shgetc(f); }
+            shunget(f);
+            return (y, true);
+        }
+        shunget(f);
+        (y, false)
+    }
 }
 
 // ---------------------------------------------------------------------------

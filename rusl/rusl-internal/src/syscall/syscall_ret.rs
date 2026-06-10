@@ -7,7 +7,7 @@
 // On success, the result is returned as-is.
 
 use core::ffi::{c_int, c_long, c_ulong};
-use rusl_errno::__errno_location;
+use crate::import::__errno_location;
 
 /// Convert raw kernel syscall return value to libc convention.
 ///

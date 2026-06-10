@@ -8,6 +8,7 @@
 //!
 //! `pub(crate)` — 仅在 rusl crate 内部使用。
 
+#[cfg(feature = "rusl")]
 use core::ffi::c_int;
 use core::sync::atomic::{AtomicI32, Ordering};
 
@@ -26,80 +27,20 @@ pub static AIO_FUT: AtomicI32 = AtomicI32::new(0);
 
 /// 关闭与 AIO 操作关联的文件描述符。
 ///
-/// 在关闭 fd 之前，确保所有针对该 fd 的异步 I/O 请求
-/// 已被取消或完成，以防止竞态条件。
-///
-/// # 参数
-///
-/// * `fd` - 通过 AIO 子系统注册的文件描述符
-///
-/// # 返回值
-///
-/// * 成功: 返回 0
-/// * 失败: 返回 -1，设置 `errno`（如 `EBADF` 表示无效的 `fd`）
-///
-/// # 系统算法
-///
-/// 1. 递增 `AIO_FUT` 表示操作进行中
-/// 2. 执行实际的清理操作（rusl no_std 阶段为占位实现）
-/// 3. 递减 `AIO_FUT`
-/// 4. 返回 0
-///
-/// # Safety
-///
-/// 调用者必须确保 `fd` 是已通过 AIO 子系统注册的有效文件描述符。
-///
-/// # Rust 实现说明
-///
-/// 在 rusl `#![no_std]` 环境下，实际的 close 系统调用需要 `syscall` 模块支持。
-/// 当前实现提供 AIO 计数器的原子保护框架，实际的 fd 关闭由调用方完成。
+/// 仅在 rusl feature 启用时导出。禁用时由 musl src/aio/aio.c 提供。
+#[cfg(feature = "rusl")]
 #[no_mangle]
 pub unsafe extern "C" fn __aio_close(fd: c_int) -> c_int {
-    // 递增 AIO_FUT 计数器，标记操作进行中
     AIO_FUT.fetch_add(1, Ordering::AcqRel);
-
-    // 占位：rusl no_std 阶段暂不执行实际的 AIO 取消操作。
-    // C 实现中此处调用 aio_cancel(fd, 0)，
-    // 而 aio_cancel 依赖 pthread_cancel 等复杂机制。
-    // 在完整实现中，此处应通过 syscall 模块调用 SYS_close。
     let _ = fd;
-
-    // 递减 AIO_FUT 计数器
     AIO_FUT.fetch_sub(1, Ordering::AcqRel);
-
-    // 返回 0 表示成功（与 __aio_close 的文档约定一致）
-    // C 实现直接返回 fd，此处统一返回 0 表示 AIO 清理成功
     0
 }
 
 /// `fork()` 处理程序。
 ///
-/// 在 `fork()` 前后被调用，协调 AIO 操作与进程 fork。
-///
-/// # 参数
-///
-/// * `arg` - 调用阶段：
-///   * `0` = pre-fork（等待所有 AIO 操作完成）
-///   * `1` = post-fork parent（父进程无需操作，计数器保持一致）
-///   * `2` = post-fork child（子进程重置 AIO 状态）
-///
-/// # 前置条件
-///
-/// * `arg` 必须属于 `{0, 1, 2}`
-///
-/// # 系统算法
-///
-/// - pre-fork (arg=0): 自旋等待 `AIO_FUT` 变为 0，
-///   确保在 fork 之前没有任何进行中的 AIO 操作。
-///   （完整实现应使用 futex 阻塞而非忙等）
-/// - post-fork parent (arg=1): 父进程中无需操作，
-///   因为父进程的 AIO 状态在 fork 前后保持一致。
-/// - post-fork child (arg=2): 子进程中重置 `AIO_FUT` 为 0，
-///   因为子进程不应继承父进程的进行中 AIO 操作。
-///
-/// # Safety
-///
-/// 仅在 `fork()` 实现的关键区段中被调用。
+/// 仅在 rusl feature 启用时导出。禁用时由 musl src/aio/aio.c 提供。
+#[cfg(feature = "rusl")]
 #[no_mangle]
 pub unsafe extern "C" fn __aio_atfork(arg: c_int) {
     match arg {
@@ -167,36 +108,37 @@ mod tests {
         assert_eq!(AIO_FUT.load(Ordering::SeqCst), 0);
     });
 
-    // 测试 pre-fork 模式 (arg=0)：AIO_FUT 为 0 时立即返回。
-    test!("aio_atfork_pre_fork_zero" {
-        AIO_FUT.store(0, Ordering::SeqCst);
-        unsafe { super::__aio_atfork(0); }
-        // pre-fork 后 AIO_FUT 应仍为 0
-        assert_eq!(AIO_FUT.load(Ordering::SeqCst), 0);
-    });
+    // 以下测试仅在 rusl feature 启用时可用（需要 __aio_atfork 导出）。
+    #[cfg(feature = "rusl")]
+    mod aio_atfork_tests {
+        use rusl_core::test;
+        use super::super::AIO_FUT;
+        use core::sync::atomic::Ordering;
 
-    // 测试 post-fork parent 模式 (arg=1)：状态不变。
-    test!("aio_atfork_parent" {
-        AIO_FUT.store(3, Ordering::SeqCst);
-        unsafe { super::__aio_atfork(1); }
-        // 父进程中 AIO_FUT 保持原值
-        assert_eq!(AIO_FUT.load(Ordering::SeqCst), 3);
-        AIO_FUT.store(0, Ordering::SeqCst);
-    });
+        test!("aio_atfork_pre_fork_zero" {
+            AIO_FUT.store(0, Ordering::SeqCst);
+            unsafe { super::super::__aio_atfork(0); }
+            assert_eq!(AIO_FUT.load(Ordering::SeqCst), 0);
+        });
 
-    // 测试 post-fork child 模式 (arg=2)：重置为 0。
-    test!("aio_atfork_child_reset" {
-        AIO_FUT.store(5, Ordering::SeqCst);
-        unsafe { super::__aio_atfork(2); }
-        // 子进程中 AIO_FUT 应被重置为 0
-        assert_eq!(AIO_FUT.load(Ordering::SeqCst), 0);
-    });
+        test!("aio_atfork_parent" {
+            AIO_FUT.store(3, Ordering::SeqCst);
+            unsafe { super::super::__aio_atfork(1); }
+            assert_eq!(AIO_FUT.load(Ordering::SeqCst), 3);
+            AIO_FUT.store(0, Ordering::SeqCst);
+        });
 
-    // 测试非法 arg 值：不应 panic。
-    test!("aio_atfork_invalid_arg" {
-        AIO_FUT.store(1, Ordering::SeqCst);
-        unsafe { super::__aio_atfork(-1); }
-        unsafe { super::__aio_atfork(99); }
-        AIO_FUT.store(0, Ordering::SeqCst);
-    });
+        test!("aio_atfork_child_reset" {
+            AIO_FUT.store(5, Ordering::SeqCst);
+            unsafe { super::super::__aio_atfork(2); }
+            assert_eq!(AIO_FUT.load(Ordering::SeqCst), 0);
+        });
+
+        test!("aio_atfork_invalid_arg" {
+            AIO_FUT.store(1, Ordering::SeqCst);
+            unsafe { super::super::__aio_atfork(-1); }
+            unsafe { super::super::__aio_atfork(99); }
+            AIO_FUT.store(0, Ordering::SeqCst);
+        });
+    }
 }

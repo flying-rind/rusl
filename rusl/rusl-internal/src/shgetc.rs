@@ -10,10 +10,8 @@
 
 use core::ffi::c_int;
 
-/// 内部 FILE 类型的占位符声明（从 intscan 模块导入，避免重复定义）。
-///
-/// 完整定义位于 `crate::stdio` 模块。
-pub use crate::intscan::File;
+use crate::file::FILE;
+use crate::import::__uflow;
 
 /// EOF 常量，与 musl 一致。
 const EOF: c_int = -1;
@@ -21,7 +19,7 @@ const EOF: c_int = -1;
 /// 扫描数据源类型。
 pub enum ScanSource {
     /// 真实 FILE 流
-    File(*mut File),
+    File(*mut FILE),
     /// 字符串源：起始指针 + 长度（不含 '\0'）
     String {
         base: *const u8,
@@ -103,7 +101,7 @@ impl ScanHelper {
     /// * `f` 非空，指向一个已初始化的 `File`
     ///
     /// TODO: 当 stdio 模块完整实现后，此函数将从真实 FILE 流读取数据。
-    pub fn from_file(_f: *mut File) -> Self {
+    pub fn from_file(_f: *mut FILE) -> Self {
         // 目前 File 是占位符（零大小），返回一个空的 ScanHelper
         ScanHelper {
             source: ScanSource::File(_f),
@@ -247,6 +245,66 @@ impl ScanHelper {
     }
 }
 
+// ---------------------------------------------------------------------------
+// C ABI 导出 — 对应 musl src/internal/shgetc.c
+// ---------------------------------------------------------------------------
+
+/// C ABI: `void __shlim(FILE *f, off_t lim)`
+#[no_mangle]
+pub unsafe extern "C" fn __shlim(f: *mut FILE, lim: i64) {
+    unsafe {
+        (*f).shlim = lim;
+        (*f).shcnt = (*f).buf.offset_from((*f).rpos) as i64;
+        if lim != 0 && (*f).rend.offset_from((*f).rpos) > lim as isize {
+            (*f).shend = (*f).rpos.offset(lim as isize);
+        } else {
+            (*f).shend = (*f).rend;
+        }
+    }
+}
+
+/// C ABI: `int __shgetc(FILE *f)`
+///
+/// 对应 musl src/internal/shgetc.c 的实现。
+/// 注意：必须使用短路求值，仅在缓冲区为空时才调用 `__uflow`。
+#[no_mangle]
+pub unsafe extern "C" fn __shgetc(f: *mut FILE) -> c_int {
+    unsafe {
+        // shcnt(f) = f->shcnt + (f->rpos - f->buf)
+        let cnt = (*f).shcnt + (*f).rpos.offset_from((*f).buf) as i64;
+
+        // 短路求值：先检查宽度限制
+        if (*f).shlim != 0 && cnt >= (*f).shlim {
+            (*f).shcnt = (*f).buf.offset_from((*f).rpos) as i64 + cnt;
+            (*f).shend = (*f).rpos;
+            (*f).shlim = -1;
+            return -1; // EOF
+        }
+
+        // 缓冲区为空时从底层读取
+        let c = __uflow(f);
+        if c < 0 {
+            (*f).shcnt = (*f).buf.offset_from((*f).rpos) as i64 + cnt;
+            (*f).shend = (*f).rpos;
+            (*f).shlim = -1;
+            return -1; // EOF
+        }
+
+        // 成功读取一个字符
+        let cnt = cnt + 1;
+        if (*f).shlim != 0 && (*f).rend.offset_from((*f).rpos) > (*f).shlim as isize - cnt as isize {
+            (*f).shend = (*f).rpos.offset(((*f).shlim - cnt) as isize);
+        } else {
+            (*f).shend = (*f).rend;
+        }
+        (*f).shcnt = (*f).buf.offset_from((*f).rpos) as i64 + cnt;
+        if (*f).rpos <= (*f).buf {
+            *(*f).rpos.sub(1) = c as u8;
+        }
+        c
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use rusl_core::test;
@@ -352,7 +410,7 @@ mod tests {
     });
 
     test!("from_file_placeholder" {
-        let f: *mut File = core::ptr::null_mut();
+        let f: *mut FILE = core::ptr::null_mut();
         let sh = ScanHelper::from_file(f);
         assert!(sh.shend.is_null());
         assert_eq!(sh.shlim, 0);

@@ -17,7 +17,7 @@
 
 
 ## 对musl的修改
-修改了musl的Makefile以部分替换为rusl实现，修改后的Makefile放在[Makefile-modified](musl-config/modified/Makefile)，原版的Makefile备份在![Makefile-orig](musl-config/origin/Makefile.bak)，[lib-origin](musl-config/origin/lib/)存放原版musl的编译产物。[REPORT-orig](musl-config/origin/REPORT.original)是使用原版musl测试的测试报告。
+修改了musl的Makefile以部分替换为rusl实现，修改后的Makefile放在[Makefile-modified](musl-config/modified/Makefile)，原版的Makefile备份在[Makefile-orig](musl-config/origin/Makefile.bak)，[lib-origin](musl-config/origin/lib/)存放原版musl的编译产物。[REPORT-orig](musl-config/origin/REPORT.original)是使用原版musl测试的测试报告。
 
 ## 测试说明
 

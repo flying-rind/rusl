@@ -264,6 +264,564 @@ fn parse_hex_float(input: &[u8], start: usize, sign: f64) -> (f64, usize) {
     (value, pos)
 }
 
+use crate::file::FILE;
+use crate::intscan::{shgetc, shunget};
+
+// ---- floatscan 常量 (x86_64, LDBL_MANT_DIG=64) ----
+
+const LD_B1B_DIG: usize = 3;
+const LD_B1B_MAX: [u32; 3] = [18, 446744073, 709551615];
+const KMAX: usize = 2048;
+const MASK: usize = KMAX - 1;
+
+const EINVAL: i32 = 22;
+const ERANGE: i32 = 34;
+
+// ---- C ABI: __floatscan ----
+
+/// 内部实现: 返回 f64 (xmm0)，由 C 包装层 `__floatscan` 转换为 long double (st(0))。
+#[no_mangle]
+pub unsafe extern "C" fn __floatscan_impl(
+    f: *mut FILE,
+    prec: core::ffi::c_int,
+    pok: core::ffi::c_int,
+) -> f64 {
+    unsafe { __floatscan_inner(f, prec, pok) }
+}
+
+unsafe fn __floatscan_inner(f: *mut FILE, prec: i32, pok: i32) -> f64 {
+    // 字符串扫描快速路径 (rend == (void*)-1)
+    let start = (*f).rpos;
+    if !start.is_null() && (*f).rend as usize == !0usize {
+        let mut end = start;
+        while *end != 0 { end = end.add(1); }
+        let len = end.offset_from(start) as usize;
+        let slice = core::slice::from_raw_parts(start, len);
+        let pok_flag = if pok != 0 { POK_SPECIAL } else { 0 };
+        let (val, consumed) = floatscan(slice, 0, pok_flag);
+        (*f).rpos = start.add(consumed);
+        let buf = (*f).buf;
+        (*f).shcnt = buf.offset_from((*f).rpos) as i64;
+        return val;
+    }
+
+    // 真实 FILE 流 — 逐字符解析
+    let (bits, emin) = match prec {
+        0 => (24, -149),
+        1 => (53, -1074),
+        2 => (64, -16445),
+        _ => return 0.0,
+    };
+
+    // 跳过空白
+    let mut c: i32 = 0;
+    loop {
+        c = shgetc(f) as i32;
+        if !is_space(c as u8) { break; }
+    }
+
+    // 正负号
+    let mut sign: f64 = 1.0;
+    if c == '+' as i32 || c == '-' as i32 {
+        if c == '-' as i32 { sign = -1.0; }
+        c = shgetc(f) as i32;
+    }
+
+    // 尝试匹配 "inf" / "infinity"
+    let mut i: usize = 0;
+    while i < 8 && (c | 32) == b"infinity"[i] as i32 {
+        if i < 7 { c = shgetc(f) as i32; }
+        i += 1;
+    }
+    if i == 3 || i == 8 || (i > 3 && pok != 0) {
+        if i != 8 {
+            shunget(f);
+            if pok != 0 { for _ in 3..i { shunget(f); } }
+        }
+        return sign * f64::INFINITY;
+    }
+
+    // 尝试匹配 "nan"
+    if i == 0 {
+        i = 0;
+        while i < 3 && (c | 32) == b"nan"[i] as i32 {
+            if i < 2 { c = shgetc(f) as i32; }
+            i += 1;
+        }
+    }
+    if i == 3 {
+        if shgetc(f) != '(' as i32 as u8 {
+            shunget(f);
+            return f64::NAN;
+        }
+        loop {
+            c = shgetc(f) as i32;
+            if (c as u8).wrapping_sub(b'0') < 10
+                || (c as u8).wrapping_sub(b'A') < 26
+                || (c as u8).wrapping_sub(b'a') < 26
+                || c == '_' as i32
+            {
+                continue;
+            }
+            if c == ')' as i32 { return f64::NAN; }
+            shunget(f);
+            if pok == 0 {
+                *crate::import::__errno_location() = EINVAL;
+                return 0.0;
+            }
+            while i > 0 { shunget(f); i -= 1; }
+            return f64::NAN;
+        }
+    }
+
+    // 无效输入
+    if i > 0 {
+        shunget(f);
+        *crate::import::__errno_location() = EINVAL;
+        return 0.0;
+    }
+
+    // 十六进制前缀
+    if c == '0' as i32 {
+        c = shgetc(f) as i32;
+        if (c | 32) == 'x' as i32 {
+            return hexfloat(f, bits, emin, sign, pok);
+        }
+        shunget(f);
+        c = '0' as i32;
+    }
+
+    decfloat(f, c, bits, emin, sign, pok)
+}
+
+// ---- hexfloat ----
+
+unsafe fn hexfloat(f: *mut FILE, bits: i32, emin: i32, sign: f64, pok: i32) -> f64 {
+    let mut x: u32 = 0;
+    let mut y: f64 = 0.0;
+    let mut scale: f64 = 1.0;
+    let mut bias: f64 = 0.0;
+    let mut gottail: bool = false;
+    let mut gotrad: bool = false;
+    let mut gotdig: bool = false;
+    let mut rp: i64 = 0;
+    let mut dc: i64 = 0;
+    let mut e2: i64 = 0;
+
+    let mut c: i32 = shgetc(f) as i32;
+
+    // 跳过前导零
+    while c == '0' as i32 { gotdig = true; c = shgetc(f) as i32; }
+
+    if c == '.' as i32 {
+        gotrad = true;
+        c = shgetc(f) as i32;
+        while c == '0' as i32 { gotdig = true; rp -= 1; c = shgetc(f) as i32; }
+    }
+
+    loop {
+        let cv = c as u8;
+        if cv.wrapping_sub(b'0') < 10 || (cv | 32).wrapping_sub(b'a') < 6 || c == '.' as i32 {
+            if c == '.' as i32 {
+                if gotrad { break; }
+                rp = dc;
+                gotrad = true;
+            } else {
+                gotdig = true;
+                let d = if c > '9' as i32 { ((cv | 32) + 10) - b'a' } else { cv - b'0' };
+                if dc < 8 {
+                    x = x * 16 + d as u32;
+                } else if dc < (bits / 4 + 1) as i64 {
+                    y += (d as f64) * (scale / 16.0);
+                    scale /= 16.0;
+                } else if d > 0 && !gottail {
+                    y += 0.5 * scale;
+                    gottail = true;
+                }
+                dc += 1;
+            }
+        } else {
+            break;
+        }
+        c = shgetc(f) as i32;
+    }
+
+    if !gotdig {
+        shunget(f);
+        if pok != 0 {
+            shunget(f);
+            if gotrad { shunget(f); }
+        }
+        return sign * 0.0;
+    }
+
+    if !gotrad { rp = dc; }
+    while dc < 8 { x *= 16; dc += 1; }
+
+    if (c | 32) == 'p' as i32 {
+        e2 = scanexp(f, pok);
+        if e2 == i64::MIN {
+            if pok != 0 {
+                shunget(f);
+            }
+            e2 = 0;
+        }
+    } else {
+        shunget(f);
+    }
+    e2 += 4 * rp - 32;
+
+    if x == 0 { return sign * 0.0; }
+    if e2 > -(emin as i64) {
+        *crate::import::__errno_location() = ERANGE;
+        return sign * f64::MAX * f64::MAX;
+    }
+    if e2 < (emin - 2 * bits) as i64 {
+        *crate::import::__errno_location() = ERANGE;
+        return sign * f64::MIN_POSITIVE * f64::MIN_POSITIVE;
+    }
+
+    while x < 0x8000_0000 {
+        if y >= 0.5 {
+            x += x + 1;
+            y += y - 1.0;
+        } else {
+            x += x;
+            y += y;
+        }
+        e2 -= 1;
+    }
+
+    let mut b: i32 = bits;
+    if b > (32i64 + e2 - emin as i64) as i32 {
+        b = (32i64 + e2 - emin as i64) as i32;
+        if b < 0 { b = 0; }
+    }
+
+    if b < bits {
+        bias = copysign(scalbn(1.0, 32 + bits - b - 1), sign);
+    }
+
+    if b < 32 && y != 0.0 && (x & 1) == 0 { x += 1; y = 0.0; }
+
+    let mut result = bias + sign * (x as f64) + sign * y;
+    result -= bias;
+
+    if result == 0.0 { *crate::import::__errno_location() = ERANGE; }
+
+    scalbn(result, e2 as i32)
+}
+
+// ---- scanexp ----
+
+unsafe fn scanexp(f: *mut FILE, pok: i32) -> i64 {
+    let mut c: i32 = shgetc(f) as i32;
+    let mut neg: bool = false;
+
+    if c == '+' as i32 || c == '-' as i32 {
+        neg = c == '-' as i32;
+        c = shgetc(f) as i32;
+        if (c as u8).wrapping_sub(b'0') >= 10 && pok != 0 { shunget(f); }
+    }
+    if (c as u8).wrapping_sub(b'0') >= 10 {
+        shunget(f);
+        return i64::MIN;
+    }
+
+    let mut x: i32 = 0;
+    while (c as u8).wrapping_sub(b'0') < 10 && x < i32::MAX / 10 {
+        x = 10 * x + (c - '0' as i32);
+        c = shgetc(f) as i32;
+    }
+    let mut y = x as i64;
+    while (c as u8).wrapping_sub(b'0') < 10 && y < i64::MAX / 100 {
+        y = 10i64 * y + ((c as i64) - (b'0' as i64));
+        c = shgetc(f) as i32;
+    }
+    while (c as u8).wrapping_sub(b'0') < 10 { c = shgetc(f) as i32; }
+    shunget(f);
+    if neg { -y } else { y }
+}
+
+// ---- decfloat ----
+
+unsafe fn decfloat(f: *mut FILE, first_c: i32, bits: i32, emin: i32, sign: f64, pok: i32) -> f64 {
+    let mut x: [u32; KMAX] = [0u32; KMAX];
+    let th: &[u32] = &LD_B1B_MAX;
+    let mut c: i32 = first_c;
+    let mut lrp: i64 = 0;
+    let mut dc: i64 = 0;
+    let mut e10: i64 = 0;
+    let mut lnz: i64 = 0;
+    let mut gotdig: bool = false;
+    let mut gotrad: bool = false;
+    let mut denormal: bool = false;
+
+    let mut j: usize = 0;
+    let mut k: usize = 0;
+
+    // 跳过前导零
+    while c == '0' as i32 { gotdig = true; c = shgetc(f) as i32; }
+    if c == '.' as i32 {
+        gotrad = true;
+        c = shgetc(f) as i32;
+        while c == '0' as i32 { gotdig = true; lrp -= 1; c = shgetc(f) as i32; }
+    }
+
+    x[0] = 0;
+    loop {
+        let cv = c as u8;
+        if cv.wrapping_sub(b'0') < 10 || c == '.' as i32 {
+            if c == '.' as i32 {
+                if gotrad { break; }
+                gotrad = true;
+                lrp = dc;
+            } else if k < KMAX - 3 {
+                dc += 1;
+                if c != '0' as i32 { lnz = dc; }
+                if j > 0 { x[k] = x[k] * 10 + (cv - b'0') as u32; }
+                else { x[k] = (cv - b'0') as u32; }
+                j += 1;
+                if j == 9 { k += 1; j = 0; }
+                gotdig = true;
+            } else {
+                dc += 1;
+                if c != '0' as i32 {
+                    lnz = (KMAX - 4) as i64 * 9;
+                    x[KMAX - 4] |= 1;
+                }
+            }
+        } else {
+            break;
+        }
+        c = shgetc(f) as i32;
+    }
+    if !gotrad { lrp = dc; }
+
+    if gotdig && (c | 32) == 'e' as i32 {
+        e10 = scanexp(f, pok);
+        if e10 == i64::MIN {
+            if pok != 0 { shunget(f); }
+            else { return 0.0; }
+            e10 = 0;
+        }
+        lrp += e10;
+    } else if c >= 0 {
+        shunget(f);
+    }
+    if !gotdig {
+        *crate::import::__errno_location() = EINVAL;
+        return 0.0;
+    }
+
+    // 零值
+    if x[0] == 0 { return sign * 0.0; }
+
+    // 小整数优化
+    if lrp == dc && dc < 10 && (bits > 30 || (x[0] as i64 >> bits) == 0) {
+        return sign * (x[0] as f64);
+    }
+    if lrp > -(emin as i64) / 2 {
+        *crate::import::__errno_location() = ERANGE;
+        return sign * f64::MAX * f64::MAX;
+    }
+    if lrp < (emin - 2 * bits) as i64 {
+        *crate::import::__errno_location() = ERANGE;
+        return sign * f64::MIN_POSITIVE * f64::MIN_POSITIVE;
+    }
+
+    // 对齐不完整的 B1B 数字
+    if j > 0 {
+        while j < 9 { x[k] *= 10; j += 1; }
+        k += 1;
+    }
+
+    let mut a: usize = 0;
+    let mut z: usize = k;
+    let mut e2: i64 = 0;
+    let mut rp: i64 = lrp;
+
+    // 中小整数优化
+    if lnz < 9 && lnz <= rp && rp < 18 {
+        if rp == 9 { return sign * (x[0] as f64); }
+        if rp < 9 {
+            let p10s: [f64; 8] = [10.0, 100.0, 1000.0, 10000.0, 100000.0, 1000000.0, 10000000.0, 100000000.0];
+            return sign * (x[0] as f64) / p10s[(8 - rp as usize)];
+        }
+        let bitlim = bits - 3 * (rp as i32 - 9);
+        if bitlim > 30 || (x[0] as i64 >> bitlim) == 0 {
+            let p10s: [f64; 8] = [10.0, 100.0, 1000.0, 10000.0, 100000.0, 1000000.0, 10000000.0, 100000000.0];
+            return sign * (x[0] as f64) * p10s[(rp as usize - 10)];
+        }
+    }
+
+    // 丢弃尾部零
+    while z > 0 && x[z - 1] == 0 { z -= 1; }
+
+    // 对齐小数点
+    if rp % 9 != 0 {
+        let rpm9 = if rp >= 0 { (rp % 9) as usize } else { ((rp % 9) + 9) as usize };
+        let p10s: [u32; 9] = [1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000];
+        let p10 = p10s[8 - rpm9] as u64;
+        let mut carry: u32 = 0;
+        let mut k2 = a;
+        while k2 != z {
+            let tmp = (x[k2] as u64) % p10;
+            x[k2] = ((x[k2] as u64) / p10) as u32 + carry;
+            carry = (1000000000 / (p10 as u32)) * (tmp as u32);
+            if k2 == a && x[k2] == 0 {
+                a = (a + 1) & MASK;
+                rp -= 9;
+            }
+            k2 = (k2 + 1) & MASK;
+        }
+        if carry > 0 { x[z] = carry; z = (z + 1) & MASK; }
+        rp += 9 - rpm9 as i64;
+    }
+
+    // 上缩放
+    while rp < 9 * LD_B1B_DIG as i64 || (rp == 9 * LD_B1B_DIG as i64 && x[a] < th[0]) {
+        let mut carry: u32 = 0;
+        e2 -= 29;
+        let mut k2 = (z.wrapping_sub(1)) & MASK;
+        loop {
+            let tmp: u64 = ((x[k2] as u64) << 29) + carry as u64;
+            if tmp > 1000000000 {
+                carry = (tmp / 1000000000) as u32;
+                x[k2] = (tmp % 1000000000) as u32;
+            } else {
+                carry = 0;
+                x[k2] = tmp as u32;
+            }
+            if k2 == (z.wrapping_sub(1)) & MASK && k2 != a && x[k2] == 0 { z = k2; }
+            if k2 == a { break; }
+            k2 = (k2.wrapping_sub(1)) & MASK;
+        }
+        if carry > 0 {
+            rp += 9;
+            a = (a.wrapping_sub(1)) & MASK;
+            if a == z {
+                z = (z.wrapping_sub(1)) & MASK;
+                x[(z.wrapping_sub(1)) & MASK] |= x[z];
+            }
+            x[a] = carry;
+        }
+    }
+
+    // 下缩放
+    loop {
+        let mut carry: u32 = 0;
+        let mut sh: i32 = 1;
+        let mut i: usize = 0;
+        while i < LD_B1B_DIG {
+            let k2 = (a + i) & MASK;
+            if k2 == z || x[k2] < th[i] { i = LD_B1B_DIG; break; }
+            if x[(a + i) & MASK] > th[i] { break; }
+            i += 1;
+        }
+        if i == LD_B1B_DIG && rp == 9 * LD_B1B_DIG as i64 { break; }
+        if rp > 9 + 9 * LD_B1B_DIG as i64 { sh = 9; }
+        e2 += sh as i64;
+        let mut k2 = a;
+        while k2 != z {
+            let tmp = x[k2] & ((1u32 << sh) - 1);
+            x[k2] = (x[k2] >> sh) + carry;
+            carry = (1000000000 >> sh) * tmp;
+            if k2 == a && x[k2] == 0 {
+                a = (a + 1) & MASK;
+                if i > 0 { i -= 1; }
+                rp -= 9;
+            }
+            k2 = (k2 + 1) & MASK;
+        }
+        if carry > 0 {
+            if (z + 1) & MASK != a {
+                x[z] = carry;
+                z = (z + 1) & MASK;
+            } else {
+                x[(z.wrapping_sub(1)) & MASK] |= 1;
+            }
+        }
+    }
+
+    // 组装浮点数
+    let mut y: f64 = 0.0;
+    let mut i: usize = 0;
+    while i < LD_B1B_DIG {
+        if (a + i) & MASK == z {
+            x[z] = 0;
+            z = (z + 1) & MASK;
+        }
+        y = 1000000000.0 * y + x[(a + i) & MASK] as f64;
+        i += 1;
+    }
+
+    y *= sign;
+
+    let mut b = bits;
+    if b > LDBL_MANT_DIG + (e2 as i32) - emin {
+        b = LDBL_MANT_DIG + (e2 as i32) - emin;
+        if b < 0 { b = 0; }
+        denormal = true;
+    }
+
+    let mut frac: f64 = 0.0;
+    let mut bias: f64 = 0.0;
+    if b < LDBL_MANT_DIG {
+        bias = copysign(scalbn(1.0, 2 * LDBL_MANT_DIG - b - 1), y);
+        frac = fmod(y, scalbn(1.0, LDBL_MANT_DIG - b));
+        y -= frac;
+        y += bias;
+    }
+
+    if (a + i) & MASK != z {
+        let t = x[(a + i) & MASK];
+        if t < 500000000 && (t > 0 || (a + i + 1) & MASK != z) {
+            frac += 0.25 * sign;
+        } else if t > 500000000 {
+            frac += 0.75 * sign;
+        } else if t == 500000000 {
+            if (a + i + 1) & MASK == z { frac += 0.5 * sign; }
+            else { frac += 0.75 * sign; }
+        }
+        if LDBL_MANT_DIG - b >= 2 && fmod(frac, 1.0) == 0.0 { frac += 1.0; }
+    }
+
+    y += frac;
+    y -= bias;
+
+    let e2_biased = e2 + (LDBL_MANT_DIG as i64);
+    if (e2_biased & (i32::MAX as i64)) > ((emax5() - 5) as i64) {
+        if fabs(y) >= 2.0 / LDBL_EPSILON {
+            if denormal && b == LDBL_MANT_DIG + (e2 as i32) - emin { denormal = false; }
+            y *= 0.5;
+            e2 += 1;
+        }
+        if (e2 + (LDBL_MANT_DIG as i64)) > (emax5() as i64) || (denormal && frac != 0.0) {
+            *crate::import::__errno_location() = ERANGE;
+        }
+    }
+
+    scalbn(y, e2 as i32)
+}
+
+// ---- math helpers (delegate to C 80-bit precision) ----
+
+use crate::import::{
+    __floatscan_scale as scalbn,
+    __floatscan_mul as ldmul,
+    __floatscan_abs as fabs,
+    __floatscan_copysign as copysign,
+    __floatscan_fmod as fmod,
+};
+
+const LDBL_MANT_DIG: i32 = 64;
+const LDBL_EPSILON: f64 = 1.08420217248550443401e-19;
+
+fn emax5() -> i32 { 16384 - 5 }
+
+// ---- C ABI 导出结束 ----
+
 // ---------------------------------------------------------------------------
 // 单元测试
 // ---------------------------------------------------------------------------

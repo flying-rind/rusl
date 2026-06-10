@@ -222,7 +222,7 @@ pub unsafe extern "C" fn __init_libc(envp: *mut *mut c_char, pn: *const c_char) 
     // ---- 4. 提取全局系统参数 ----
     crate::import::libc::__hwcap = aux[AT_HWCAP];
     if aux[AT_SYSINFO] != 0 {
-        crate::import::defsysinfo::__SYSINFO.store(aux[AT_SYSINFO], Ordering::Release);
+        crate::import::defsysinfo::__sysinfo = aux[AT_SYSINFO];
     }
     crate::import::libc::__libc.page_size = aux[AT_PAGESZ];
 

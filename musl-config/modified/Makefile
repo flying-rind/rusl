@@ -29,16 +29,18 @@ RUSL_A_malloc = $(abspath $(srcdir)/../rusl/target/release/librusl_malloc.a)
 RUSL_A_string = $(abspath $(srcdir)/../rusl/target/release/librusl_string.a)
 RUSL_A_ctype  = $(abspath $(srcdir)/../rusl/target/release/librusl_ctype.a)
 RUSL_A_prng   = $(abspath $(srcdir)/../rusl/target/release/librusl_prng.a)
-RUSL_A_env    = $(abspath $(srcdir)/../rusl/target/release/librusl_env.a)
+RUSL_A_env      = $(abspath $(srcdir)/../rusl/target/release/librusl_env.a)
+RUSL_A_internal = $(abspath $(srcdir)/../rusl/target/release/librusl_internal.a)
 
-RUSL_FEATURES_malloc = --no-default-features
-RUSL_FEATURES_string = --no-default-features
-RUSL_FEATURES_ctype  = --no-default-features
-RUSL_FEATURES_prng   = --no-default-features
-RUSL_FEATURES_env    = --no-default-features
+RUSL_FEATURES_malloc   = --no-default-features
+RUSL_FEATURES_string   = --no-default-features
+RUSL_FEATURES_ctype    = --no-default-features
+RUSL_FEATURES_prng     = --no-default-features
+RUSL_FEATURES_env      = --no-default-features
+RUSL_FEATURES_internal = --no-default-features
 
 # 有效的可替换模块列表
-RUSL_MODULES = malloc string ctype prng env
+RUSL_MODULES = malloc string ctype prng env internal
 
 # ---- REPLACE 解析 ----
 # 支持 make replace mod1 mod2 ... (通过 MAKECMDGOALS 解析)
@@ -62,6 +64,9 @@ RUSL_STAMP_DEPS = $(foreach m,$(REPLACE),$(RUSL_A_$(m)))
 # 链接时添加的 .o 文件
 RUSL_LINK_OBJS  = $(if $(REPLACE),$(RUSL_OBJDIR)/*.o,)
 
+# floatscan_wrap.c: C ABI 包装层 (f64→long double), 替换 internal 时保留编译
+RUSL_WRAP_OBJ = $(if $(findstring internal,$(REPLACE)),obj/src/internal/floatscan_wrap.o,)
+
 MALLOC_DIR = mallocng
 SRC_DIRS = $(addprefix $(srcdir)/,src/* src/malloc/$(MALLOC_DIR) crt ldso $(COMPAT_SRC_DIRS))
 BASE_GLOBS = $(addsuffix /*.c,$(SRC_DIRS))
@@ -72,6 +77,7 @@ BASE_OBJS = $(patsubst $(srcdir)/%,%.o,$(basename $(BASE_SRCS)))
 ARCH_OBJS = $(patsubst $(srcdir)/%,%.o,$(basename $(ARCH_SRCS)))
 REPLACED_OBJS = $(sort $(subst /$(ARCH)/,/,$(ARCH_OBJS)))
 ALL_OBJS = $(addprefix obj/, $(filter-out $(REPLACED_OBJS), $(sort $(BASE_OBJS) $(ARCH_OBJS))))
+ALL_OBJS += $(RUSL_WRAP_OBJ)
 
 LIBC_OBJS = $(filter obj/src/%,$(ALL_OBJS)) $(filter obj/compat/%,$(ALL_OBJS))
 LDSO_OBJS = $(filter obj/ldso/%,$(ALL_OBJS:%.o=%.lo))
@@ -220,6 +226,7 @@ $(RUSL_STAMP): $(RUSL_STAMP_DEPS)
 	@cd $(RUSL_OBJDIR); for a in $(RUSL_STAMP_DEPS); do $(AR) x $$a; done
 	rm -f $(RUSL_OBJDIR)/test_framework-*.o
 	rm -f $(RUSL_OBJDIR)/rustc_std_workspace_core-*.o
+	rm -f $(RUSL_OBJDIR)/compiler_builtins-*.o
 	@touch $@
 
 endif
@@ -321,6 +328,9 @@ $(RUSL_A_prng): FORCE
 
 $(RUSL_A_env): FORCE
 	cd $(RUSL_WORKSPACE) && cargo build --package rusl-env $(RUSL_FEATURES_env) --release
+
+$(RUSL_A_internal): FORCE
+	cd $(RUSL_WORKSPACE) && cargo build --package rusl-internal $(RUSL_FEATURES_internal) --release
 
 # ---- replace 目标 ----
 # 用法: make replace string malloc ctype prng env

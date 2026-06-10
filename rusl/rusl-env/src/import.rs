@@ -221,8 +221,10 @@ pub mod pthread_impl {
 
 #[cfg(not(feature = "rusl"))]
 pub mod defsysinfo {
-    use core::sync::atomic::AtomicUsize;
-    pub static __SYSINFO: AtomicUsize = AtomicUsize::new(0);
+    extern "C" {
+        /// musl src/internal/defsysinfo.c: `size_t __sysinfo;`
+        pub static mut __sysinfo: usize;
+    }
 }
 
 // ---------------------------------------------------------------------------

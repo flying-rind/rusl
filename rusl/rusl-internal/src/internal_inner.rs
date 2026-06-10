@@ -9,6 +9,8 @@
 
 // 原子操作 (对应 musl src/internal/atomic.h)
 pub mod atomic;
+// C 兼容类型
+pub mod file;
 // libc 全局状态 (对应 musl src/internal/libc.c + libc.h)
 pub mod libc;
 // 版本号 (对应 musl src/internal/version.c)
@@ -23,6 +25,7 @@ pub mod lock;
 
 // 全局状态
 pub mod defsysinfo;
+pub mod vdso;
 
 // 系统调用宏 + 返回转换 (对应 musl src/internal/syscall.h + syscall_ret.c)
 pub mod syscall;

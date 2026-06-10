@@ -78,6 +78,13 @@ pub fn procfdname(buf: &mut [u8], fd: c_uint) {
     }
 }
 
+/// C ABI 导出 — 对应 musl `void __procfdname(char *buf, unsigned fd)`
+#[no_mangle]
+pub unsafe extern "C" fn __procfdname(buf: *mut u8, fd: c_uint) {
+    let buf_slice = unsafe { core::slice::from_raw_parts_mut(buf, 32) };
+    procfdname(buf_slice, fd);
+}
+
 #[cfg(test)]
 mod tests {
     use rusl_core::test;
