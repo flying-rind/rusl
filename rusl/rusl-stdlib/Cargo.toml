@@ -12,12 +12,10 @@ test = true
 [features]
 default = ["rusl"]
 c-test = []
-rusl = ["dep:rusl-internal", "dep:rusl-string", "dep:rusl-errno"]
+rusl = ["dep:rusl-errno"]
 
 [dependencies]
 rusl-core = { path = "../rusl-core", features = ["rusl"] }
-rusl-internal = { path = "../rusl-internal", optional = true }
-rusl-string = { path = "../rusl-string", optional = true }
 rusl-errno = { path = "../rusl-errno", optional = true }
 
 [profile.dev]

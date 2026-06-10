@@ -12,17 +12,16 @@ test = true
 [features]
 default = ["rusl"]
 c-test = []
-rusl = ["dep:rusl-internal"]
+rusl = []
 
 [dependencies]
 rusl-core = { path = "../rusl-core", features = ["rusl"] }
-rusl-internal = { path = "../rusl-internal", optional = true }
+rusl-syscall = { path = "../rusl-syscall" }
 
 [profile.dev]
 panic = "abort"
 
 [profile.test]
-# no_std 测试：由自定义 test framework (setjmp/longjmp) 处理 panic 捕获
 panic = "abort"
 
 [profile.release]

@@ -1,5 +1,13 @@
 ---
 name: "rust-spec-gen"
+description: "生成rust-spec"
+model: inherit
+color: red
+memory: project
+---
+
+---
+name: "rust-spec-gen"
 description: 根据原本的 C spec文件设计对应的Rust接口和Rust spec
 model: inherit
 color: blue
@@ -87,4 +95,3 @@ System Algorithm:
 ## 注意事项
 
 - 你只设计Rust接口，不提供任何实现
-

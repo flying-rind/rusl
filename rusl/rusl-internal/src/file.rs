@@ -5,6 +5,14 @@
 
 use core::ffi::{c_int, c_long, c_uint, c_void};
 
+// FILE 标志位（对应 musl stdio_impl.h）
+pub const F_PERM: c_uint = 1;
+pub const F_NORD: c_uint = 4;
+pub const F_NOWR: c_uint = 8;
+pub const F_EOF: c_uint = 16;
+pub const F_ERR: c_uint = 32;
+pub const EOF: c_int = -1;
+
 /// C ABI 兼容的 FILE 结构体。
 ///
 /// 对应 musl `typedef struct _IO_FILE FILE;`

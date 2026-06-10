@@ -11,16 +11,16 @@ test = true
 
 [features]
 default = ["rusl"]
-c-test = []
 # 开启时依赖各rusl crate,否则使用musl C接口
-rusl = ["dep:rusl-malloc", "dep:rusl-stdlib", "dep:rusl-string", "dep:rusl-internal"]
+rusl = ["dep:rusl-stdlib", "dep:rusl-string"]
 
 [dependencies]
 rusl-core = { path = "../rusl-core", features = ["rusl"] }
 rusl-stdlib = { path = "../rusl-stdlib", optional = true }
 rusl-string = { path = "../rusl-string", optional = true }
-rusl-internal = { path = "../rusl-internal", optional = true }
-rusl-malloc = { path = "../rusl-malloc", optional = true}
+
+[dev-dependencies]
+rusl-malloc = { path = "../rusl-malloc" }
 
 [profile.dev]
 panic = "abort"

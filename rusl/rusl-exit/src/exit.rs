@@ -1,32 +1,24 @@
 //! `exit` — 标准进程终止函数。
-//!
-//! 严格对应 musl `src/exit/exit.c`。
-//!
+//! 对应 musl `src/exit/exit.c`。
 //! 流程：atexit 处理 → fini 析构 → stdio 刷新 → `_Exit(code)`
 
-#![allow(non_upper_case_globals)]
-
 use core::ffi::c_int;
-use rusl_internal::atomic::{a_cas, a_crash};
-use rusl_internal::pthread_impl::__pthread_self;
-use crate::_Exit;
+use core::sync::atomic::{AtomicI32, Ordering};
+use rusl_syscall::__syscall1;
+use super::sys_consts::SYS_gettid;
+use super::_Exit;
 
 // ---------------------------------------------------------------------------
-// 弱符号等效：函数指针默认指向空操作，可由其他 crate 覆盖
-// 对应 C: weak_alias(dummy, __funcs_on_exit) 等
+// 弱符号等效 — 默认为空操作, 可由其他模块覆盖
 // ---------------------------------------------------------------------------
 
-extern "C" fn dummy() {}
-
-/// 对应 C: `weak_alias(dummy, __funcs_on_exit)`
-pub(crate) static mut __funcs_on_exit: extern "C" fn() = dummy;
-
-/// 对应 C: `weak_alias(dummy, __stdio_exit)`
-pub(crate) static mut __stdio_exit: extern "C" fn() = dummy;
+extern "C" {
+    /// 对应 C: `weak_alias(dummy, __stdio_exit)` — stdio 模块提供强定义覆盖。
+    fn __stdio_exit();
+}
 
 // ---------------------------------------------------------------------------
 // .fini_array — ELF 析构函数数组
-// 对应 C: extern weak hidden void (*const __fini_array_start)(void)
 // ---------------------------------------------------------------------------
 
 extern "C" {
@@ -37,36 +29,22 @@ extern "C" {
     static __fini_array_end: unsafe extern "C" fn();
 }
 
-/// 遍历 `.fini_array` 段，按逆序调用所有析构函数。
+/// 逆序遍历 .fini_array 调用析构函数。
+/// 对应 musl `libc_exit_fini()` (static → weak alias `__libc_exit_fini`)。
+/// 不做 `#[no_mangle]` 导出: 动态链接时由 `ldso/dynlink.c` 提供强版本覆盖。
 ///
-/// 严格对应 musl `exit.c` 中的 `libc_exit_fini()`:
-/// ```c
-/// static void libc_exit_fini(void)
-/// {
-///     uintptr_t a = (uintptr_t)&__fini_array_end;
-///     for (; a>(uintptr_t)&__fini_array_start; a-=sizeof(void(*)()))
-///         (*(void (**)())(a-sizeof(void(*)())))();
-///     _fini();
-/// }
-/// ```
+/// 与 musl C 版本不同: 不调用 `_fini()` — `.fini_array` 已覆盖所有析构需求，
+/// `_fini` 的弱符号语义可用纯 Rust 实现。
 unsafe fn libc_exit_fini() {
     let start = &raw const __fini_array_start as *const usize;
     let end = &raw const __fini_array_end as *const usize;
-    // 逆序遍历 fini_array
     let mut a = end as usize;
     let step = core::mem::size_of::<unsafe extern "C" fn()>();
     while a > start as usize {
         a -= step;
-        let f: unsafe extern "C" fn() = core::mem::transmute_copy(&*(a as *const usize));
+        let f: unsafe extern "C" fn() = unsafe { core::mem::transmute_copy(&*(a as *const usize)) };
         f();
     }
-    // _fini() — 默认指向 dummy，可由链接覆盖
-    // 在 Rust 中通过 __fini 函数指针或直接调用链接时覆盖的符号
-    extern "C" {
-        #[link_name = "_fini"]
-        fn _fini();
-    }
-    unsafe { _fini(); }
 }
 
 // ---------------------------------------------------------------------------
@@ -74,43 +52,27 @@ unsafe fn libc_exit_fini() {
 // ---------------------------------------------------------------------------
 
 /// ISO C `exit` — 以正常状态终止进程。
-///
-/// 严格按照 musl 实现：
-/// 1. 使用自定义 exit_lock 防止重入和并发退出
-/// 2. 调用 `__funcs_on_exit()`（由 atexit 注册的函数）
-/// 3. 调用 `__libc_exit_fini()`（遍历 .fini_array 析构函数）
-/// 4. 调用 `__stdio_exit()`（刷新 stdio 缓冲区）
-/// 5. 调用 `_Exit(code)` 终止进程
-#[allow(static_mut_refs)]
 #[no_mangle]
 pub unsafe extern "C" fn exit(code: c_int) -> ! {
-    // 对应 C: static volatile int exit_lock[1];
-    static mut EXIT_LOCK: [c_int; 1] = [0];
+    static EXIT_LOCK: AtomicI32 = AtomicI32::new(0);
 
-    // 对应 C: int tid = __pthread_self()->tid;
-    let tid = unsafe { (*__pthread_self()).tid };
-    // 对应 C: int prev = a_cas(exit_lock, 0, tid);
-    let prev = a_cas(EXIT_LOCK.as_mut_ptr(), 0, tid);
+    let tid = unsafe { __syscall1(SYS_gettid, 0) as c_int };
 
-    // 对应 C: if (prev == tid) a_crash();
+    let prev = EXIT_LOCK.compare_exchange(0, tid, Ordering::Acquire, Ordering::Relaxed)
+        .unwrap_or_else(|v| v);
+
     if prev == tid {
-        a_crash();
+        // 重入: 同一线程调用了 exit 两次 → crash
+        unsafe { core::ptr::null_mut::<u8>().write(0); }
+        loop { core::hint::spin_loop(); }
     }
-    // 对应 C: else if (prev) for (;;) __sys_pause();
     if prev != 0 {
-        loop {
-            // __sys_pause() — 让出 CPU，等待被杀死
-            core::hint::spin_loop();
-        }
+        // 另一线程正在退出 → 永久阻塞
+        loop { core::hint::spin_loop(); }
     }
 
-    // 对应 C: __funcs_on_exit();
-    unsafe { (__funcs_on_exit)(); }
-    // 对应 C: __libc_exit_fini();
+    super::atexit::__funcs_on_exit();
     unsafe { libc_exit_fini(); }
-    // 对应 C: __stdio_exit();
-    unsafe { (__stdio_exit)(); }
-
-    // 对应 C: _Exit(code);
+    unsafe { __stdio_exit(); }
     unsafe { _Exit(code) }
 }

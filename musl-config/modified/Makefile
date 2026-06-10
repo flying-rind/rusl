@@ -20,7 +20,7 @@ libdir = $(prefix)/lib
 syslibdir = /lib
 
 # --- RUSL crate replacements ---
-# 可配置的模块替换: make replace string malloc ctype prng env
+# 可配置的模块替换: make replace string malloc ctype prng env errno
 # 或: make REPLACE="string malloc"
 # 不指定 REPLACE 时，构建原版 musl（不替换任何模块）
 #
@@ -31,6 +31,9 @@ RUSL_A_ctype  = $(abspath $(srcdir)/../rusl/target/release/librusl_ctype.a)
 RUSL_A_prng   = $(abspath $(srcdir)/../rusl/target/release/librusl_prng.a)
 RUSL_A_env      = $(abspath $(srcdir)/../rusl/target/release/librusl_env.a)
 RUSL_A_internal = $(abspath $(srcdir)/../rusl/target/release/librusl_internal.a)
+RUSL_A_errno    = $(abspath $(srcdir)/../rusl/target/release/librusl_errno.a)
+RUSL_A_exit     = $(abspath $(srcdir)/../rusl/target/release/librusl_exit.a)
+RUSL_A_search   = $(abspath $(srcdir)/../rusl/target/release/librusl_search.a)
 
 RUSL_FEATURES_malloc   = --no-default-features
 RUSL_FEATURES_string   = --no-default-features
@@ -38,9 +41,12 @@ RUSL_FEATURES_ctype    = --no-default-features
 RUSL_FEATURES_prng     = --no-default-features
 RUSL_FEATURES_env      = --no-default-features
 RUSL_FEATURES_internal = --no-default-features
+RUSL_FEATURES_errno    = --no-default-features
+RUSL_FEATURES_exit     = --no-default-features
+RUSL_FEATURES_search   = --no-default-features
 
 # 有效的可替换模块列表
-RUSL_MODULES = malloc string ctype prng env internal
+RUSL_MODULES = malloc string ctype prng env internal errno exit search
 
 # ---- REPLACE 解析 ----
 # 支持 make replace mod1 mod2 ... (通过 MAKECMDGOALS 解析)
@@ -59,6 +65,8 @@ RUSL_STAMP     = $(RUSL_OBJDIR)/.extracted
 RUSL_SRC_FILTER = $(foreach m,$(REPLACE),$(srcdir)/src/$(m)/%)
 # 仅 string 有 arch 特定文件需要排除
 RUSL_ARCH_FILTER = $(if $(findstring string,$(REPLACE)),$(srcdir)/src/string/%,)
+# errno 替换时排除 src/string/strerror_r.c (rusl-errno 已实现)
+RUSL_ERRNO_STRING_FILTER = $(if $(findstring errno,$(REPLACE)),$(srcdir)/src/string/strerror_r.c,)
 # 需要提取的 .a 列表
 RUSL_STAMP_DEPS = $(foreach m,$(REPLACE),$(RUSL_A_$(m)))
 # 链接时添加的 .o 文件
@@ -71,7 +79,7 @@ MALLOC_DIR = mallocng
 SRC_DIRS = $(addprefix $(srcdir)/,src/* src/malloc/$(MALLOC_DIR) crt ldso $(COMPAT_SRC_DIRS))
 BASE_GLOBS = $(addsuffix /*.c,$(SRC_DIRS))
 ARCH_GLOBS = $(addsuffix /$(ARCH)/*.[csS],$(SRC_DIRS))
-BASE_SRCS = $(sort $(filter-out $(RUSL_SRC_FILTER),$(wildcard $(BASE_GLOBS))))
+BASE_SRCS = $(sort $(filter-out $(RUSL_SRC_FILTER) $(RUSL_ERRNO_STRING_FILTER) %/floatscan_wrap.c,$(wildcard $(BASE_GLOBS))))
 ARCH_SRCS = $(sort $(filter-out $(RUSL_ARCH_FILTER),$(wildcard $(ARCH_GLOBS))))
 BASE_OBJS = $(patsubst $(srcdir)/%,%.o,$(basename $(BASE_SRCS)))
 ARCH_OBJS = $(patsubst $(srcdir)/%,%.o,$(basename $(ARCH_SRCS)))
@@ -331,6 +339,15 @@ $(RUSL_A_env): FORCE
 
 $(RUSL_A_internal): FORCE
 	cd $(RUSL_WORKSPACE) && cargo build --package rusl-internal $(RUSL_FEATURES_internal) --release
+
+$(RUSL_A_errno): FORCE
+	cd $(RUSL_WORKSPACE) && cargo build --package rusl-errno $(RUSL_FEATURES_errno) --release
+
+$(RUSL_A_exit): FORCE
+	cd $(RUSL_WORKSPACE) && cargo build --package rusl-exit $(RUSL_FEATURES_exit) --release
+
+$(RUSL_A_search): FORCE
+	cd $(RUSL_WORKSPACE) && cargo build --package rusl-search $(RUSL_FEATURES_search) --release
 
 # ---- replace 目标 ----
 # 用法: make replace string malloc ctype prng env

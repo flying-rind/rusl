@@ -64,7 +64,7 @@ name = "rusl-exit"
 version = "0.1.0"
 dependencies = [
  "rusl-core",
- "rusl-internal",
+ "rusl-syscall",
 ]
 
 [[package]]
@@ -73,6 +73,7 @@ version = "0.1.0"
 dependencies = [
  "rusl-core",
  "rusl-errno",
+ "rusl-stdio",
 ]
 
 [[package]]
@@ -121,7 +122,6 @@ name = "rusl-stdio"
 version = "0.1.0"
 dependencies = [
  "rusl-core",
- "rusl-internal",
  "rusl-malloc",
  "rusl-stdlib",
  "rusl-string",
@@ -133,8 +133,6 @@ version = "0.1.0"
 dependencies = [
  "rusl-core",
  "rusl-errno",
- "rusl-internal",
- "rusl-string",
 ]
 
 [[package]]

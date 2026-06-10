@@ -8,6 +8,7 @@
 #![test_runner(rusl_core::runner)]
 #![reexport_test_harness_main = "test_main"]
 #![no_main]
+#[allow(non_upper_case_globals)]
 
 extern crate rusl_core;
 

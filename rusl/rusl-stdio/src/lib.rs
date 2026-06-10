@@ -10,8 +10,9 @@
 #![no_main]
 
 extern crate rusl_core;
-#[cfg(feature = "rusl")]
+#[cfg(test)]
 extern crate rusl_malloc;
+#[cfg(test)]
 extern crate alloc;
 
 pub(crate) mod import;
