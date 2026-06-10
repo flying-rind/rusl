@@ -31,14 +31,30 @@
 
 - **集成测试中不能使用extern "C"**,而是使用rusl-main的api模块导出接口。
 
-# 测试musl-libc
+- 每次修改./musl-1.2.6/Makefile后，将其复制到./musl-config/modified/Makefile
 
+# 运行测试
+
+## 运行./rusl目录下的集成测试和单元测试，并测试rusl的Rust实现
 ```
+cd rusl
+make test
+```
+
+## 运行./rusl目录下的集成测试，并直接测试musl-libc
+```
+cd rusl
 make test-c
 ```
 
-# 测试rusl的对外api
+## 运行libc-test的测试
+首先重新编译musl libc（部分替代为rusl实现）再进入
+```
+cd musl-1.2.6 && make clean
+make replace xxx xxx
+cd ../libc-test
+make clean && make
+```
 
-```
-make inte-test
-```
+# 测试结果对比
+./musl-lib-origin/REPORT.original是使用原始musl测试libc-test的结果，每次测试完成后对比输出新增的错误

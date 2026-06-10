@@ -8,6 +8,8 @@
 # Do not make changes here.
 #
 
+# test
+
 srcdir = .
 exec_prefix = /usr/local
 bindir = $(exec_prefix)/bin
@@ -33,7 +35,7 @@ RUSL_FEATURES_malloc = --no-default-features
 RUSL_FEATURES_string = --no-default-features
 RUSL_FEATURES_ctype  = --no-default-features
 RUSL_FEATURES_prng   = --no-default-features
-RUSL_FEATURES_env    = --features rusl
+RUSL_FEATURES_env    = --no-default-features
 
 # 有效的可替换模块列表
 RUSL_MODULES = malloc string ctype prng env
@@ -97,7 +99,6 @@ LDFLAGS_ALL = $(LDFLAGS_AUTO) $(LDFLAGS)
 
 AR      = $(CROSS_COMPILE)ar
 RANLIB  = $(CROSS_COMPILE)ranlib
-OBJCOPY = $(CROSS_COMPILE)objcopy
 INSTALL = $(srcdir)/tools/install.sh
 
 ARCH_INCLUDES = $(wildcard $(srcdir)/arch/$(ARCH)/bits/*.h)
@@ -205,7 +206,7 @@ obj/%.lo: $(srcdir)/%.c $(GENH) $(IMPH)
 # --- rusl object extraction ---
 # 条件化提取: 仅当 REPLACE 非空时执行
 # 所有 staticlib 共享依赖 (rusl_core, core)，提取到同一目录避免重复符号。
-# 对与 musl 冲突的符号做 weaken 处理，让 musl 版本优先。
+#
 ifeq ($(REPLACE),)
 
 $(RUSL_STAMP):
@@ -219,37 +220,6 @@ $(RUSL_STAMP): $(RUSL_STAMP_DEPS)
 	@cd $(RUSL_OBJDIR); for a in $(RUSL_STAMP_DEPS); do $(AR) x $$a; done
 	rm -f $(RUSL_OBJDIR)/test_framework-*.o
 	rm -f $(RUSL_OBJDIR)/rustc_std_workspace_core-*.o
-	@# rusl_core: weaken symbols that may conflict with musl
-	@for obj in $(RUSL_OBJDIR)/rusl_core-*.o; do \
-		if [ -f "$$obj" ]; then \
-			$(OBJCOPY) --weaken-symbol=__errno_location "$$obj" 2>/dev/null || true; \
-			$(OBJCOPY) --weaken-symbol=___errno_location "$$obj" 2>/dev/null || true; \
-			$(OBJCOPY) --weaken-symbol=__syscall_ret "$$obj" 2>/dev/null || true; \
-			$(OBJCOPY) --weaken-symbol=strerror "$$obj" 2>/dev/null || true; \
-			$(OBJCOPY) --weaken-symbol=strerror_l "$$obj" 2>/dev/null || true; \
-		fi; \
-	done
-	@# rusl-errno (brought in by rusl-env): weaken conflicting errno symbols
-	@for obj in $(RUSL_OBJDIR)/rusl_errno-*.o; do \
-		if [ -f "$$obj" ]; then \
-			$(OBJCOPY) --weaken-symbol=strerror "$$obj" 2>/dev/null || true; \
-			$(OBJCOPY) --weaken-symbol=__strerror_l "$$obj" 2>/dev/null || true; \
-			$(OBJCOPY) --weaken-symbol=strerror_r "$$obj" 2>/dev/null || true; \
-			$(OBJCOPY) --weaken-symbol=__xpg_strerror_r "$$obj" 2>/dev/null || true; \
-			$(OBJCOPY) --weaken-symbol=__errno_location "$$obj" 2>/dev/null || true; \
-			$(OBJCOPY) --weaken-symbol=___errno_location "$$obj" 2>/dev/null || true; \
-		fi; \
-	done
-	@# rusl-env: weaken CRT symbols that conflict with musl's crt/exit
-	@for obj in $(RUSL_OBJDIR)/rusl_env-*.o; do \
-		if [ -f "$$obj" ]; then \
-			$(OBJCOPY) --weaken-symbol=_start "$$obj" 2>/dev/null || true; \
-			$(OBJCOPY) --weaken-symbol=_start_c "$$obj" 2>/dev/null || true; \
-			$(OBJCOPY) --weaken-symbol=exit "$$obj" 2>/dev/null || true; \
-			$(OBJCOPY) --weaken-symbol=_exit "$$obj" 2>/dev/null || true; \
-			$(OBJCOPY) --weaken-symbol=_Exit "$$obj" 2>/dev/null || true; \
-		fi; \
-	done
 	@touch $@
 
 endif
@@ -356,6 +326,13 @@ $(RUSL_A_env): FORCE
 # 用法: make replace string malloc ctype prng env
 # 也可以用: make REPLACE="string malloc"
 replace: all
+	@# Patch musl-gcc & specs to use local build paths (no sudo make install needed)
+	@sed -i 's|/usr/local/musl/lib/musl-gcc.specs|$(abspath lib/musl-gcc.specs)|' obj/musl-gcc
+	@sed -i 's|-L/usr/local/musl/lib |-L$(abspath lib) |g' lib/musl-gcc.specs
+	@sed -i 's|/usr/local/musl/lib/Scrt1.o|$(abspath lib/Scrt1.o)|g' lib/musl-gcc.specs
+	@sed -i 's|-dynamic-linker /lib/ld-musl-x86_64\.so\.1|-dynamic-linker $(abspath lib/libc.so)|g' lib/musl-gcc.specs
+	@sed -i 's|/usr/local/musl/lib/crti.o|$(abspath lib/crti.o)|g' lib/musl-gcc.specs
+	@sed -i 's|/usr/local/musl/lib/crtn.o|$(abspath lib/crtn.o)|g' lib/musl-gcc.specs
 
 # 帮助信息
 replace-help:
