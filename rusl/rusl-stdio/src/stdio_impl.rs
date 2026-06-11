@@ -162,3 +162,7 @@ pub unsafe fn va_arg_ptr(ap: *mut VaList) -> *mut c_void {
         val
     }
 }
+
+// FILE 是 C FFI 类型，musl 在多线程环境中通过锁保护访问。
+// *mut FILE 在多线程间的共享是安全的（由调用者负责同步）。
+unsafe impl Sync for FILE {}

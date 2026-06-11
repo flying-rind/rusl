@@ -41,6 +41,8 @@ memory: project
 ## 注意事项
 - **绝对禁止实现代码**：函数体只能包含 `todo!()` 或 `unimplemented!()`，不得有任何实际逻辑。哪怕是简单的 `return dst;` 也不允许。
 -  **属性完整性**：正确添加 `#[no_mangle]`、`#[repr(C)]`、`#[inline]`、`#[must_use]` 等必要属性。
+- **对外接口必须 safe**：在 `rusl-main/src/api/` 中声明用户可见接口时，必须将 `extern "C"` 的 unsafe 函数包装为 safe 的 Rust 函数。对外暴露给用户的接口应当始终是 safe 的，不能在函数签名上标记 `unsafe`。内部使用 `unsafe { ... }` 块调用底层 FFI 即可。
+- **对外接口必须 safe**：在 rusl-xxx/ crate内部声明用户可见接口时，必须是safe的，例如：pub extern "C" fn vsnprintf(...)
 - **若需要使用动态数据结构**：则条件（关闭rusl feature时）定义一个allocator module，使用extern C的free和malloc实现global allocator，开启rusl feature时，直接依赖rusl-malloc。可以参见rusl-regex。
 
 

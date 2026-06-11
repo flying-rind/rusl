@@ -26,7 +26,7 @@ fn link_musl_libc() {
         .and_then(|p| p.parent())
         .expect("无法定位 musl 源码根目录");
 
-    let lib_dir = musl_root.join("musl-lib-origin/lib");
+    let lib_dir = musl_root.join("musl-config/origin/lib");
 
     // musl 原生启动文件: _start → __libc_start_main → main
     // Scrt1.o 用于 PIE (Rust 默认), crti.o/crtn.o 提供 .init/.fini 段头尾

@@ -38,7 +38,7 @@ test!("test_overflow_max_times_two" {
 
 
 ### 步骤 2：创建集成测试
-- 在rusl-main/tests/中创建对应的xxx_integration模块，声明相关测试，参考其他集成测试的文件结构。
+- 在rusl-main/tests/中创建对应的xxx_integration模块，根据rust-spec/xxx/export.md中的接口签名，编写所有相关测试，参考其他集成测试的文件结构。
 
 ## 注意事项
 

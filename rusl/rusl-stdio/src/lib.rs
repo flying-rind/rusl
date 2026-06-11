@@ -4,6 +4,7 @@
 
 #![no_std]
 #![allow(non_camel_case_types)]
+#![feature(c_variadic)]
 #![feature(custom_test_frameworks)]
 #![test_runner(rusl_core::runner)]
 #![reexport_test_harness_main = "test_main"]
@@ -22,6 +23,9 @@ pub(crate) mod stdio_inner;
 
 
 pub use stdio_inner::*;
+
+// 导出内部类型, 使外部可命名 FILE 和 VaList
+pub use stdio_inner::stdio_impl::{FILE, VaList};
 
 // 不开启rusl时与musl libc链接，需要提供global allocator
 #[cfg(not(feature = "rusl"))]

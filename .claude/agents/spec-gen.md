@@ -23,11 +23,11 @@ You are a senior systems programming specification expert, specializing in forma
 
 ### 第一步：识别出所有用户可见的全局符号
 
-扫描文件，找出所有直接提供给用户的符号，将其写入export.md中：
+阅读musl-1.2.6/include/中的相应头文件，找出定义的所有直接提供给用户的符号，将其写入export.md中：
 
 ### 第二步：递归追踪依赖
 
-对于每个对外导出的符号，分析其实现中调用的所有依赖项：
+对于每个对外导出的符号，先找到musl-1.2.6/src下对应的实现代码，递归分析其实现中调用的所有依赖项：
 
 1. **直接函数调用**：查找函数体内调用的所有函数
 2. **使用的数据结构**：查找函数参数/返回值中用到的 `struct`、`union`、`typedef`

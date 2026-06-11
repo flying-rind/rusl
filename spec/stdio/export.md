@@ -1,294 +1,374 @@
-# stdio 内部实现模块 — 对外导出符号
+# stdio 模块 — 对外导出 API 汇总
 
-本文件记录 `src/stdio/` 下所有文件的符号导出状态，分为内部实现和格式化 I/O 两部分。
-
----
-
-## 对外导出（Public API）— 内部实现模块
-
-| 符号 | 定义文件 | 说明 |
-|------|----------|------|
-| `fdopen` | `__fdopen.c` (weak_alias) | 通过文件描述符打开流 — POSIX 标准函数 |
-| `__overflow` | `__overflow.c` | 输出缓冲区溢出处理 — 由 `putc_unlocked` 宏使用，protected 可见性 |
-| `setbuf` | `setbuf.c` | 设置 FILE 流缓冲模式和缓冲区（BUFSIZ 大小） |
-| `setvbuf` | `setvbuf.c` | 设置 FILE 流缓冲模式、缓冲区位置和大小 — 所有缓冲设置函数的底层实现 |
-| `ungetc` | `ungetc.c` | 将单字节字符推回 FILE 流读缓冲区 |
-| `ungetwc` | `ungetwc.c` | 将宽字符推回 FILE 流读缓冲区（支持多字节编码和 locale） |
-| `stdin` | `stdin.c` | 标准输入 FILE 对象（文件描述符 0，全缓冲 BUFSIZ） |
-| `stdout` | `stdout.c` | 标准输出 FILE 对象（文件描述符 1，行缓冲 BUFSIZ） |
-| `stderr` | `stderr.c` | 标准错误输出 FILE 对象（文件描述符 2，无缓冲） |
-| `setbuffer` | `setbuffer.c` | GNU 扩展：设置流缓冲模式和自定义大小缓冲区 |
-| `setlinebuf` | `setlinebuf.c` | GNU 扩展：将流设为行缓冲模式 |
-
-### 文件定位操作 (Public API)
-
-| 符号 | 定义文件 | 标准 | 说明 |
-|------|----------|------|------|
-| `fseek` | `fseek.c` | ISO C | 设置文件位置指示符（`long` 偏移） |
-| `fseeko` | `fseek.c` (weak_alias) | POSIX | 设置文件位置指示符（`off_t` 偏移，支持大文件） |
-| `ftell` | `ftell.c` | ISO C | 获取当前文件位置（返回 `long`） |
-| `ftello` | `ftell.c` (weak_alias) | POSIX | 获取当前文件位置（返回 `off_t`，支持大文件） |
-| `fgetpos` | `fgetpos.c` | ISO C | 获取文件位置存入 `fpos_t` 不透明对象 |
-| `fsetpos` | `fsetpos.c` | ISO C | 从 `fpos_t` 不透明对象恢复文件位置 |
-| `rewind` | `rewind.c` | ISO C | 回绕到文件起始并清除错误标志 |
-
-### 流状态查询 / 清除 (Public API)
-
-| 符号 | 定义文件 | 标准 | 说明 |
-|------|----------|------|------|
-| `feof` | `feof.c` | ISO C | 测试流文件结束指示符 |
-| `ferror` | `ferror.c` | ISO C | 测试流错误指示符 |
-| `clearerr` | `clearerr.c` | ISO C | 清除流的 EOF 和错误指示符 |
-| `feof_unlocked` | `feof.c` (weak_alias) | POSIX | `feof` 的免锁版本 |
-| `ferror_unlocked` | `ferror.c` (weak_alias) | POSIX | `ferror` 的免锁版本 |
-| `clearerr_unlocked` | `clearerr.c` (weak_alias) | POSIX | `clearerr` 的免锁版本 |
-
-### 流锁定操作 (Public API)
-
-| 符号 | 定义文件 | 标准 | 说明 |
-|------|----------|------|------|
-| `flockfile` | `flockfile.c` | POSIX | 获取 FILE 关联的内部递归锁（阻塞式） |
-| `ftrylockfile` | `ftrylockfile.c` | POSIX | 尝试获取 FILE 关联的内部递归锁（非阻塞式） |
-| `funlockfile` | `funlockfile.c` | POSIX | 释放 FILE 关联的内部递归锁 |
-
-### 流底层文件描述符 (Public API)
-
-| 符号 | 定义文件 | 标准 | 说明 |
-|------|----------|------|------|
-| `fileno` | `fileno.c` | POSIX | 获取与 FILE 流关联的底层文件描述符 |
-| `fileno_unlocked` | `fileno.c` (weak_alias) | POSIX | `fileno` 的免锁版本 |
-
-## 内部实现（不对外导出）— 内部实现模块
-
-| 符号 | 定义文件 | 可见性 | 说明 |
-|------|----------|--------|------|
-| `__stdio_read` | `__stdio_read.c` | `hidden` | 默认 FILE 读操作函数指针实现 |
-| `__stdio_write` | `__stdio_write.c` | `hidden` | 默认 FILE 写操作函数指针实现 |
-| `__stdio_seek` | `__stdio_seek.c` | `hidden` | 默认 FILE 定位操作函数指针实现 |
-| `__stdio_close` | `__stdio_close.c` | `hidden` | 默认 FILE 关闭操作函数指针实现 |
-| `__stdout_write` | `__stdout_write.c` | `hidden` | stdout 专用写函数（检测终端行缓冲） |
-| `__lockfile` | `__lockfile.c` | `hidden` | 获取 FILE 锁（支持 futex 等待） |
-| `__unlockfile` | `__lockfile.c` | `hidden` | 释放 FILE 锁（支持 futex 唤醒） |
-| `__fdopen` | `__fdopen.c` | `hidden` | 从 fd+mode 构造 FILE（`fdopen` 的主实现） |
-| `__fmodeflags` | `__fmodeflags.c` | `hidden` | 将 mode 字符串转换为 open 标志 |
-| `__fclose_ca` | `__fclose_ca.c` | `hidden` | 调用方分配 FILE 的关闭操作 |
-| `__fopen_rb_ca` | `__fopen_rb_ca.c` | `hidden` | 调用方分配 FILE 的只读打开操作 |
-| `__stdin_FILE` | `stdin.c` | `hidden` | stdin 的 FILE 结构体实例 |
-| `__stdout_FILE` | `stdout.c` | `hidden` | stdout 的 FILE 结构体实例 |
-| `__stderr_FILE` | `stderr.c` | `hidden` | stderr 的 FILE 结构体实例 |
-| `__stdin_used` | `stdin.c` | `hidden` / weak_alias | stdin 哨兵变量（退出时刷新；弱别名兜底为 NULL） |
-| `__stdout_used` | `stdout.c` | `hidden` / weak_alias | stdout 哨兵变量（退出时刷新；弱别名兜底为 NULL） |
-| `__stderr_used` | `stderr.c` | `hidden` / weak_alias | stderr 哨兵变量（退出时刷新；弱别名兜底为 NULL） |
-| `__stdio_exit` | `__stdio_exit.c` | `hidden` | 程序退出时的 stdio 清理（刷新所有缓冲、修正文件偏移） |
-| `__stdio_exit_needed` | `__stdio_exit.c` | weak_alias (内部) | `__stdio_exit` 的弱别名，供 exit 路径符号引用链使用 |
-| `__ofl_lock` | `ofl.c` | `hidden` | 获取全局打开文件链表锁，返回链表头指针 |
-| `__ofl_unlock` | `ofl.c` | `hidden` | 释放全局打开文件链表锁 |
-| `__ofl_add` | `ofl_add.c` | `hidden` | 将 FILE 插入全局打开文件链表头部 |
-| `__stdio_ofl_lockptr` | `ofl.c` | 全局变量 | 指向 `ofl_lock` 的指针，供 fork 后锁重置使用 |
-| `__fseeko` | `fseek.c` | `hidden` | 加锁版文件流定位（`fseeko` 的主实现） |
-| `__fseeko_unlocked` | `fseek.c` | `hidden` | 不加锁版文件流定位引擎（缓冲区同步 + seek） |
-| `__ftello` | `ftell.c` | `hidden` | 加锁版文件流位置查询（`ftello` 的主实现） |
-| `__ftello_unlocked` | `ftell.c` | `hidden` | 不加锁版文件流位置查询（内核偏移 + 缓冲区补偿） |
-| `__register_locked_file` | `ftrylockfile.c` | `hidden` | 将 FILE 注册到线程持有的 stdio 锁链表 |
-| `__unlist_locked_file` | `ftrylockfile.c` | `hidden` | 将 FILE 从线程持有的 stdio 锁链表移除 |
-| `__do_orphaned_stdio_locks` | `ftrylockfile.c` | `hidden` | 线程退出时清理所有孤儿 stdio 锁（设为 MAYBE_WAITERS） |
+本文件记录 `src/stdio/` 下所有在 `<stdio.h>` 中声明的、用户程序可直接调用的公开接口。内部实现符号（`__` 前缀、`hidden` 可见性、弱别名等）不在此列，详见各具体 spec 文件。
 
 ---
 
-## 对外导出（Public API）— 格式化 I/O 模块
+## 宏常量
 
-### printf 家族（格式化输出）
+| 符号 | 标准 | 值 | 说明 |
+|------|------|-----|------|
+| `NULL` | ISO C | `((void*)0)` | 空指针常量 |
+| `EOF` | ISO C | `(-1)` | 文件结束/错误返回值 |
+| `SEEK_SET` | ISO C | `0` | 文件定位 — 从文件头开始 |
+| `SEEK_CUR` | ISO C | `1` | 文件定位 — 从当前位置开始 |
+| `SEEK_END` | ISO C | `2` | 文件定位 — 从文件尾开始 |
+| `_IOFBF` | ISO C | `0` | 全缓冲模式 |
+| `_IOLBF` | ISO C | `1` | 行缓冲模式 |
+| `_IONBF` | ISO C | `2` | 无缓冲模式 |
+| `BUFSIZ` | ISO C | `1024` | 默认缓冲区大小 |
+| `FILENAME_MAX` | ISO C | `4096` | 文件名最大长度 |
+| `FOPEN_MAX` | ISO C | `1000` | 同时打开的最大文件数 |
+| `TMP_MAX` | ISO C | `10000` | tmpnam 可生成的最大唯一文件名数 |
+| `L_tmpnam` | ISO C | `20` | tmpnam 缓冲区所需最小长度 |
+| `L_ctermid` | POSIX | `20` | ctermid 缓冲区所需最小长度 |
+| `P_tmpdir` | XOPEN/GNU/BSD | `"/tmp"` | 默认临时文件目录路径 |
+| `L_cuserid` | GNU/BSD | `20` | cuserid 缓冲区所需最小长度 |
+| `RENAME_NOREPLACE` | GNU | `(1 << 0)` | renameat2 标志 — 目标存在则失败 |
+| `RENAME_EXCHANGE` | GNU | `(1 << 1)` | renameat2 标志 — 原子交换 |
+| `RENAME_WHITEOUT` | GNU | `(1 << 2)` | renameat2 标志 — 白化源文件 |
 
-| 符号 | 定义文件 | 标准/扩展 | 说明 |
-|------|----------|-----------|------|
-| `printf` | `printf.c` | C89/C99 | 向 `stdout` 格式化输出 |
-| `fprintf` | `fprintf.c` | C89/C99 | 向 `FILE` 流格式化输出 |
-| `sprintf` | `sprintf.c` | C89/C99 | 向字符串缓冲区格式化输出（无边界检查） |
-| `snprintf` | `snprintf.c` | C99 | 向字符串缓冲区格式化输出（有边界检查） |
-| `asprintf` | `asprintf.c` | GNU/POSIX | 向动态分配缓冲区格式化输出 |
-| `dprintf` | `dprintf.c` | POSIX.1-2008 | 向文件描述符格式化输出 |
-| `vprintf` | `vprintf.c` | C89/C99 | `printf` 的 `va_list` 版本 |
-| `vfprintf` | `vfprintf.c` | C89/C99 | `fprintf` 的 `va_list` 版本（核心引擎） |
-| `vsprintf` | `vsprintf.c` | C89/C99 | `sprintf` 的 `va_list` 版本 |
-| `vsnprintf` | `vsnprintf.c` | C99 | `snprintf` 的 `va_list` 版本 |
-| `vasprintf` | `vasprintf.c` | GNU/POSIX | `asprintf` 的 `va_list` 版本 |
-| `vdprintf` | `vdprintf.c` | POSIX.1-2008 | `dprintf` 的 `va_list` 版本 |
+### _LARGEFILE64_SOURCE 兼容宏（`#define` 别名）
 
-### scanf 家族（格式化输入）
+以下宏在定义 `_LARGEFILE64_SOURCE` 时生效，将 `xxx64` 符号映射到对应的标准函数/类型：
 
-| 符号 | 定义文件 | 标准/扩展 | 说明 |
-|------|----------|-----------|------|
-| `scanf` | `scanf.c` | C89/C99 | 从 `stdin` 格式化输入 |
-| `fscanf` | `fscanf.c` | C89/C99 | 从 `FILE` 流格式化输入 |
-| `sscanf` | `sscanf.c` | C89/C99 | 从字符串格式化输入 |
-| `vscanf` | `vscanf.c` | C99 | `scanf` 的 `va_list` 版本 |
-| `vfscanf` | `vfscanf.c` | C99 | `fscanf` 的 `va_list` 版本（核心引擎） |
-| `vsscanf` | `vsscanf.c` | C99 | `sscanf` 的 `va_list` 版本 |
-
-### 读写操作模块 — 对外导出
-
-以下为 `fread.c`、`fwrite.c`、`fgetc.c`、`fputc.c`、`fgets.c`、`fputs.c`、`getc.c`、`putc.c`、`getchar.c`、`putchar.c`、`fgetln.c`、`getdelim.c`、`getline.c` 中对外可见的符号。
-
-#### 标准 C 库接口 (Public API)
-
-| 符号 | 定义文件 | 标准 | 说明 |
-|------|----------|------|------|
-| `fread` | `fread.c` | ISO C / POSIX | 从 FILE 流读取二进制块 |
-| `fwrite` | `fwrite.c` | ISO C / POSIX | 向 FILE 流写入二进制块 |
-| `fgetc` | `fgetc.c` | ISO C / POSIX | 从 FILE 流读取一个字符 |
-| `fputc` | `fputc.c` | ISO C / POSIX | 向 FILE 流写入一个字符 |
-| `fgets` | `fgets.c` | ISO C / POSIX | 从 FILE 流读取一行字符串 |
-| `fputs` | `fputs.c` | ISO C / POSIX | 向 FILE 流写入字符串 |
-| `getc` | `getc.c` | ISO C / POSIX | 从 FILE 流读取字符（宏的函数备选实现） |
-| `putc` | `putc.c` | ISO C / POSIX | 向 FILE 流写入字符（宏的函数备选实现） |
-| `getchar` | `getchar.c` | ISO C / POSIX | 从 stdin 读取一个字符 |
-| `putchar` | `putchar.c` | ISO C / POSIX | 向 stdout 写入一个字符 |
-
-#### POSIX 免锁扩展 (Public API)
-
-| 符号 | 定义文件 | 说明 |
-|------|----------|------|
-| `fread_unlocked` | `fread.c` (weak_alias) | fread 的免锁版本（与 fread 共享实现） |
-| `fwrite_unlocked` | `fwrite.c` (weak_alias) | fwrite 的免锁版本（与 fwrite 共享实现） |
-| `fgets_unlocked` | `fgets.c` (weak_alias) | fgets 的免锁版本（与 fgets 共享实现） |
-| `fputs_unlocked` | `fputs.c` (weak_alias) | fputs 的免锁版本（与 fputs 共享实现） |
-
-#### POSIX.1-2008 动态行读取 (Public API)
-
-| 符号 | 定义文件 | 说明 |
-|------|----------|------|
-| `getdelim` | `getdelim.c` | 以指定分隔符读取动态分配的一行 |
-| `getline` | `getline.c` | 以 `\n` 为分隔符读取动态分配的一行 |
-
-#### GNU 扩展 (Public — 需定义 `_GNU_SOURCE`)
-
-| 符号 | 定义文件 | 说明 |
-|------|----------|------|
-| `fgetln` | `fgetln.c` | 零拷贝返回 FILE 缓冲区中下一行指针 |
-
-#### 读写操作 — 内部符号
-
-| 符号 | 定义文件 | 可见性 | 说明 |
-|------|----------|--------|------|
-| `__fwritex` | `fwrite.c` | `hidden` | 无锁底层缓冲写入引擎，被 fwrite/fputs/printf 系列调用 |
-| `__getdelim` | `getdelim.c` | weak_alias (内部) | getdelim 的 `__` 前缀别名 |
-| `_IO_getc` | `getc.c` | weak_alias (内部) | 传统 glibc `_IO_*` 兼容别名 |
-| `_IO_putc` | `putc.c` | weak_alias (内部) | 传统 glibc `_IO_*` 兼容别名 |
+| 宏 | 映射目标 | 说明 |
+|-----|---------|------|
+| `tmpfile64` | `tmpfile` | 64 位临时文件（透明别名） |
+| `fopen64` | `fopen` | 64 位文件打开（透明别名） |
+| `freopen64` | `freopen` | 64 位文件重打开（透明别名） |
+| `fseeko64` | `fseeko` | 64 位文件定位（透明别名） |
+| `ftello64` | `ftello` | 64 位文件位置查询（透明别名） |
+| `fgetpos64` | `fgetpos` | 64 位文件位置获取（透明别名） |
+| `fsetpos64` | `fsetpos` | 64 位文件位置设置（透明别名） |
+| `fpos64_t` | `fpos_t` | 64 位文件位置类型（透明别名） |
+| `off64_t` | `off_t` | 64 位文件偏移类型（透明别名） |
 
 ---
 
-## 宽字符 I/O 模块 — 对外导出
+## 类型定义
 
-### 宽字符单字符 I/O (Public API)
-
-| 符号 | 定义文件 | 标准 | 说明 |
-|------|----------|------|------|
-| `fgetwc` | `fgetwc.c` | ISO C / POSIX | 从 FILE 流读取一个宽字符 |
-| `fputwc` | `fputwc.c` | ISO C / POSIX | 向 FILE 流写入一个宽字符 |
-| `getwc` | `getwc.c` | ISO C / POSIX | 从 FILE 流读取宽字符（宏的函数备选实现） |
-| `putwc` | `putwc.c` | ISO C / POSIX | 向 FILE 流写入宽字符（宏的函数备选实现） |
-| `getwchar` | `getwchar.c` | ISO C / POSIX | 从 stdin 读取一个宽字符 |
-| `putwchar` | `putwchar.c` | ISO C / POSIX | 向 stdout 写入一个宽字符 |
-| `fgetws` | `fgetws.c` | ISO C / POSIX | 从 FILE 流读取一行宽字符串 |
-| `fputws` | `fputws.c` | ISO C / POSIX | 向 FILE 流写入宽字符串 |
-
-#### 宽字符免锁扩展 (Public API)
-
-| 符号 | 定义文件 | 说明 |
-|------|----------|------|
-| `fgetwc_unlocked` | `fgetwc.c` (weak_alias) | fgetwc 的免锁版本（指向 `__fgetwc_unlocked`） |
-| `getwc_unlocked` | `fgetwc.c` (weak_alias) | getwc 的免锁版本（指向 `__fgetwc_unlocked`） |
-| `fputwc_unlocked` | `fputwc.c` (weak_alias) | fputwc 的免锁版本（指向 `__fputwc_unlocked`） |
-| `putwc_unlocked` | `fputwc.c` (weak_alias) | putwc 的免锁版本（指向 `__fputwc_unlocked`） |
-| `fgetws_unlocked` | `fgetws.c` (weak_alias) | fgetws 的免锁版本（与 fgetws 共享实现） |
-| `fputws_unlocked` | `fputws.c` (weak_alias) | fputws 的免锁版本（与 fputws 共享实现） |
-| `getwchar_unlocked` | `getwchar.c` (weak_alias) | getwchar 的免锁版本（与 getwchar 共享实现） |
-| `putwchar_unlocked` | `putwchar.c` (weak_alias) | putwchar 的免锁版本（与 putwchar 共享实现） |
-
-### 宽字符格式化 I/O (Public API)
-
-#### 宽字符 printf 家族（格式化输出）
-
-| 符号 | 定义文件 | 标准 | 说明 |
-|------|----------|------|------|
-| `fwprintf` | `fwprintf.c` | ISO C / POSIX | 向 FILE 流格式化输出宽字符串 |
-| `wprintf` | `wprintf.c` | ISO C / POSIX | 向 stdout 格式化输出宽字符串 |
-| `swprintf` | `swprintf.c` | ISO C / POSIX | 向宽字符缓冲区格式化输出（有边界检查） |
-| `vfwprintf` | `vfwprintf.c` | ISO C / POSIX | `fwprintf` 的 `va_list` 版本（核心引擎） |
-| `vwprintf` | `vwprintf.c` | ISO C / POSIX | `wprintf` 的 `va_list` 版本 |
-| `vswprintf` | `vswprintf.c` | ISO C / POSIX | `swprintf` 的 `va_list` 版本 |
-
-#### 宽字符 scanf 家族（格式化输入）
-
-| 符号 | 定义文件 | 标准 | 说明 |
-|------|----------|------|------|
-| `fwscanf` | `fwscanf.c` | ISO C / POSIX | 从 FILE 流格式化输入宽字符串 |
-| `wscanf` | `wscanf.c` | ISO C / POSIX | 从 stdin 格式化输入宽字符串 |
-| `swscanf` | `swscanf.c` | ISO C / POSIX | 从宽字符串格式化输入 |
-| `vfwscanf` | `vfwscanf.c` | ISO C / POSIX | `fwscanf` 的 `va_list` 版本（核心引擎） |
-| `vwscanf` | `vwscanf.c` | ISO C / POSIX | `wscanf` 的 `va_list` 版本 |
-| `vswscanf` | `vswscanf.c` | ISO C / POSIX | `swscanf` 的 `va_list` 版本 |
-
-### 其他宽字符函数 (Public API)
-
-| 符号 | 定义文件 | 标准 | 说明 |
-|------|----------|------|------|
-| `fwide` | `fwide.c` | ISO C / POSIX | 设置/查询 FILE 流的宽窄方向 |
-| `open_wmemstream` | `open_wmemstream.c` | POSIX.1-2008 | 打开动态宽字符内存流 |
-
-### 宽字符模块 — 内部实现（不对外导出）
-
-| 符号 | 定义文件 | 可见性 | 说明 |
-|------|----------|--------|------|
-| `__fgetwc_unlocked` | `fgetwc.c` | `hidden` | 无锁宽字符读取（`fgetwc_unlocked`/`getwc_unlocked` 的主实现） |
-| `__fgetwc_unlocked_internal` | `fgetwc.c` | `static` | 宽字符读取核心引擎（多字节转换逻辑） |
-| `__fputwc_unlocked` | `fputwc.c` | `hidden` | 无锁宽字符写入（`fputwc_unlocked`/`putwc_unlocked` 的主实现） |
-| `wprintf_core` | `vfwprintf.c` | `static` | 宽字符 printf 格式化核心引擎 |
-| `wstring_read` | `vswscanf.c` | `static` | vswscanf 自定义读取回调（宽字符串源） |
-| `sw_write` | `vswprintf.c` | `static` | vswprintf 自定义写入回调（宽字符目标） |
-| `wms_write` | `open_wmemstream.c` | `static` | 宽字符内存流写入回调 |
-| `wms_seek` | `open_wmemstream.c` | `static` | 宽字符内存流 seek 回调 |
-| `wms_close` | `open_wmemstream.c` | `static` | 宽字符内存流关闭回调 |
-| `struct cookie` (wms) | `open_wmemstream.c` | 文件作用域 | 宽字符内存流状态结构 |
-| `struct wms_FILE` | `open_wmemstream.c` | 文件作用域 | 宽字符内存流 FILE 包装结构 |
+| 符号 | 标准 | 说明 |
+|------|------|------|
+| `fpos_t` | ISO C | 文件位置不透明类型，定义为 `union _G_fpos64_t { char __opaque[16]; long long __lldata; double __align; }` |
+| `cookie_read_function_t` | GNU | Cookie 流读取回调：`ssize_t (*)(void *, char *, size_t)` |
+| `cookie_write_function_t` | GNU | Cookie 流写入回调：`ssize_t (*)(void *, const char *, size_t)` |
+| `cookie_seek_function_t` | GNU | Cookie 流定位回调：`int (*)(void *, off_t *, int)` |
+| `cookie_close_function_t` | GNU | Cookie 流关闭回调：`int (*)(void *)` |
+| `cookie_io_functions_t` | GNU | Cookie 流回调集结构体，含 `read` / `write` / `seek` / `close` 四个函数指针 |
 
 ---
 
-### musl 内部兼容弱别名（不直接导出给用户）
+## 标准流对象
 
-| 弱别名 | 主符号 | 定义文件 | 说明 |
-|--------|--------|----------|------|
-| `__isoc99_scanf` | `scanf` | `scanf.c` | C99 标准兼容别名 |
-| `__isoc99_fscanf` | `fscanf` | `fscanf.c` | C99 标准兼容别名 |
-| `__isoc99_sscanf` | `sscanf` | `sscanf.c` | C99 标准兼容别名 |
-| `__isoc99_vfscanf` | `vfscanf` | `vfscanf.c` | C99 标准兼容别名 |
-| `__isoc99_vscanf` | `vscanf` | `vscanf.c` | C99 标准兼容别名 |
-| `__isoc99_vsscanf` | `vsscanf` | `vsscanf.c` | C99 标准兼容别名 |
-| `_IO_feof_unlocked` | `feof` | `feof.c` | glibc `_IO_*` 兼容别名 |
-| `_IO_ferror_unlocked` | `ferror` | `ferror.c` | glibc `_IO_*` 兼容别名 |
-| `_IO_getc_unlocked` | `getc_unlocked` | `getc_unlocked.c` | glibc `_IO_*` 兼容别名 |
-| `_IO_putc_unlocked` | `putc_unlocked` | `putc_unlocked.c` | glibc `_IO_*` 兼容别名 |
-| `__isoc99_fwscanf` | `fwscanf` | `fwscanf.c` | C99 宽字符 scanf 兼容别名 |
-| `__isoc99_wscanf` | `wscanf` | `wscanf.c` | C99 宽字符 scanf 兼容别名 |
-| `__isoc99_swscanf` | `swscanf` | `swscanf.c` | C99 宽字符 scanf 兼容别名 |
-| `__isoc99_vfwscanf` | `vfwscanf` | `vfwscanf.c` | C99 宽字符 vfscanf 兼容别名 |
-| `__isoc99_vwscanf` | `vwscanf` | `vwscanf.c` | C99 宽字符 vscanf 兼容别名 |
-| `__isoc99_vswscanf` | `vswscanf` | `vswscanf.c` | C99 宽字符 vsscanf 兼容别名 |
+| 符号 | 类型 | 标准 | 说明 |
+|------|------|------|------|
+| `stdin` | `FILE *const` | ISO C | 标准输入流（文件描述符 0） |
+| `stdout` | `FILE *const` | ISO C | 标准输出流（文件描述符 1） |
+| `stderr` | `FILE *const` | ISO C | 标准错误输出流（文件描述符 2） |
 
-### 格式化 I/O 模块 — 内部实现（不对外导出）
+---
 
-| 符号 | 定义文件 | 可见性 | 说明 |
-|------|----------|--------|------|
-| `printf_core` | `vfprintf.c` | `static` | printf 格式化核心引擎 |
-| `pop_arg` | `vfprintf.c` | `static` | 从 va_list 提取参数 |
-| `out` | `vfprintf.c` | `static` | 向 FILE 输出字节 |
-| `pad` | `vfprintf.c` | `static` | 输出填充字符 |
-| `fmt_x` / `fmt_o` / `fmt_u` | `vfprintf.c` | `static` | 整数格式化 |
-| `fmt_fp` | `vfprintf.c` | `static` | 浮点数格式化 |
-| `getint` | `vfprintf.c` | `static` | 解析格式串中整数 |
-| `states` 数组 | `vfprintf.c` | `static` | 格式说明符状态机表 |
-| `store_int` | `vfscanf.c` | `static` | 按长度修饰符存储整数 |
-| `arg_n` | `vfscanf.c` | `static` | 按位置参数索引提取参数 |
-| `sn_write` | `vsnprintf.c` | `static` | snprintf 输出回调 |
-| `string_read` | `vsscanf.c` | `static` | sscanf 输入回调 |
-| `struct cookie` | `vsnprintf.c` | 文件作用域 | snprintf 缓冲区管理结构 |
+## 1. 文件操作
+
+### ISO C 标准
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `fopen` | `FILE *fopen(const char *path, const char *mode)` | 按模式打开文件，返回 FILE 流指针 |
+| `freopen` | `FILE *freopen(const char *path, const char *mode, FILE *f)` | 以新模式重新打开流 |
+| `fclose` | `int fclose(FILE *f)` | 关闭流、刷新缓冲并释放 FILE 对象 |
+| `remove` | `int remove(const char *path)` | 删除文件 |
+| `rename` | `int rename(const char *old, const char *new)` | 重命名文件 |
+| `tmpfile` | `FILE *tmpfile(void)` | 创建临时文件（关闭时自动删除） |
+| `tmpnam` | `char *tmpnam(char *s)` | 生成唯一临时文件名 |
+
+### POSIX 扩展
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `renameat` | `int renameat(int oldfd, const char *old, int newfd, const char *new)` | 相对目录文件描述符的重命名 |
+| `popen` | `FILE *popen(const char *cmd, const char *mode)` | 通过管道执行 shell 命令并打开流 |
+| `pclose` | `int pclose(FILE *f)` | 关闭 popen 打开的流并等待命令结束 |
+
+### GNU 扩展
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `renameat2` | `int renameat2(int oldfd, const char *old, int newfd, const char *new, unsigned flags)` | 带标志的 renameat（支持 NOREPLACE / EXCHANGE / WHITEOUT） |
+
+---
+
+## 2. 流缓冲
+
+### ISO C 标准
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `setbuf` | `void setbuf(FILE *f, char *buf)` | 设置流缓冲（等价 `setvbuf(f, buf, buf ? _IOFBF : _IONBF, BUFSIZ)`） |
+| `setvbuf` | `int setvbuf(FILE *f, char *buf, int mode, size_t size)` | 设置流缓冲模式、缓冲区及大小 |
+
+### GNU/BSD 扩展
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `setbuffer` | `void setbuffer(FILE *f, char *buf, size_t size)` | 设置全缓冲（mode 固定为 `_IOFBF`） |
+| `setlinebuf` | `void setlinebuf(FILE *f)` | 设置行缓冲（等价 `setvbuf(f, NULL, _IOLBF, 0)`） |
+
+---
+
+## 3. 格式化输出（printf 家族）
+
+### ISO C 标准
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `printf` | `int printf(const char *fmt, ...)` | 向 stdout 格式化输出 |
+| `fprintf` | `int fprintf(FILE *f, const char *fmt, ...)` | 向 FILE 流格式化输出 |
+| `sprintf` | `int sprintf(char *s, const char *fmt, ...)` | 向字符串缓冲区格式化输出（无边界检查） |
+| `snprintf` | `int snprintf(char *s, size_t n, const char *fmt, ...)` | 向字符串缓冲区格式化输出（有边界检查） |
+| `vprintf` | `int vprintf(const char *fmt, va_list ap)` | `printf` 的 `va_list` 版本 |
+| `vfprintf` | `int vfprintf(FILE *f, const char *fmt, va_list ap)` | `fprintf` 的 `va_list` 版本（核心引擎） |
+| `vsprintf` | `int vsprintf(char *s, const char *fmt, va_list ap)` | `sprintf` 的 `va_list` 版本 |
+| `vsnprintf` | `int vsnprintf(char *s, size_t n, const char *fmt, va_list ap)` | `snprintf` 的 `va_list` 版本 |
+
+### POSIX 扩展
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `dprintf` | `int dprintf(int fd, const char *fmt, ...)` | 向文件描述符格式化输出 |
+| `vdprintf` | `int vdprintf(int fd, const char *fmt, va_list ap)` | `dprintf` 的 `va_list` 版本 |
+
+### GNU/BSD 扩展
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `asprintf` | `int asprintf(char **sp, const char *fmt, ...)` | 动态分配缓冲区并格式化输出 |
+| `vasprintf` | `int vasprintf(char **sp, const char *fmt, va_list ap)` | `asprintf` 的 `va_list` 版本 |
+
+---
+
+## 4. 格式化输入（scanf 家族）
+
+### ISO C 标准
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `scanf` | `int scanf(const char *fmt, ...)` | 从 stdin 格式化输入 |
+| `fscanf` | `int fscanf(FILE *f, const char *fmt, ...)` | 从 FILE 流格式化输入 |
+| `sscanf` | `int sscanf(const char *s, const char *fmt, ...)` | 从字符串格式化输入 |
+| `vscanf` | `int vscanf(const char *fmt, va_list ap)` | `scanf` 的 `va_list` 版本 |
+| `vfscanf` | `int vfscanf(FILE *f, const char *fmt, va_list ap)` | `fscanf` 的 `va_list` 版本（核心引擎） |
+| `vsscanf` | `int vsscanf(const char *s, const char *fmt, va_list ap)` | `sscanf` 的 `va_list` 版本 |
+
+---
+
+## 5. 字符 I/O
+
+### ISO C 标准
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `fgetc` | `int fgetc(FILE *f)` | 从流读取一个 `unsigned char` 转换为 `int` |
+| `fputc` | `int fputc(int c, FILE *f)` | 向流写入一个字符（`int` 低 8 位） |
+| `getc` | `int getc(FILE *f)` | 从流读取一个字符（宏的函数备选实现） |
+| `putc` | `int putc(int c, FILE *f)` | 向流写入一个字符（宏的函数备选实现） |
+| `getchar` | `int getchar(void)` | 从 stdin 读取一个字符（等价 `getc(stdin)`） |
+| `putchar` | `int putchar(int c)` | 向 stdout 写入一个字符（等价 `putc(c, stdout)`） |
+| `ungetc` | `int ungetc(int c, FILE *f)` | 将字符推回流读缓冲区 |
+
+---
+
+## 6. 字符串 I/O
+
+### ISO C 标准
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `fgets` | `char *fgets(char *s, int n, FILE *f)` | 从流读取一行至多 n-1 字符，保留换行符 |
+| `fputs` | `int fputs(const char *s, FILE *f)` | 向流写入字符串（不含尾部 `\0`） |
+| `puts` | `int puts(const char *s)` | 向 stdout 写入字符串并追加换行符 |
+| `gets` | `char *gets(char *s)` | (C89，C11 中已移除) 从 stdin 读取一行（无边界检查，不安全） |
+
+---
+
+## 7. 块 I/O
+
+### ISO C 标准
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `fread` | `size_t fread(void *ptr, size_t size, size_t nmemb, FILE *f)` | 从流中读取最多 `nmemb` 个 `size` 大小的元素 |
+| `fwrite` | `size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *f)` | 向流中写入最多 `nmemb` 个 `size` 大小的元素 |
+
+---
+
+## 8. 文件定位
+
+### ISO C 标准
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `fseek` | `int fseek(FILE *f, long offset, int whence)` | 设置文件位置指示符（`long` 偏移） |
+| `ftell` | `long ftell(FILE *f)` | 获取当前文件位置（返回 `long`） |
+| `fgetpos` | `int fgetpos(FILE *f, fpos_t *pos)` | 获取文件位置存入 `fpos_t` 不透明对象 |
+| `fsetpos` | `int fsetpos(FILE *f, const fpos_t *pos)` | 从 `fpos_t` 不透明对象恢复文件位置 |
+| `rewind` | `void rewind(FILE *f)` | 回绕到文件起始并清除 EOF/错误标志 |
+
+### POSIX 扩展
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `fseeko` | `int fseeko(FILE *f, off_t offset, int whence)` | 设置文件位置指示符（`off_t` 偏移，支持大文件） |
+| `ftello` | `off_t ftello(FILE *f)` | 获取当前文件位置（返回 `off_t`，支持大文件） |
+
+---
+
+## 9. 流状态
+
+### ISO C 标准
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `feof` | `int feof(FILE *f)` | 测试流文件结束指示符（非零 = 已到文件尾） |
+| `ferror` | `int ferror(FILE *f)` | 测试流错误指示符（非零 = 有错误） |
+| `clearerr` | `void clearerr(FILE *f)` | 清除流的 EOF 和错误指示符 |
+| `fflush` | `int fflush(FILE *f)` | 刷新输出缓冲区到内核（null 参数刷新所有流） |
+
+---
+
+## 10. 流锁定（POSIX）
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `flockfile` | `void flockfile(FILE *f)` | 获取 FILE 关联的内部递归锁（阻塞式） |
+| `ftrylockfile` | `int ftrylockfile(FILE *f)` | 尝试获取 FILE 关联的内部递归锁（非阻塞式，成功返回 0） |
+| `funlockfile` | `void funlockfile(FILE *f)` | 释放 FILE 关联的内部递归锁 |
+
+---
+
+## 11. 免锁 I/O 版本
+
+### POSIX 标准免锁函数
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `getc_unlocked` | `int getc_unlocked(FILE *f)` | 免锁版 getc |
+| `getchar_unlocked` | `int getchar_unlocked(void)` | 免锁版 getchar |
+| `putc_unlocked` | `int putc_unlocked(int c, FILE *f)` | 免锁版 putc |
+| `putchar_unlocked` | `int putchar_unlocked(int c)` | 免锁版 putchar |
+
+### GNU/BSD 免锁函数
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `fgetc_unlocked` | `int fgetc_unlocked(FILE *f)` | 免锁版 fgetc |
+| `fputc_unlocked` | `int fputc_unlocked(int c, FILE *f)` | 免锁版 fputc |
+| `fflush_unlocked` | `int fflush_unlocked(FILE *f)` | 免锁版 fflush |
+| `fread_unlocked` | `size_t fread_unlocked(void *p, size_t sz, size_t n, FILE *f)` | 免锁版 fread |
+| `fwrite_unlocked` | `size_t fwrite_unlocked(const void *p, size_t sz, size_t n, FILE *f)` | 免锁版 fwrite |
+| `clearerr_unlocked` | `void clearerr_unlocked(FILE *f)` | 免锁版 clearerr |
+| `feof_unlocked` | `int feof_unlocked(FILE *f)` | 免锁版 feof |
+| `ferror_unlocked` | `int ferror_unlocked(FILE *f)` | 免锁版 ferror |
+| `fileno_unlocked` | `int fileno_unlocked(FILE *f)` | 免锁版 fileno |
+
+### GNU 免锁函数
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `fgets_unlocked` | `char *fgets_unlocked(char *s, int n, FILE *f)` | 免锁版 fgets |
+| `fputs_unlocked` | `int fputs_unlocked(const char *s, FILE *f)` | 免锁版 fputs |
+
+---
+
+## 12. 文件描述符
+
+### POSIX 扩展
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `fileno` | `int fileno(FILE *f)` | 获取与 FILE 流关联的底层文件描述符 |
+| `fdopen` | `FILE *fdopen(int fd, const char *mode)` | 从已有文件描述符创建 FILE 流 |
+
+---
+
+## 13. 动态行读取（POSIX）
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `getdelim` | `ssize_t getdelim(char **linep, size_t *np, int delim, FILE *f)` | 读取至分隔符的动态分配行 |
+| `getline` | `ssize_t getline(char **linep, size_t *np, FILE *f)` | 读取至 `\n` 的动态分配行（等价 `getdelim(linep, np, '\n', f)`） |
+
+---
+
+## 14. GNU/BSD 扩展
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `fgetln` | `char *fgetln(FILE *f, size_t *lenp)` | 零拷贝返回 FILE 缓冲区中下一行指针及长度 |
+| `getw` | `int getw(FILE *f)` | 从流读取一个 `int`（二进制） |
+| `putw` | `int putw(int w, FILE *f)` | 向流写入一个 `int`（二进制） |
+
+---
+
+## 15. 内存流（POSIX）
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `fmemopen` | `FILE *fmemopen(void *buf, size_t size, const char *mode)` | 在内存缓冲区上打开流 |
+| `open_memstream` | `FILE *open_memstream(char **bufp, size_t *sizep)` | 打开动态增长的内存流（写入时自动扩展） |
+
+---
+
+## 16. Cookie 流（GNU）
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `fopencookie` | `FILE *fopencookie(void *cookie, const char *mode, cookie_io_functions_t funcs)` | 以自定义回调函数集打开流 |
+
+---
+
+## 17. 终端/用户标识
+
+### POSIX 扩展
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `ctermid` | `char *ctermid(char *s)` | 返回当前进程控制终端的路径名 |
+
+### GNU/BSD 扩展
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `cuserid` | `char *cuserid(char *s)` | 返回当前用户的登录名（已废弃） |
+
+---
+
+## 18. 其他
+
+### GNU/BSD 扩展
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `tempnam` | `char *tempnam(const char *dir, const char *pfx)` | 在指定目录生成带前缀的临时文件名 |
+
+### ISO C 标准
+
+| 符号 | 签名 | 说明 |
+|------|------|------|
+| `perror` | `void perror(const char *s)` | 向 stderr 输出当前 `errno` 对应的错误消息（前缀 `s`） |
+
+---
+
+## 排除说明
+
+以下类别的符号**不出现在**本文件中，它们属于内部实现细节：
+
+- 所有 `__` 前缀的内部函数（如 `__stdio_read`、`__overflow`、`__fdopen` 等）
+- `_IO_*` 前缀的 glibc 兼容弱别名（如 `_IO_getc`、`_IO_feof_unlocked` 等）
+- `__isoc99_*` 前缀的 C99 标准兼容弱别名（如 `__isoc99_scanf` 等）
+- `hidden` 可见性的内部符号（内部引擎函数、静态辅助函数）
+- 内部静态变量及结构体实例（如 `__stdin_FILE`、`__stdout_FILE`、`__stderr_FILE` 等）
+- 内部弱别名（如 `__getdelim`、`__fseeko`、`__ftello` 等）
+- 宽字符 I/O 函数（声明在 `<wchar.h>` 而非 `<stdio.h>`，如 `fgetwc`、`fwprintf` 等）
+- `<wchar.h>` 中的函数（如 `open_wmemstream`、`fwide` 等）
