@@ -64,6 +64,7 @@ name = "rusl-exit"
 version = "0.1.0"
 dependencies = [
  "rusl-core",
+ "rusl-stdio",
  "rusl-syscall",
 ]
 

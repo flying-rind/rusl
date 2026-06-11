@@ -1,9 +1,9 @@
 //! feof / ferror / clearerr / fileno / fseek / ftell / rewind 集成测试
 
-use core::ffi::{c_char, c_int, c_long, c_void};
+use core::ffi::{c_char,  c_long, c_void};
 use super::imports::{
     fopen, fclose, feof, ferror, clearerr, fileno,
-    fseek, ftell, rewind, fgetc, fwrite, fflush,
+    fseek, ftell, rewind, fgetc, fwrite,
 };
 use test_framework::test;
 

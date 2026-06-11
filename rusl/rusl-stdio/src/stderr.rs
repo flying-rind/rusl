@@ -47,9 +47,9 @@ pub(crate) static mut __stderr_FILE: FILE = FILE {
 
 /// stderr — 标准错误输出流, 指向 __stderr_FILE。
 #[no_mangle]
-pub static mut stderr: *mut FILE = unsafe { core::ptr::addr_of_mut!(__stderr_FILE) };
+pub static mut stderr: *mut FILE = core::ptr::addr_of_mut!(__stderr_FILE);
 
 /// 内部哨兵变量，用于 __stdio_exit 退出刷新
 #[no_mangle]
 pub(crate) static mut __stderr_used: *mut FILE =
-    unsafe { core::ptr::addr_of_mut!(__stderr_FILE) };
+    core::ptr::addr_of_mut!(__stderr_FILE);

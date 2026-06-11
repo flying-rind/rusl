@@ -7,7 +7,7 @@ use super::stdio_impl::*;
 
 /// 程序退出时刷新所有 stdio 流的入口函数
 #[no_mangle]
-pub(crate) unsafe extern "C" fn __stdio_exit() {
+pub unsafe extern "C" fn __stdio_exit() {
     unimplemented!()
 }
 

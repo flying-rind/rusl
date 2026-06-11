@@ -48,9 +48,9 @@ pub(crate) static mut __stdout_FILE: FILE = FILE {
 
 /// stdout — 标准输出流, 指向 __stdout_FILE。
 #[no_mangle]
-pub static mut stdout: *mut FILE = unsafe { core::ptr::addr_of_mut!(__stdout_FILE) };
+pub static mut stdout: *mut FILE = core::ptr::addr_of_mut!(__stdout_FILE);
 
 /// 内部哨兵变量，用于 __stdio_exit 退出刷新
 #[no_mangle]
 pub(crate) static mut __stdout_used: *mut FILE =
-    unsafe { core::ptr::addr_of_mut!(__stdout_FILE) };
+    core::ptr::addr_of_mut!(__stdout_FILE);

@@ -1,7 +1,7 @@
 //! fgetc / fputc / getc / putc / getchar / putchar / puts 集成测试
 
 use core::ffi::{c_char, c_int};
-use super::imports::{fopen, fclose, fgetc, fputc, getc, putc, getchar, putchar, puts, fflush};
+use super::imports::{fopen, fclose, fgetc, fputc, getc, putc, putchar, puts, fflush};
 use test_framework::test;
 
 fn cstr(s: &[u8]) -> *const c_char {

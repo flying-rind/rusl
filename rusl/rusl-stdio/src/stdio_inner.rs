@@ -2,6 +2,7 @@
 //! 对应 musl src/stdio/ 目录。
 
 #![allow(dead_code, unused_imports)]
+#![allow(nonstandard_style)]
 
 pub(crate) mod stdio_impl;
 
@@ -60,7 +61,7 @@ pub(crate) use __fdopen::*;
 pub(crate) use __fmodeflags::*;
 pub(crate) use __fopen_rb_ca::*;
 pub(crate) use __stdio_close::*;
-pub(crate) use __stdio_exit::*;
+pub use __stdio_exit::*;
 pub(crate) use __stdio_read::*;
 pub(crate) use __stdio_seek::*;
 pub(crate) use __stdio_write::*;

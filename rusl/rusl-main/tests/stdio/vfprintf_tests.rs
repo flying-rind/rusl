@@ -1,7 +1,7 @@
 //! vfprintf 集成测试
 
-use core::ffi::{c_char, c_int};
-use super::imports::{vfprintf, vsnprintf};
+use core::ffi::c_char;
+use super::imports::vsnprintf;
 use test_framework::test;
 
 test!("vfprintf_via_vsnprintf" {

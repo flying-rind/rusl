@@ -9,9 +9,13 @@ use super::sys_consts::SYS_gettid;
 use super::_Exit;
 
 // ---------------------------------------------------------------------------
-// 弱符号等效 — 默认为空操作, 可由其他模块覆盖
+// __stdio_exit — 退出时刷新 stdio
 // ---------------------------------------------------------------------------
 
+#[cfg(feature = "rusl")]
+use rusl_stdio::__stdio_exit;
+
+#[cfg(not(feature = "rusl"))]
 extern "C" {
     /// 对应 C: `weak_alias(dummy, __stdio_exit)` — stdio 模块提供强定义覆盖。
     fn __stdio_exit();

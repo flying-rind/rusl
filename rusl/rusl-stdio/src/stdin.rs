@@ -48,9 +48,9 @@ pub(crate) static mut __stdin_FILE: FILE = FILE {
 
 /// stdin — 标准输入流, 指向 __stdin_FILE。
 #[no_mangle]
-pub static mut stdin: *mut FILE = unsafe { core::ptr::addr_of_mut!(__stdin_FILE) };
+pub static mut stdin: *mut FILE = core::ptr::addr_of_mut!(__stdin_FILE);
 
 /// 内部哨兵变量，用于 __stdio_exit 退出刷新
 #[no_mangle]
 pub(crate) static mut __stdin_used: *mut FILE =
-    unsafe { core::ptr::addr_of_mut!(__stdin_FILE) };
+    core::ptr::addr_of_mut!(__stdin_FILE);

@@ -11,11 +11,12 @@ test = true
 
 [features]
 default = ["rusl"]
-rusl = []
+rusl = ["dep:rusl-stdio"]
 
 [dependencies]
 rusl-core = { path = "../rusl-core", features = ["rusl"] }
 rusl-syscall = { path = "../rusl-syscall" }
+rusl-stdio = { path = "../rusl-stdio", optional = true }
 
 [profile.dev]
 panic = "abort"
