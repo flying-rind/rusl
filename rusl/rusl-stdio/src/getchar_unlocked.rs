@@ -9,5 +9,6 @@ use core::ffi::c_int;
 /// [Visibility]: User — POSIX 免锁扩展（需 _POSIX_C_SOURCE >= 200112L）。
 #[no_mangle]
 pub extern "C" fn getchar_unlocked() -> c_int {
-    unimplemented!()
+    let f = unsafe { super::stdin::stdin };
+    super::getc_unlocked::getc_unlocked(f)
 }

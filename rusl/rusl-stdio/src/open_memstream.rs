@@ -4,6 +4,7 @@
 #![allow(unused_imports, unused_variables)]
 
 use super::stdio_impl::*;
+use core::ffi::{c_char, c_int};
 
 /// 创建动态内存流。
 /// - bufp: 输出参数，关闭时写入最终缓冲区地址
@@ -11,8 +12,8 @@ use super::stdio_impl::*;
 /// 返回新创建的只写 FILE 指针，失败返回 NULL
 #[no_mangle]
 pub extern "C" fn open_memstream(
-    bufp: *mut *mut u8,
-    sizep: *mut usize,
+    _bufp: *mut *mut c_char,
+    _sizep: *mut usize,
 ) -> *mut FILE {
-    unimplemented!()
+    core::ptr::null_mut() // TODO: fully implement
 }

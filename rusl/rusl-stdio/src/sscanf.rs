@@ -7,12 +7,13 @@ use core::ffi::{c_char, c_int};
 
 /// 从内存中的 null 结尾字符串 s 读取格式化输入
 #[no_mangle]
-pub unsafe extern "C" fn sscanf(s: *const c_char, fmt: *const c_char, _: ...) -> c_int {
-    loop {}
+pub unsafe extern "C" fn sscanf(s: *const c_char, fmt: *const c_char, mut args: ...) -> c_int {
+    let ap = &raw mut args as *mut super::stdio_impl::VaList;
+    super::vsscanf::vsscanf(s, fmt, ap)
 }
 
 /// __isoc99_sscanf — sscanf 的弱别名，C99 兼容
 #[no_mangle]
-pub unsafe extern "C" fn __isoc99_sscanf(s: *const c_char, fmt: *const c_char, _: ...) -> c_int {
-    loop {}
+pub unsafe extern "C" fn __isoc99_sscanf(s: *const c_char, fmt: *const c_char, args: ...) -> c_int {
+    sscanf(s, fmt, args)
 }

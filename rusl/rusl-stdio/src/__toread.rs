@@ -23,8 +23,8 @@ pub(crate) unsafe extern "C" fn __toread(f: *mut FILE) -> c_int {
         f.flags |= F_ERR;
         return EOF;
     }
-    f.rpos = f.buf;
-    f.rend = unsafe { f.buf.add(f.buf_size) };
+    f.rpos = unsafe { f.buf.add(f.buf_size) };
+    f.rend = f.rpos;
     if f.flags & F_EOF != 0 { EOF } else { 0 }
 }
 
@@ -57,12 +57,9 @@ mod tests {
             let result = __toread(&mut f as *mut FILE);
             assert_eq!(result, 0, "__toread 应返回 0 表示成功");
             assert_eq!(f.mode, -1, "mode 应变为 -1");
-            assert_eq!(f.rpos, buf.as_mut_ptr(), "rpos 应指向缓冲区起始");
-            assert_eq!(
-                f.rend as usize,
-                buf.as_mut_ptr().add(64) as usize,
-                "rend 应指向缓冲区末尾"
-            );
+            let buf_end = buf.as_mut_ptr().add(64);
+            assert_eq!(f.rpos, buf_end, "rpos 应指向缓冲区末尾（空缓冲区）");
+            assert_eq!(f.rend, buf_end, "rend 应指向缓冲区末尾（空缓冲区）");
             assert!(f.wpos.is_null(), "wpos 应被置空");
             assert!(f.wbase.is_null(), "wbase 应被置空");
             assert!(f.wend.is_null(), "wend 应被置空");
@@ -93,7 +90,7 @@ mod tests {
 
             let result = __toread(&mut f as *mut FILE);
             assert_eq!(result, EOF, "带 F_EOF 时应返回 EOF");
-            assert_eq!(f.rpos, buf.as_mut_ptr(), "rpos 仍被设置");
+            assert_eq!(f.rpos, buf.as_mut_ptr().add(64), "rpos 应指向缓冲区末尾");
         }
     });
 

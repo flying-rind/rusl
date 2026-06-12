@@ -6,8 +6,12 @@
 use super::stdio_impl::*;
 use core::ffi::c_char;
 
+const BUFSIZ: usize = 1024;
+const _IOFBF: i32 = 0;
+const _IONBF: i32 = 2;
+
 /// 设置流缓冲：buf 非 null 时全缓冲 BUFSIZ，null 时无缓冲
 #[no_mangle]
 pub extern "C" fn setbuf(f: *mut FILE, buf: *mut c_char) {
-    unimplemented!()
+    super::setvbuf::setvbuf(f, buf, if buf.is_null() { _IONBF } else { _IOFBF }, BUFSIZ);
 }

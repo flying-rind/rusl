@@ -9,5 +9,6 @@ use core::ffi::c_int;
 /// [Visibility]: User — <stdio.h> 标准库函数。
 #[no_mangle]
 pub extern "C" fn getchar() -> c_int {
-    unimplemented!()
+    let f = unsafe { super::stdin::stdin };
+    super::getc::getc(f)
 }

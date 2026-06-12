@@ -10,6 +10,11 @@ use core::ffi::c_int;
 /// 仅调用 f->close(f) 关闭底层文件描述符，不释放 FILE 内存。
 /// 与 __fopen_rb_ca 配套使用。
 #[no_mangle]
-pub(crate) unsafe extern "C" fn __fclose_ca(_f: *mut FILE) -> c_int {
-    unimplemented!()
+pub(crate) unsafe extern "C" fn __fclose_ca(f: *mut FILE) -> c_int {
+    let f_ref = &*f;
+    if let Some(close_fn) = f_ref.close {
+        close_fn(f)
+    } else {
+        0
+    }
 }

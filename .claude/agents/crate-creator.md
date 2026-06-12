@@ -32,7 +32,7 @@ memory: project
 ### 步骤 2：导入外部依赖，导出对外接口
 - 根据import.md，创建一个import module，在其中声明使用的所有依赖的别的模块的接口，若开启rusl feature，直接从其他rusl-xxx crate导入，否则使用extern C。参考rusl-malloc。
 
-- 根据export.md，在rusl-main的api模块中创建一个新的对应模块，在其中声明所有本模块直接对用户暴露的接口，开启rusl feature时，直接依赖本crate，否则使用extern C声明。
+- 根据rust-spec/xxx/export.md，在rusl-main的api模块中创建一个新的对应模块，在其中声明所有本模块直接对用户暴露的接口，开启rusl feature时，直接依赖本crate，否则使用extern C声明。
 
 ### 步骤 3：创建项目骨架
 根据rust-spec创建对应的crate骨架，创建rs文件，声明rust函数和其他符号，使用unimplemented()占位。

@@ -3,18 +3,20 @@
 
 #![allow(unused_imports, unused_variables)]
 
-use core::ffi::c_uint;
+use core::ffi::c_int;
 
 /// 从标准输入流 stdin 读取一个宽字符。等价于 fgetwc(stdin) / getwc(stdin)。
 /// [Visibility]: User — <wchar.h> 标准库函数。
 #[no_mangle]
-pub extern "C" fn getwchar() -> c_uint /* wint_t */ {
-    unimplemented!()
+pub extern "C" fn getwchar() -> c_int /* wint_t */ {
+    let f = unsafe { super::stdin::stdin };
+    super::fgetwc::fgetwc(f)
 }
 
 /// 免锁版本（弱别名 -> getwchar）。
 /// [Visibility]: User — POSIX 免锁扩展。
 #[no_mangle]
-pub extern "C" fn getwchar_unlocked() -> c_uint /* wint_t */ {
-    unimplemented!()
+pub extern "C" fn getwchar_unlocked() -> c_int /* wint_t */ {
+    let f = unsafe { super::stdin::stdin };
+    super::fgetwc::fgetwc_unlocked(f)
 }

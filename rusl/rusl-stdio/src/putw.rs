@@ -9,5 +9,11 @@ use core::ffi::c_int;
 /// 将 c_int 值 x 的二进制表示写入 FILE 流 f
 #[no_mangle]
 pub extern "C" fn putw(x: c_int, f: *mut FILE) -> c_int {
-    unimplemented!()
+    let n = super::fwrite::fwrite(
+        &x as *const c_int as *const core::ffi::c_void,
+        core::mem::size_of::<c_int>(),
+        1,
+        f,
+    );
+    (n as c_int) - 1
 }

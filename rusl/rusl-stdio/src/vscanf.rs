@@ -17,11 +17,12 @@ use core::ffi::c_int;
 /// 返回值：成功时为匹配并赋值的输入项数；输入失败时返回 EOF。
 #[no_mangle]
 pub extern "C" fn vscanf(fmt: *const c_char, ap: *mut VaList) -> c_int {
-    loop {}
+    let f = unsafe { super::stdin::stdin };
+    super::vfscanf::vfscanf(f, fmt, ap)
 }
 
 /// __isoc99_vscanf — vscanf 的 C99 兼容弱别名。
 #[no_mangle]
 pub extern "C" fn __isoc99_vscanf(fmt: *const c_char, ap: *mut VaList) -> c_int {
-    loop {}
+    vscanf(fmt, ap)
 }

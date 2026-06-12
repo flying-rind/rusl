@@ -3,13 +3,13 @@
 
 #![allow(unused_imports, unused_variables)]
 
-use core::ffi::c_uint;
-use crate::stdio_impl::FILE;
+use core::ffi::c_int;
+use super::stdio_impl::FILE;
 
 /// 从 FILE 流 f 中读取一个宽字符（wchar_t）。
 /// 等价于 fgetwc(f)。
 /// [Visibility]: User — <wchar.h> / <stdio.h> 标准库函数。
 #[no_mangle]
-pub extern "C" fn getwc(f: *mut FILE) -> c_uint /* wint_t */ {
-    unimplemented!()
+pub extern "C" fn getwc(f: *mut FILE) -> c_int /* wint_t */ {
+    super::fgetwc::fgetwc(f)
 }

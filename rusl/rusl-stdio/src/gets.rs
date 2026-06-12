@@ -13,5 +13,30 @@ use core::ffi::c_char;
 /// [Visibility]: User — C89 标准库函数（C11 已移除，POSIX.1-2008 标记为过时）。
 #[no_mangle]
 pub extern "C" fn gets(s: *mut c_char) -> *mut c_char {
-    unimplemented!()
+    unsafe {
+        let mut i: usize = 0;
+        let stdin_ptr = super::stdin::stdin as *mut super::stdio_impl::FILE;
+        let mut c: i32;
+
+        loop {
+            c = super::getc_unlocked::getc_unlocked(stdin_ptr);
+            if c == super::stdio_impl::EOF || c == b'\n' as i32 {
+                break;
+            }
+            *s.add(i) = c as c_char;
+            i += 1;
+        }
+        *s.add(i) = 0;
+
+        // musl: if (c != '\n' && (!feof(stdin) || !i)) s = 0;
+        if c != b'\n' as i32 {
+            let stdin_ref = &*stdin_ptr;
+            let is_eof = stdin_ref.flags & super::stdio_impl::F_EOF != 0;
+            if !is_eof || i == 0 {
+                return core::ptr::null_mut();
+            }
+        }
+
+        s
+    }
 }

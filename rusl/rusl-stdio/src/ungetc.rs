@@ -16,5 +16,27 @@ use core::ffi::c_int;
 /// 返回值：成功时返回 (c as u8 as c_int)；失败时返回 EOF。
 #[no_mangle]
 pub extern "C" fn ungetc(c: c_int, f: *mut FILE) -> c_int {
-    unimplemented!()
+    if c == EOF {
+        return c;
+    }
+
+    unsafe {
+        let f_ref = &mut *f;
+
+        if f_ref.rpos.is_null() {
+            if super::__toread::__toread(f) != 0 {
+                return EOF;
+            }
+        }
+
+        if f_ref.rpos.is_null() || f_ref.rpos <= f_ref.buf.sub(UNGET) {
+            return EOF;
+        }
+
+        f_ref.rpos = f_ref.rpos.sub(1);
+        *f_ref.rpos = c as u8;
+        f_ref.flags &= !F_EOF;
+
+        (c as u8) as c_int
+    }
 }

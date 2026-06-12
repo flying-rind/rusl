@@ -26,9 +26,17 @@ lib-test:
 test-c:
 	RUSTFLAGS="-C panic=abort" cargo +nightly -Z panic-abort-tests test -p rusl --no-default-features -- test-threads=1
 
-# 单独测试某个模块的集成测试 (用法: make test-string)
+# 单独测试某个模块的集成测试，测试rusl实现 (用法: make test-string)
 test-%:
 	RUSTFLAGS="-C panic=abort" cargo +nightly -Z panic-abort-tests test -p rusl --test $*_integration -- test-threads=1
+
+# 单独测试某个模块的集成测试，测试musl c实现 (用法: make test-string-c)
+test-%-c:
+	RUSTFLAGS="-C panic=abort" cargo +nightly -Z panic-abort-tests test -p rusl --no-default-features --test $*_integration -- test-threads=1
+
+# 单独测试某个模块的单元测试 (用法: make test-string-lib)
+test-%-lib:
+	RUSTFLAGS="-C panic=abort" cargo +nightly -Z panic-abort-tests test -p rusl-$* -- test-threads=1
 
 clean:
 	cargo clean

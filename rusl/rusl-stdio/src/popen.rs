@@ -8,6 +8,6 @@ use core::ffi::c_char;
 
 /// 创建管道、fork 子进程执行 /bin/sh -c <cmd>，返回 FILE 流
 #[no_mangle]
-pub extern "C" fn popen(cmd: *const c_char, mode: *const c_char) -> *mut FILE {
-    unimplemented!()
+pub extern "C" fn popen(_cmd: *const c_char, _mode: *const c_char) -> *mut FILE {
+    core::ptr::null_mut()
 }

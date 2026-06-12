@@ -40,6 +40,12 @@ test!("test_overflow_max_times_two" {
 ### 步骤 2：创建集成测试
 - 在rusl-main/tests/中创建对应的xxx_integration模块，根据rust-spec/xxx/export.md中的接口签名，编写所有相关测试，参考其他集成测试的文件结构。
 
+### 步骤3：集成测试验证
+- 在rusl目录下运行make test-xxx-c会关闭所有Rust的rusl实现，链接musl libc并直接测试c实现，所以集成测试应当保证make test-xxx-c全部通过，否则说明集成测测试自身设计有问题，需要修正。
+
+- 每次完成一个模块后，运行make test-xxx-c来验证集成测试实现，若有测试失败，则修改测试本身。
+
+
 ## 注意事项
 
 

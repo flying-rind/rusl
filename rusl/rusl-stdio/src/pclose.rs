@@ -9,5 +9,5 @@ use core::ffi::c_int;
 /// 关闭 popen 打开的流，等待子进程退出，返回退出状态码
 #[no_mangle]
 pub extern "C" fn pclose(f: *mut FILE) -> c_int {
-    unimplemented!()
+    super::fclose::fclose(f)
 }

@@ -15,14 +15,14 @@ pub(crate) static mut __stderr_FILE: FILE = FILE {
     flags: F_PERM | F_NORD,
     rpos: core::ptr::null_mut(),
     rend: core::ptr::null_mut(),
-    close: None, // TODO: Some(__stdio_close)
+    close: Some(super::__stdio_close::__stdio_close),
     wend: core::ptr::null_mut(),
     wpos: core::ptr::null_mut(),
     mustbezero_1: core::ptr::null_mut(),
     wbase: core::ptr::null_mut(),
     read: None,
-    write: None, // TODO: Some(__stdio_write)
-    seek: None,  // TODO: Some(__stdio_seek)
+    write: Some(super::__stdio_write::__stdio_write),
+    seek: Some(super::__stdio_seek::__stdio_seek),
     buf: unsafe { core::ptr::addr_of_mut!(BUF).cast::<u8>().add(UNGET) },
     buf_size: 0,
     prev: core::ptr::null_mut(),
@@ -45,7 +45,7 @@ pub(crate) static mut __stderr_FILE: FILE = FILE {
     locale: core::ptr::null_mut(),
 };
 
-/// stderr — 标准错误输出流, 指向 __stderr_FILE。
+/// stderr — 标准错误流, 指向 __stderr_FILE。
 #[no_mangle]
 pub static mut stderr: *mut FILE = core::ptr::addr_of_mut!(__stderr_FILE);
 

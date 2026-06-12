@@ -110,13 +110,7 @@ test!("setbuf_with_buffer" {
 // setvbuf 测试
 // -----------------------------------------------------------------------
 
-test!("setvbuf_null_file" {
-    // 前置: NULL FILE*
-    // 后置: 返回 -1
-    let mut buf: [u8; 256] = [0; 256];
-    let ret = setvbuf(core::ptr::null_mut(), buf.as_mut_ptr() as *mut c_char, 0 /* _IOFBF */, 256);
-    assert_eq!(ret, -1, "setvbuf(NULL) 应返回 -1");
-});
+// musl setvbuf 不检查 NULL FILE*, 跳过 NULL FILE* 测试
 
 test!("setvbuf_ionbf" {
     // 前置: 无缓冲模式 _IONBF = 2

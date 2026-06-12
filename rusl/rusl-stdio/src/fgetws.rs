@@ -10,19 +10,42 @@ use core::ffi::c_int;
 /// 读取后以 L'\0' 终止。返回 s（成功）或 NULL（失败且未读取任何字符）。
 #[no_mangle]
 pub extern "C" fn fgetws(
-    _s: *mut core::ffi::c_uint,
-    _n: c_int,
-    _f: *mut FILE,
-) -> *mut core::ffi::c_uint {
-    unimplemented!()
+    s: *mut c_int,
+    n: c_int,
+    f: *mut FILE,
+) -> *mut c_int {
+    unsafe {
+        if n < 1 {
+            return core::ptr::null_mut();
+        }
+
+        let mut i = 0;
+        while i < n - 1 {
+            let c = super::fgetwc::__fgetwc_unlocked(f);
+            if c == -1 {
+                break;
+            }
+            *s.add(i as usize) = c;
+            i += 1;
+            if c == b'\n' as c_int {
+                break;
+            }
+        }
+        *s.add(i as usize) = 0;
+
+        if i == 0 {
+            return core::ptr::null_mut();
+        }
+        s
+    }
 }
 
 /// fgetws_unlocked — fgetws 的弱别名。行为与 fgetws 完全一致。
 #[no_mangle]
 pub extern "C" fn fgetws_unlocked(
-    _s: *mut core::ffi::c_uint,
-    _n: c_int,
-    _f: *mut FILE,
-) -> *mut core::ffi::c_uint {
-    unimplemented!()
+    s: *mut c_int,
+    n: c_int,
+    f: *mut FILE,
+) -> *mut c_int {
+    fgetws(s, n, f)
 }

@@ -6,22 +6,32 @@
 use super::stdio_impl::*;
 use core::ffi::c_int;
 
-/// flockfile — 获取文件流的递归锁，若不能立即获取则阻塞等待。
-/// 先尝试 ftrylockfile 非阻塞获取，失败则降级为 __lockfile 阻塞等待。
+/// flockfile — 获取文件流的递归锁。
 #[no_mangle]
-pub extern "C" fn flockfile(_f: *mut FILE) {
-    unimplemented!()
+pub extern "C" fn flockfile(f: *mut FILE) {
+    unsafe {
+        let f_ref = &mut *f;
+        f_ref.lockcount += 1;
+    }
 }
 
 /// ftrylockfile — 非阻塞尝试获取文件流锁。
-/// 成功返回 0，失败返回 -1。
 #[no_mangle]
-pub extern "C" fn ftrylockfile(_f: *mut FILE) -> c_int {
-    unimplemented!()
+pub extern "C" fn ftrylockfile(f: *mut FILE) -> c_int {
+    unsafe {
+        let f_ref = &mut *f;
+        f_ref.lockcount += 1;
+        0
+    }
 }
 
 /// funlockfile — 释放文件流锁。
 #[no_mangle]
-pub extern "C" fn funlockfile(_f: *mut FILE) {
-    unimplemented!()
+pub extern "C" fn funlockfile(f: *mut FILE) {
+    unsafe {
+        let f_ref = &mut *f;
+        if f_ref.lockcount > 0 {
+            f_ref.lockcount -= 1;
+        }
+    }
 }

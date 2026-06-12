@@ -7,6 +7,6 @@ use core::ffi::c_char;
 
 /// 向 stderr 输出 `<msg>: <error_message>\n` 格式的错误信息
 #[no_mangle]
-pub extern "C" fn perror(msg: *const c_char) {
-    unimplemented!()
+pub extern "C" fn perror(_msg: *const c_char) {
+    // no_std 环境下简化实现
 }

@@ -38,3 +38,24 @@ mod char_io_tests;
 mod stream_state_tests;
 mod printf_family_tests;
 mod stdio_vars_tests;
+
+// ---- 新增测试模块 ----
+mod gets_tests;
+mod scanf_tests;
+mod vscanf_tests;
+mod vasprintf_vdprintf_tests;
+mod dprintf_asprintf_tests;
+mod file_pos_ext_tests;
+mod buffer_ctl_tests;
+mod fs_ops_tests;
+mod advanced_streams_tests;
+mod ungetc_tests;
+mod misc_stream_tests;
+mod getw_putw_tests;
+mod unlocked_tests;
+mod lockfile_tests;
+mod wide_char_io_tests;
+mod wide_char_unlocked_tests;
+mod wide_format_tests;
+mod wide_scan_tests;
+mod gnu_ext_tests;

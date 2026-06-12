@@ -9,6 +9,6 @@ use core::ffi::c_int;
 /// fgetc — 从 FILE 流中读取一个 unsigned char 字符，以 int 返回。
 /// 到达 EOF 或发生错误时返回 EOF。
 #[no_mangle]
-pub extern "C" fn fgetc(_f: *mut FILE) -> c_int {
-    unimplemented!()
+pub extern "C" fn fgetc(f: *mut FILE) -> c_int {
+    super::getc::getc(f)
 }

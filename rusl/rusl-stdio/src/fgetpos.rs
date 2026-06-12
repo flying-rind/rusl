@@ -13,6 +13,13 @@ pub type fpos_t = i64;
 /// 内部调用 __ftello(f) 获取 off_t 位置。
 /// 成功返回 0，失败返回 -1 且 *pos 不被修改。
 #[no_mangle]
-pub extern "C" fn fgetpos(_f: *mut FILE, _pos: *mut fpos_t) -> c_int {
-    unimplemented!()
+pub extern "C" fn fgetpos(f: *mut FILE, pos: *mut fpos_t) -> c_int {
+    unsafe {
+        let off = super::ftell::__ftello(f);
+        if off < 0 {
+            return -1;
+        }
+        *pos = off as fpos_t;
+        0
+    }
 }

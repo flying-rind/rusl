@@ -20,6 +20,22 @@ pub extern "C" fn fwrite(
     if l == 0 {
         return 0;
     }
+    let k = unsafe { __fwritex(src as *const u8, l, f) };
+    if k == l { nmemb } else { k / size }
+}
+
+/// fwrite_unlocked — fwrite 的免锁版本。
+#[no_mangle]
+pub extern "C" fn fwrite_unlocked(
+    src: *const c_void,
+    size: usize,
+    nmemb: usize,
+    f: *mut FILE,
+) -> usize {
+    let l = size.wrapping_mul(nmemb);
+    if l == 0 {
+        return 0;
+    }
     unsafe { __fwritex(src as *const u8, l, f) }
 }
 

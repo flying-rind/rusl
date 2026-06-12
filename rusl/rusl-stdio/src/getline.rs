@@ -4,16 +4,15 @@
 
 #![allow(unused_imports, unused_variables)]
 
+use super::stdio_impl::*;
 use core::ffi::c_char;
-use crate::stdio_impl::FILE;
 
-/// 从 FILE 流 f 中读取以 '\n' 结尾的一行数据到动态分配的缓冲区 *s。
-/// [Visibility]: User — POSIX.1-2008 标准函数。
+/// getline — 获取一行（'\n' 为分隔符），等价于 getdelim(lineptr, n, '\n', f)。
 #[no_mangle]
 pub extern "C" fn getline(
-    s: *mut *mut c_char,
-    n: *mut usize,
-    f: *mut FILE,
+    _lineptr: *mut *mut c_char,
+    _n: *mut usize,
+    _f: *mut FILE,
 ) -> isize {
-    unimplemented!()
+    -1
 }

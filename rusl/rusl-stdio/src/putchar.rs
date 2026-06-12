@@ -8,5 +8,6 @@ use core::ffi::c_int;
 /// 将字符 c 写入 stdout，等价于 putc(c, stdout)
 #[no_mangle]
 pub extern "C" fn putchar(c: c_int) -> c_int {
-    unimplemented!()
+    let f = unsafe { super::stdout::stdout };
+    super::putc::putc(c, f)
 }

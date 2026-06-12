@@ -16,14 +16,14 @@ pub(crate) static mut __stdout_FILE: FILE = FILE {
     flags: F_PERM | F_NORD,
     rpos: core::ptr::null_mut(),
     rend: core::ptr::null_mut(),
-    close: None, // TODO: Some(__stdio_close)
+    close: Some(super::__stdio_close::__stdio_close),
     wend: core::ptr::null_mut(),
     wpos: core::ptr::null_mut(),
     mustbezero_1: core::ptr::null_mut(),
     wbase: core::ptr::null_mut(),
     read: None,
-    write: None, // TODO: Some(__stdout_write)
-    seek: None,  // TODO: Some(__stdio_seek)
+    write: Some(super::__stdout_write::__stdout_write),
+    seek: Some(super::__stdio_seek::__stdio_seek),
     buf: unsafe { core::ptr::addr_of_mut!(BUF).cast::<u8>().add(UNGET) },
     buf_size: 1024,
     prev: core::ptr::null_mut(),
