@@ -19,11 +19,7 @@ pub(crate) unsafe extern "C" fn __towrite(f: *mut FILE) -> c_int {
     f.rend = core::ptr::null_mut();
     f.wpos = f.buf;
     f.wbase = f.buf;
-    f.wend = if f.buf_size > 0 {
-        unsafe { f.buf.add(f.buf_size) }
-    } else {
-        core::ptr::null_mut()
-    };
+    f.wend = unsafe { f.buf.add(f.buf_size) };
     0
 }
 
@@ -87,7 +83,7 @@ mod tests {
 
     test!("test_towrite_zero_bufsize" {
         // 前置: buf_size = 0
-        // 后置: wpos/wbase 指向 buf，wend 为空
+        // 后置: wpos/wbase/wend 都指向 buf（buf+0=buf），缓冲"满"直接走 write 回调
         let mut buf = [0u8; 1]; // buf 存在但大小为 0
         unsafe {
             let mut f = make_test_file(buf.as_mut_ptr(), 0);
@@ -96,7 +92,7 @@ mod tests {
             assert_eq!(result, 0, "buf_size=0 仍应成功");
             assert_eq!(f.wpos, buf.as_mut_ptr());
             assert_eq!(f.wbase, buf.as_mut_ptr());
-            assert!(f.wend.is_null(), "buf_size=0 时 wend 应为空");
+            assert_eq!(f.wend, buf.as_mut_ptr(), "buf_size=0 时 wend=buf+0=buf，使 wpos==wend 强制走 write 回调");
         }
     });
 

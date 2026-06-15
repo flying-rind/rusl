@@ -27,11 +27,10 @@ unsafe fn __fgets_impl(s: *mut c_char, n: c_int, f: *mut FILE) -> *mut c_char {
             break;
         }
     }
-    *s.add(i as usize) = 0;
-
     if i == 0 {
         return core::ptr::null_mut();
     }
+    *s.add(i as usize) = 0;
     s
 }
 

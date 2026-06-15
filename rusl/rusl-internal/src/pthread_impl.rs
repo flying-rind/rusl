@@ -210,8 +210,11 @@ pub struct Pthread {
     /// 线程局部的定时器 ID
     pub timer_id: AtomicI32,
 
-    /// 线程局部的 locale（占位符）
-    pub locale: Locale,
+    /// 线程局部的 locale 指针。
+    ///
+    /// musl 中 `locale_t` 定义为 `struct __locale_struct *` (指针，8 字节)，
+    /// 而非内联结构体。该指针由 `__init_tp` 初始化为 `&libc.global_locale`。
+    pub locale: *mut c_void,
 
     /// 信号递送锁
     pub killlock: SpinLock,
@@ -270,11 +273,11 @@ pub struct RobustList {
     pub pending: *mut c_void,
 }
 
-/// 线程局部的 locale（占位符）。
-#[repr(C)]
-pub struct Locale {
-    _private: [u8; 64], // 实际布局由 locale 模块定义
-}
+/// 线程局部的 locale 指针类型。
+///
+/// musl 中 `locale_t` = `struct __locale_struct *`，是一个指针。
+/// Pthread 中使用 `*mut c_void` 存储以保持 ABI 兼容。
+pub type Locale = *mut c_void;
 
 // ---------------------------------------------------------------------------
 // 默认常量

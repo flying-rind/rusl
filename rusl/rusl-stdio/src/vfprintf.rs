@@ -59,6 +59,8 @@ enum Type {
     UMAX   = 22,
     PDIFF  = 23,
     UIPTR  = 24,
+    DOUBLE  = 25,
+    LDOUBLE = 26,
     NOARG  = 27,
 }
 
@@ -82,6 +84,8 @@ impl Type {
             22 => Some(Type::UMAX),
             23 => Some(Type::PDIFF),
             24 => Some(Type::UIPTR),
+            25 => Some(Type::DOUBLE),
+            26 => Some(Type::LDOUBLE),
             27 => Some(Type::NOARG),
             _ => None,
         }
@@ -94,6 +98,7 @@ impl Type {
 union Arg {
     i: u64,
     p: *mut c_void,
+    f: f64,
 }
 
 // ---------------------------------------------------------------------------
@@ -109,6 +114,8 @@ fn next_state(st: u8, ch: u8) -> u8 {
     match (st, ch) {
         (BARE, b'd') | (BARE, b'i') => Type::INT as u8,
         (BARE, b'o') | (BARE, b'u') | (BARE, b'x') | (BARE, b'X') => Type::UINT as u8,
+        (BARE, b'f') | (BARE, b'F') | (BARE, b'e') | (BARE, b'E')
+            | (BARE, b'g') | (BARE, b'G') | (BARE, b'a') | (BARE, b'A') => Type::DOUBLE as u8,
         (BARE, b'c') => Type::INT as u8,
         (BARE, b's') => Type::PTR as u8,
         (BARE, b'p') => Type::UIPTR as u8,
@@ -120,6 +127,8 @@ fn next_state(st: u8, ch: u8) -> u8 {
 
         (LPRE, b'd') | (LPRE, b'i') => Type::LONG as u8,
         (LPRE, b'o') | (LPRE, b'u') | (LPRE, b'x') | (LPRE, b'X') => Type::ULONG as u8,
+        (LPRE, b'f') | (LPRE, b'F') | (LPRE, b'e') | (LPRE, b'E')
+            | (LPRE, b'g') | (LPRE, b'G') | (LPRE, b'a') | (LPRE, b'A') => Type::DOUBLE as u8,
         (LPRE, b'c') => Type::UINT as u8,
         (LPRE, b's') => Type::PTR as u8,
         (LPRE, b'n') => Type::PTR as u8,
@@ -127,6 +136,8 @@ fn next_state(st: u8, ch: u8) -> u8 {
 
         (LLPRE, b'd') | (LLPRE, b'i') => Type::LLONG as u8,
         (LLPRE, b'o') | (LLPRE, b'u') | (LLPRE, b'x') | (LLPRE, b'X') => Type::ULLONG as u8,
+        (LLPRE, b'f') | (LLPRE, b'F') | (LLPRE, b'e') | (LLPRE, b'E')
+            | (LLPRE, b'g') | (LLPRE, b'G') | (LLPRE, b'a') | (LLPRE, b'A') => Type::LDOUBLE as u8,
         (LLPRE, b'n') => Type::PTR as u8,
 
         (HPRE, b'd') | (HPRE, b'i') => Type::SHORT as u8,
@@ -168,10 +179,406 @@ unsafe fn pop_arg(arg: &mut Arg, t: Type, ap: *mut VaList) {
         Type::UMAX  => { arg.i = va_arg_ulonglong(ap); }
         Type::PDIFF => { arg.i = va_arg_long(ap) as u64; }
         Type::UIPTR => { arg.i = va_arg_ptr(ap) as u64; }
+        Type::DOUBLE => { arg.f = va_arg_double(ap); }
+        Type::LDOUBLE => { arg.f = va_arg_double(ap); }
         Type::NOARG => {}
     }
 }
 
+// ===========================================================================
+// 浮点数格式化
+// ===========================================================================
+
+fn pow10(exp: i32) -> f64 {
+    let mut result: f64 = 1.0;
+    let mut e = if exp < 0 { -exp } else { exp };
+    while e > 0 {
+        result *= 10.0;
+        e -= 1;
+    }
+    if exp < 0 { 1.0 / result } else { result }
+}
+
+/// 提取浮点数的前缀（符号处理）。
+fn prefix_for_float(x: f64, fl: u32) -> (*const u8, i32) {
+    if x.is_sign_negative() {
+        (b"-\0".as_ptr(), 1)
+    } else if fl & MARK_POS != 0 {
+        (b"+\0".as_ptr(), 1)
+    } else if fl & PAD_POS != 0 {
+        (b" \0".as_ptr(), 1)
+    } else {
+        (core::ptr::null(), 0)
+    }
+}
+
+/// %e/%E 科学记数法: [-]d.dddde±dd
+unsafe fn fmt_e(x: f64, buf: *mut u8, prec: i32, lowercase: bool, _ld: bool) -> *mut u8 {
+    let mut b = buf;
+    if x.is_nan() {
+        let s = if lowercase { b"nan\0" } else { b"NAN\0" };
+        b = b.sub(3);
+        core::ptr::copy_nonoverlapping(s.as_ptr(), b, 3);
+        return b;
+    }
+    if x.is_infinite() {
+        let s = if lowercase { b"inf\0" } else { b"INF\0" };
+        b = b.sub(3);
+        core::ptr::copy_nonoverlapping(s.as_ptr(), b, 3);
+        return b;
+    }
+    if x == 0.0 {
+        // 输出指数部分 e+00
+        let e_part = if lowercase { b"e+00\0" } else { b"E+00\0" };
+        for i in (0..4).rev() {
+            b = b.sub(1);
+            *b = *e_part.as_ptr().add(i);
+        }
+        // 小数部分
+        for _ in 0..prec {
+            b = b.sub(1);
+            *b = b'0';
+        }
+        b = b.sub(1);
+        *b = b'.';
+        b = b.sub(1);
+        *b = b'0';
+        return b;
+    }
+
+    // 规范化为 1.xxx * 10^exp
+    let mut v = if x < 0.0 { -x } else { x };
+    let mut exp: i32 = 0;
+    if v >= 10.0 {
+        while v >= 10.0 { v /= 10.0; exp += 1; }
+    } else if v < 1.0 {
+        while v < 1.0 { v *= 10.0; exp -= 1; }
+    }
+
+    // 舍入
+    v += 0.5 / pow10(prec);
+
+    // 处理舍入导致进位到 10.0
+    if v >= 10.0 {
+        v /= 10.0;
+        exp += 1;
+    }
+
+    // 输出指数
+    let echar = if lowercase { b'e' } else { b'E' };
+    let mut e_abs = if exp < 0 { -exp } else { exp };
+    if e_abs == 0 {
+        b = b.sub(1); *b = b'0';
+        b = b.sub(1); *b = b'0';
+    } else {
+        while e_abs > 0 {
+            b = b.sub(1);
+            *b = (e_abs % 10) as u8 + b'0';
+            e_abs /= 10;
+        }
+        if e_abs == 0 && exp < 10 && exp > -10 {
+            b = b.sub(1);
+            *b = b'0';
+        }
+    }
+    b = b.sub(1);
+    *b = if exp < 0 { b'-' } else { b'+' };
+    b = b.sub(1);
+    *b = echar;
+
+    // 小数部分
+    let int_part = v as u64;
+    let frac = v - int_part as f64;
+    let max_prec = (prec as usize).min(255);
+    if max_prec > 0 {
+        let mut tmp: [u8; 256] = [0u8; 256];
+        let mut f = frac;
+        for i in 0..max_prec {
+            f *= 10.0;
+            let digit = f as u8;
+            tmp[i] = digit + b'0';
+            f -= digit as f64;
+        }
+        for i in (0..max_prec).rev() {
+            b = b.sub(1);
+            *b = tmp[i];
+        }
+    }
+    b = b.sub(1);
+    *b = b'.';
+    b = b.sub(1);
+    *b = (int_part as u8) + b'0';
+
+    b
+}
+
+/// %g/%G: 自动选择 %f 或 %e，去除尾部零。
+unsafe fn fmt_g(x: f64, buf: *mut u8, prec: i32, lowercase: bool, fl: u32) -> *mut u8 {
+    if x.is_nan() { return fmt_e(x, buf, prec, lowercase, false); }
+    if x.is_infinite() { return fmt_e(x, buf, prec, lowercase, false); }
+    if x == 0.0 {
+        if fl & ALT_FORM != 0 {
+            let mut b = buf;
+            for _ in 0..prec - 1 { b = b.sub(1); *b = b'0'; }
+            b = b.sub(1); *b = b'.';
+            b = b.sub(1); *b = b'0';
+            return b;
+        }
+        let b = buf.sub(1);
+        *b = b'0';
+        return b;
+    }
+
+    let v_abs = if x < 0.0 { -x } else { x };
+    let mut exp: i32 = 0;
+    let mut v = v_abs;
+    if v >= 10.0 { while v >= 10.0 { v /= 10.0; exp += 1; } }
+    else if v < 1.0 && v > 0.0 { while v < 1.0 { v *= 10.0; exp -= 1; } }
+
+    let has_hash = fl & ALT_FORM != 0;
+
+    if exp < -4 || exp >= prec {
+        // %e 模式
+        let a = fmt_e(x, buf, prec - 1, lowercase, false);
+        if !has_hash {
+            // 用临时缓冲区收集输出，剥离尾零后回填
+            let mut tmp: [u8; 128] = [0u8; 128];
+            let end = buf as usize;
+            let start = a as usize;
+            let len = end - start;
+            if len < 128 {
+                core::ptr::copy_nonoverlapping(a, tmp.as_mut_ptr(), len);
+                // 找 'e' 位置
+                let ech = if lowercase { b'e' } else { b'E' };
+                let mut e_pos = len;
+                for i in 0..len { if tmp[i] == ech { e_pos = i; break; } }
+                if e_pos > 0 && e_pos < len {
+                    let mut keep = e_pos;
+                    while keep > 0 && tmp[keep - 1] == b'0' { keep -= 1; }
+                    if keep > 0 && tmp[keep - 1] == b'.' { keep -= 1; }
+                    if keep < e_pos {
+                        // 将指数部分移到 mantissa 后面
+                        let exp_len = len - e_pos;
+                        for i in 0..exp_len { tmp[keep + i] = tmp[e_pos + i]; }
+                        let new_len = keep + exp_len;
+                        // 从 buf 右到左写入
+                        let mut b = buf;
+                        for i in (0..new_len).rev() {
+                            b = b.sub(1);
+                            *b = tmp[i];
+                        }
+                        return b;
+                    }
+                }
+            }
+        }
+        a
+    } else {
+        // %f 模式: 计算小数位数，避免多余尾零
+        let frac_prec_raw = prec - 1 - exp;
+        let frac_prec = if frac_prec_raw < 0 { 0 } else { frac_prec_raw as usize };
+        let a = fmt_fp(x, buf, frac_prec as i32);
+        if !has_hash && frac_prec > 0 {
+            let end = buf as usize;
+            let start = a as usize;
+            let len = end - start;
+            let mut strip = 0usize;
+            let mut p = buf.sub(1);
+            while strip < len && *p == b'0' { strip += 1; p = p.sub(1); }
+            if strip < len && *p == b'.' { strip += 1; }
+            if strip > 0 {
+                // 从高位向低位复制 (dst > src: 反序复制防止覆盖)
+                let new_len = len - strip;
+                for i in (0..new_len).rev() {
+                    *a.add(strip + i) = *a.add(i);
+                }
+                a.add(strip)
+            } else { a }
+        } else { a }
+    }
+}
+
+/// %a/%A 十六进制浮点: [-]0xh.hhhhp±d
+unsafe fn fmt_a(x: f64, buf: *mut u8, _prec: i32, uppercase: bool, _ld: bool) -> *mut u8 {
+    let mut b = buf;
+    if x.is_nan() {
+        let s = if uppercase { b"NAN\0" } else { b"nan\0" };
+        b = b.sub(3);
+        core::ptr::copy_nonoverlapping(s.as_ptr(), b, 3);
+        return b;
+    }
+    if x.is_infinite() {
+        let s = if uppercase { b"INF\0" } else { b"inf\0" };
+        b = b.sub(3);
+        core::ptr::copy_nonoverlapping(s.as_ptr(), b, 3);
+        return b;
+    }
+    if x == 0.0 {
+        // 输出 0x0p+0
+        let end_marker = if uppercase {
+            b"0X0P+0\0"
+        } else {
+            b"0x0p+0\0"
+        };
+        for i in (0..6).rev() {
+            b = b.sub(1);
+            *b = *end_marker.as_ptr().add(i);
+        }
+        return b;
+    }
+
+    // 提取尾数和指数
+    let bits = x.to_bits();
+    let sign = bits >> 63 != 0;
+    let mut mant = bits & 0x000F_FFFF_FFFF_FFFF;
+    let mut exp = ((bits >> 52) & 0x7FF) as i32;
+
+    if exp == 0 {
+        // 次正规数
+        exp = 1 - 1023;
+    } else {
+        mant |= 1u64 << 52; // 隐含位
+        exp -= 1023;
+    }
+
+    // 去掉尾随的零 nibbles (不改变值, 不调整指数)
+    while mant != 0 && mant & 0xF == 0 { mant >>= 4; }
+
+    // 输出指数
+    let mut e = if exp < 0 { -exp } else { exp };
+    if e == 0 {
+        b = b.sub(1); *b = b'0';
+    } else {
+        while e > 0 {
+            b = b.sub(1);
+            *b = (e % 10) as u8 + b'0';
+            e /= 10;
+        }
+    }
+    b = b.sub(1);
+    *b = if exp < 0 { b'-' } else { b'+' };
+    b = b.sub(1);
+    *b = if uppercase { b'P' } else { b'p' };
+
+    // 输出尾数分数部分 (mant 去掉隐含位的 nibble 外的剩余)
+    // mant 的最高 nibble 是隐含位 (0x1)
+    // 剩余的低位 nibble(s) 是分数部分
+    if mant > 0xF {
+        let frac = (mant & 0xF) as u8;
+        mant >>= 4;
+        while mant > 0xF {
+            // mant 的剩余 nibbles 也是分数部分 (隐含位 nibble 不输出)
+            let nibble = (mant & 0xF) as u8;
+            b = b.sub(1);
+            *b = if nibble < 10 { b'0' + nibble }
+                else { nibble - 10u8 + if uppercase { b'A' } else { b'a' } };
+            mant >>= 4;
+        }
+        // 输出第一个分数 nibble (最右)
+        b = b.sub(1);
+        *b = if frac < 10 { b'0' + frac } else { frac - 10u8 + if uppercase { b'A' } else { b'a' } };
+        // 小数点
+        b = b.sub(1);
+        *b = b'.';
+    }
+
+    // 隐含位
+    b = b.sub(1);
+    *b = b'1';
+    // 0x 前缀
+    b = b.sub(1);
+    *b = if uppercase { b'X' } else { b'x' };
+    b = b.sub(1);
+    *b = b'0';
+    if sign {
+        b = b.sub(1);
+        *b = b'-';
+    }
+    b
+}
+
+/// 将 f64 值格式化为固定点字符串写入 buf（从后往前填充）。
+/// 返回指向结果首字符的指针。
+unsafe fn fmt_fp(x: f64, buf: *mut u8, p: i32) -> *mut u8 {
+    let mut b = buf;
+    if x.is_nan() {
+        let nan = b"nan\0";
+        b = b.sub(3);
+        core::ptr::copy_nonoverlapping(nan.as_ptr(), b, 3);
+        return b;
+    }
+    if x.is_infinite() {
+        if x.is_sign_negative() {
+            let inf = b"-inf\0";
+            b = b.sub(4);
+            core::ptr::copy_nonoverlapping(inf.as_ptr(), b, 4);
+        } else {
+            let inf = b"inf\0";
+            b = b.sub(3);
+            core::ptr::copy_nonoverlapping(inf.as_ptr(), b, 3);
+        }
+        return b;
+    }
+
+    let mut val = if x < 0.0 { -x } else { x };
+    let prec = if p < 0 { 6 } else { p.min(200) };
+
+    // 四舍五入: round = 0.5 * 10^(-prec)
+    val += 0.5 / pow10(prec);
+
+    // 整数部分
+    let int_part = val as u64;
+    let frac = val - int_part as f64;
+
+    // 小数部分（先写，靠右端）
+    let mut frac_digits: usize = 0;
+    if prec > 0 {
+        let max_prec = (prec as usize).min(255);
+        let mut tmp: [u8; 256] = [0u8; 256];
+        let mut f = frac;
+        for i in 0..max_prec {
+            f *= 10.0;
+            let digit = f as u8;
+            tmp[i] = digit + b'0';
+            f -= digit as f64;
+        }
+        // 从后往前写入小数: 末位数字在右端
+        for i in (0..max_prec).rev() {
+            b = b.sub(1);
+            *b = tmp[i];
+        }
+        frac_digits = max_prec;
+    }
+
+    // 小数点
+    if frac_digits > 0 {
+        b = b.sub(1);
+        *b = b'.';
+    }
+
+    // 整数部分（从后往前，写在小数点左边）
+    let mut n = int_part;
+    if n == 0 {
+        b = b.sub(1);
+        *b = b'0';
+    } else {
+        while n > 0 {
+            b = b.sub(1);
+            *b = (n % 10) as u8 + b'0';
+            n /= 10;
+        }
+    }
+
+    // 符号
+    if x.is_sign_negative() {
+        b = b.sub(1);
+        *b = b'-';
+    }
+
+    b
+}
+
+/// 十六进制浮点格式化 (%a)。
 unsafe fn out(f: *mut FILE, s: *const u8, l: usize) {
     if !ferror(f) {
         __fwritex(s as *const u8, l, f);
@@ -279,7 +686,7 @@ struct FmtResult {
 unsafe fn printf_core(f: *mut FILE, fmt: *const u8, ap: *mut VaList) -> i32 {
     let mut s = fmt;
     let mut cnt: i32 = 0;
-    let mut buf = [0u8; 32];
+    let mut buf = [0u8; 512]; // 扩大以支持浮点格式化
     let z_buf = buf.as_mut_ptr().add(buf.len());
 
     loop {
@@ -448,11 +855,12 @@ unsafe fn printf_core(f: *mut FILE, fmt: *const u8, ap: *mut VaList) -> i32 {
             b'o' => {
                 let a = fmt_o(arg.i, z_buf);
                 let z = (z_buf as usize - a as usize) as i32;
-                let mut z_adj = z;
-                if (fl & ALT_FORM != 0) && p < z + 1 {
-                    z_adj = z + 1;
-                }
-                FmtResult { a, z: z_adj, prefix: core::ptr::null(), pl: 0 }
+                let (prefix, pl) = if (fl & ALT_FORM != 0) && p < z + 1 && arg.i != 0 {
+                    (b"0\0".as_ptr(), 1i32)
+                } else {
+                    (core::ptr::null(), 0i32)
+                };
+                FmtResult { a, z, prefix, pl }
             }
 
             b'd' | b'i' => {
@@ -498,6 +906,67 @@ unsafe fn printf_core(f: *mut FILE, fmt: *const u8, ap: *mut VaList) -> i32 {
                 FmtResult { a: s_ptr, z, prefix: core::ptr::null(), pl: 0 }
             }
 
+            b'f' | b'F' => {
+                let a = fmt_fp(arg.f, z_buf, p);
+                let z = (z_buf as usize - a as usize) as i32;
+                let (prefix, pl): (*const u8, i32) = prefix_for_float(arg.f, fl);
+                FmtResult { a, z, prefix, pl }
+            }
+
+            b'e' | b'E' => {
+                let val = arg.f;
+                let prec = if p < 0 { 6 } else { p };
+                let is_neg = val.is_sign_negative();
+                let a = fmt_e(val, z_buf, prec, terminal & 32 != 0, false);
+                let z = (z_buf as usize - a as usize) as i32;
+                let (prefix, pl) = if is_neg {
+                    (b"-\0".as_ptr(), 1)
+                } else if fl & MARK_POS != 0 {
+                    (b"+\0".as_ptr(), 1)
+                } else if fl & PAD_POS != 0 {
+                    (b" \0".as_ptr(), 1)
+                } else {
+                    (core::ptr::null(), 0)
+                };
+                FmtResult { a, z, prefix, pl }
+            }
+
+            b'g' | b'G' => {
+                let val = arg.f;
+                let prec = if p < 0 { 6 } else if p == 0 { 1 } else { p };
+                let is_neg = val.is_sign_negative();
+                let a = fmt_g(val, z_buf, prec, terminal & 32 != 0, fl);
+                let z = (z_buf as usize - a as usize) as i32;
+                let (prefix, pl) = if is_neg {
+                    (b"-\0".as_ptr(), 1)
+                } else if fl & MARK_POS != 0 {
+                    (b"+\0".as_ptr(), 1)
+                } else if fl & PAD_POS != 0 {
+                    (b" \0".as_ptr(), 1)
+                } else {
+                    (core::ptr::null(), 0)
+                };
+                FmtResult { a, z, prefix, pl }
+            }
+
+            b'a' | b'A' => {
+                let val = arg.f;
+                let prec = if p < 0 { 0 } else { p };
+                let is_neg = val.is_sign_negative();
+                let a = fmt_a(val, z_buf, prec, terminal & 32 == 0, false);
+                let z = (z_buf as usize - a as usize) as i32;
+                let (prefix, pl) = if is_neg {
+                    (b"-\0".as_ptr(), 1)
+                } else if fl & MARK_POS != 0 {
+                    (b"+\0".as_ptr(), 1)
+                } else if fl & PAD_POS != 0 {
+                    (b" \0".as_ptr(), 1)
+                } else {
+                    (core::ptr::null(), 0)
+                };
+                FmtResult { a, z, prefix, pl }
+            }
+
             _ => return -1,
         };
 
@@ -510,12 +979,17 @@ unsafe fn printf_core(f: *mut FILE, fmt: *const u8, ap: *mut VaList) -> i32 {
         }
 
         if arg.i == 0 && p == 0 && matches!(terminal, b'd' | b'i' | b'u' | b'x' | b'X' | b'o') {
-            z = 0;
+            // %#.0o 对于 0 仍应输出 "0"
+            if terminal == b'o' && (fl & ALT_FORM != 0) {
+                // 保持 z = 1 (fmt_o 对 0 输出 "0")
+            } else {
+                z = 0;
+            }
         }
 
         if terminal == b'o' {
             z = p.max(z);
-        } else if !matches!(terminal, b's' | b'c') {
+        } else if !matches!(terminal, b's' | b'c' | b'f' | b'F' | b'e' | b'E' | b'g' | b'G' | b'a' | b'A') {
             z = p.max(z + if arg.i == 0 && z == 0 && p > 0 { 1 } else { 0 });
         }
 

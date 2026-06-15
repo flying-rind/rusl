@@ -436,14 +436,15 @@ pub(crate) fn init_tp(p: *mut c_void) -> c_int {
     unsafe {
         (*td).detach_state.store(DetachState::Joinable as i32, Ordering::Release);
 
-        // 注册 TID 清除地址 — 使用 THREAD_LIST_LOCK 的地址
-        // 内核在线程退出时将 &THREAD_LIST_LOCK 清零并 futex-wake
-        let lock_ref = &crate::import::pthread_impl::THREAD_LIST_LOCK;
-        let lock_ptr = lock_ref as *const _ as *const c_int;
-        (*td).tid = syscall_set_tid_address(lock_ptr) as c_int;
+        // 注册 TID 清除地址 — 使用 __thread_list_lock
+        // musl 将 &__thread_list_lock 作为 set_tid_address 目标，
+        // 内核在线程退出时原子性清零该地址并 futex-wake。
+        // 注意: 不能使用 THREAD_LIST_LOCK (SpinLock)，因为内核写入的是 int 大小的 0，
+        // 会破坏 SpinLock 内部结构。
+        (*td).tid = syscall_set_tid_address(&raw const __thread_list_lock) as c_int;
 
-        // 指向全局 C locale
-        (*td).locale = core::mem::zeroed();
+        // 指向全局 C locale (musl: td->locale = &libc.global_locale)
+        (*td).locale = &raw mut __libc.global_locale as *mut c_void;
 
         // Robust mutex 链表初始化为自环（空表）
         let head_ptr: *mut c_void = &raw mut (*td).robust_list.head as *mut _ as *mut c_void;
@@ -451,8 +452,8 @@ pub(crate) fn init_tp(p: *mut c_void) -> c_int {
         (*td).robust_list.off = 0;
         (*td).robust_list.pending = ptr::null_mut();
 
-        // vDSO sysinfo 地址 (当前使用默认值，后续由 crt 更新)
-        (*td).sysinfo = 0;
+        // vDSO sysinfo 地址 (musl: td->sysinfo = __sysinfo)
+        (*td).sysinfo = crate::import::defsysinfo::__sysinfo;
 
         // 线程链表初始化为自环（尚未链接到全局线程列表）
         (*td).prev = td;

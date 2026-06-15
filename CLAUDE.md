@@ -33,6 +33,8 @@
 
 - 每次修改./musl-1.2.6/Makefile后，将其复制到./musl-config/modified/Makefile
 
+- 每次测试libc-test后，对比./musl-config/origin/REPORT.original中的原版测试报告，并将新增的错误汇总
+
 # 运行测试
 
 ## 运行./rusl目录下的集成测试和单元测试，并测试rusl的Rust实现

@@ -124,10 +124,9 @@ pub mod pthread_impl {
         _private: [u8; 4],
     }
 
-    #[repr(C)]
-    pub struct Locale {
-        _private: [u8; 64],
-    }
+    /// musl 中 `locale_t` = `struct __locale_struct *`，是指针类型。
+    /// Pthread 中使用 `*mut c_void` 以保持 ABI 兼容。
+    pub type Locale = *mut c_void;
 
     #[repr(C)]
     pub enum DetachState {
@@ -181,7 +180,7 @@ pub mod pthread_impl {
     }
 
     pub const DEFAULT_STACK_MAX: usize = 8 << 20;
-    pub const DEFAULT_STACK_SIZE: usize = 80 * 1024;
+    pub const DEFAULT_STACK_SIZE: usize = 131072;
     pub static mut DEFAULT_STACKSIZE: c_uint = DEFAULT_STACK_SIZE as c_uint;
 
     extern "C" {
@@ -190,10 +189,10 @@ pub mod pthread_impl {
     }
 
     /// 获取当前线程的 Pthread 指针。
-    /// 对应 musl `pthread_impl.h` 中的内联宏：
-    /// `#define __pthread_self() ((pthread_t)(__get_tp() - sizeof(struct __pthread) - TP_OFFSET))`
-    /// musl 中 __pthread_self 是内联宏，不作为外部 C 符号导出，
-    /// 因此 rusl-env 必须用内联汇编自行实现。
+    /// musl arch/x86_64/pthread_arch.h 中:
+    ///   `__asm__ ("mov %%fs:0,%0" : "=r" (self)); return self;`
+    /// fs:0 处的值已经是 `self_` 指针，无需减法。
+    /// TLS Below TP (x86_64): fs:0 直接是 Pthread 指针
     pub fn __pthread_self() -> pthread_t {
         let tp: usize;
         #[cfg(target_arch = "x86_64")]
@@ -204,12 +203,12 @@ pub mod pthread_impl {
         unsafe {
             core::arch::asm!("mrs {}, tpidr_el0", out(reg) tp, options(nostack, preserves_flags));
         }
-        // TLS Below TP (x86_64): TCB 在 TP 之下
+        // x86_64 (TLS Below TP): fs:0 存储的是 self_ 值即 Pthread 指针
         #[cfg(not(TLS_ABOVE_TP))]
-        { (tp - core::mem::size_of::<Pthread>()) as pthread_t }
-        // TLS Above TP (aarch64): TCB 在 TP 之上
-        #[cfg(TLS_ABOVE_TP)]
         { tp as pthread_t }
+        // aarch64 (TLS Above TP): tpidr_el0 指向 Pthread 末尾
+        #[cfg(TLS_ABOVE_TP)]
+        { (tp - core::mem::size_of::<Pthread>()) as pthread_t }
     }
 
     pub fn set_thread_area(p: *mut c_void) -> c_int {

@@ -146,6 +146,26 @@ pub unsafe fn va_arg_longlong(ap: *mut VaList) -> i64 {
     va_arg_long(ap)
 }
 
+/// x86_64 va_arg 提取 double 参数 (使用 XMM 寄存器保存区)。
+#[inline]
+pub unsafe fn va_arg_double(ap: *mut VaList) -> f64 {
+    let ap = &mut *ap;
+    if ap.fp_offset + 16 <= 176 {
+        // 仍在 SSE 寄存器保存区 (48 + 8*16 = 176)
+        let ptr = (ap.reg_save_area as *const u8).add(ap.fp_offset as usize);
+        ap.fp_offset += 16;
+        (ptr as *const f64).read_unaligned()
+    } else {
+        // 从溢出区取
+        let ptr = ap.overflow_arg_area;
+        ap.overflow_arg_area =
+            ((ap.overflow_arg_area as usize + 7) & !7) as *mut c_void;
+        let val = (ptr as *const f64).read_unaligned();
+        ap.overflow_arg_area = (ap.overflow_arg_area as *mut u8).add(8) as *mut c_void;
+        val
+    }
+}
+
 #[inline]
 pub unsafe fn va_arg_ptr(ap: *mut VaList) -> *mut c_void {
     let ap = &mut *ap;

@@ -34,6 +34,8 @@ RUSL_A_internal = $(abspath $(srcdir)/../rusl/target/release/librusl_internal.a)
 RUSL_A_errno    = $(abspath $(srcdir)/../rusl/target/release/librusl_errno.a)
 RUSL_A_exit     = $(abspath $(srcdir)/../rusl/target/release/librusl_exit.a)
 RUSL_A_search   = $(abspath $(srcdir)/../rusl/target/release/librusl_search.a)
+RUSL_A_stdio    = $(abspath $(srcdir)/../rusl/target/release/librusl_stdio.a)
+RUSL_A_stdlib   = $(abspath $(srcdir)/../rusl/target/release/librusl_stdlib.a)
 
 RUSL_FEATURES_malloc   = --no-default-features
 RUSL_FEATURES_string   = --no-default-features
@@ -44,9 +46,11 @@ RUSL_FEATURES_internal = --no-default-features
 RUSL_FEATURES_errno    = --no-default-features
 RUSL_FEATURES_exit     = --no-default-features
 RUSL_FEATURES_search   = --no-default-features
+RUSL_FEATURES_stdio    = --no-default-features
+RUSL_FEATURES_stdlib   = --no-default-features
 
 # 有效的可替换模块列表
-RUSL_MODULES = malloc string ctype prng env internal errno exit search
+RUSL_MODULES = malloc string ctype prng env internal errno exit search stdio stdlib
 
 # ---- REPLACE 解析 ----
 # 支持 make replace mod1 mod2 ... (通过 MAKECMDGOALS 解析)
@@ -348,6 +352,12 @@ $(RUSL_A_exit): FORCE
 
 $(RUSL_A_search): FORCE
 	cd $(RUSL_WORKSPACE) && cargo build --package rusl-search $(RUSL_FEATURES_search) --release
+
+$(RUSL_A_stdio): FORCE
+	cd $(RUSL_WORKSPACE) && cargo build --package rusl-stdio $(RUSL_FEATURES_stdio) --release
+
+$(RUSL_A_stdlib): FORCE
+	cd $(RUSL_WORKSPACE) && cargo build --package rusl-stdlib $(RUSL_FEATURES_stdlib) --release
 
 # ---- replace 目标 ----
 # 用法: make replace string malloc ctype prng env

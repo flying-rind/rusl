@@ -7,15 +7,30 @@ use super::stdio_impl::*;
 use core::ffi::c_int;
 
 /// 从 FILE 流获取下一个字符（仅在缓冲区为空时调用）。
+/// 将数据读入内部缓冲区，然后从缓冲区返回首字符。
+/// 后续 getc_unlocked 调用将直接从缓冲区读取，直到耗尽再次调用 __uflow。
 #[no_mangle]
 pub(crate) unsafe extern "C" fn __uflow(f: *mut FILE) -> c_int {
     if super::__toread::__toread(f) != 0 {
         return EOF;
     }
     if let Some(read_fn) = (*f).read {
-        let mut c: u8 = 0;
-        if read_fn(f, &raw mut c, 1) == 1 {
-            return c as c_int;
+        let buf = (*f).buf;
+        let buf_size = (*f).buf_size;
+        if buf_size == 0 {
+            // vsscanf 等场景: buf 指向输入数据本身, 不可覆盖。
+            // 逐字节读取。
+            let mut c: u8 = 0;
+            if read_fn(f, &raw mut c, 1) == 1 {
+                return c as c_int;
+            }
+            return EOF;
+        }
+        let cnt = read_fn(f, buf, buf_size);
+        if cnt > 0 {
+            (*f).rpos = buf.add(1);
+            (*f).rend = buf.add(cnt);
+            return *buf as c_int;
         }
     }
     EOF
