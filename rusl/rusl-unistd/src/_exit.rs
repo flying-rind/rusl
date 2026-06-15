@@ -19,6 +19,7 @@ extern "C" {
 ///
 /// 委托给 [`_Exit`]，与 musl 实现完全一致。
 #[no_mangle]
-pub unsafe extern "C" fn _exit(status: c_int) -> ! {
+/// [Visibility]: External
+pub extern "C" fn _exit(status: c_int) -> ! {
     unsafe { _Exit(status) }
 }

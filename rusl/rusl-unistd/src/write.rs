@@ -7,6 +7,7 @@ use rusl_internal::do_syscall;
 /// write(fd, buf, count) — 将 `buf` 中最多 `count` 字节写入文件描述符 `fd`。
 #[cfg(not(test))]
 #[no_mangle]
+/// [Visibility]: External
 pub extern "C" fn write(
     fd: c_int,
     buf: *const c_void,
@@ -17,6 +18,7 @@ pub extern "C" fn write(
 }
 
 #[cfg(test)]
+/// [Visibility]: External
 pub extern "C" fn write(
     _fd: c_int,
     _buf: *const c_void,
