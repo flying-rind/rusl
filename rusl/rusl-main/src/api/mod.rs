@@ -125,3 +125,11 @@ pub mod aio {
 #[cfg(not(feature = "rusl"))]
 #[path = "aio.rs"]
 pub mod aio;
+
+#[cfg(feature = "rusl")]
+pub mod thread {
+    pub use rusl_thread::*;
+}
+#[cfg(not(feature = "rusl"))]
+#[path = "thread.rs"]
+pub mod thread;

@@ -27,6 +27,7 @@ rusl = [
     "rusl-stdio/rusl",
     "dep:rusl-exit",
     "dep:rusl-aio",
+    "dep:rusl-thread",
     "rusl-core/rusl"
 ]
 
@@ -46,6 +47,7 @@ rusl-unistd = { path = "../rusl-unistd", optional = true }
 rusl-stdio = { path = "../rusl-stdio", optional = true, default-features = false }
 rusl-exit = { path = "../rusl-exit", optional = true }
 rusl-aio = { path = "../rusl-aio", optional = true, default-features = false }
+rusl-thread = { path = "../rusl-thread", optional = true, default-features = false }
 test-framework = {path = "../test-framework"}
 
 [lib]
@@ -118,7 +120,10 @@ name = "aio_integration"
 harness = true
 test = true
 
-
+[[test]]
+name = "thread_integration"
+harness = true
+test = true
 
 [profile.dev]
 panic = "abort"

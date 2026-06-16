@@ -20,6 +20,7 @@ dependencies = [
  "rusl-stdio",
  "rusl-stdlib",
  "rusl-string",
+ "rusl-thread",
  "rusl-unistd",
  "test-framework",
 ]
@@ -160,6 +161,20 @@ dependencies = [
 [[package]]
 name = "rusl-syscall"
 version = "0.1.0"
+
+[[package]]
+name = "rusl-thread"
+version = "0.1.0"
+dependencies = [
+ "rusl-core",
+ "rusl-errno",
+ "rusl-internal",
+ "rusl-malloc",
+ "rusl-stdio",
+ "rusl-string",
+ "rusl-syscall",
+ "rusl-unistd",
+]
 
 [[package]]
 name = "rusl-unistd"

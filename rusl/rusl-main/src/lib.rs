@@ -22,6 +22,7 @@
 #![no_std]
 #![allow(non_camel_case_types)]
 #![feature(custom_test_frameworks)]
+#![feature(c_variadic)]
 #![test_runner(test_framework::runner)]
 #![reexport_test_harness_main = "test_main"]
 #![no_main]
