@@ -4,7 +4,7 @@
 //! SYS_dup 系统调用的薄封装。
 
 use core::ffi::c_int;
-use rusl_internal::do_syscall;
+use crate::import::do_syscall;
 
 /// dup(fd) — 复制文件描述符 `fd`，返回最低可用编号的新文件描述符。
 ///
@@ -14,5 +14,5 @@ use rusl_internal::do_syscall;
 #[no_mangle]
 /// [Visibility]: External
 pub extern "C" fn dup(fd: c_int) -> c_int {
-    unsafe { do_syscall!(rusl_internal::syscall::SYS_dup, fd) as c_int }
+    unsafe { do_syscall!(crate::syscall::SYS_dup, fd) as c_int }
 }

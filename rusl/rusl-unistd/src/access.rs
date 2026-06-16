@@ -4,7 +4,7 @@
 //! SYS_access 系统调用的薄封装。
 
 use core::ffi::{c_char, c_int};
-use rusl_internal::do_syscall;
+use crate::import::do_syscall;
 
 /// access(filename, amode) — 检查文件的访问权限（使用真实 UID/GID）。
 ///
@@ -13,5 +13,5 @@ use rusl_internal::do_syscall;
 #[no_mangle]
 /// [Visibility]: External
 pub extern "C" fn access(filename: *const c_char, amode: c_int) -> c_int {
-    unsafe { do_syscall!(rusl_internal::syscall::SYS_access, filename, amode) as c_int }
+    unsafe { do_syscall!(crate::syscall::SYS_access, filename, amode) as c_int }
 }

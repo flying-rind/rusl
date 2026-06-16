@@ -4,7 +4,7 @@
 //! 使用 getpriority/setpriority 系统调用实现。
 
 use core::ffi::c_int;
-use rusl_internal::syscall::{raw_syscall2, raw_syscall3, __syscall_ret};
+use crate::syscall::{raw_syscall2, raw_syscall3, __syscall_ret};
 
 const PRIO_PROCESS: i64 = 0;
 
@@ -17,7 +17,7 @@ pub extern "C" fn nice(inc: c_int) -> c_int {
     // 内核 getpriority 返回 (20 - nice_value)，范围 [1, 40]
     let kernel_ret = unsafe {
         let r = raw_syscall2(
-            rusl_internal::syscall::SYS_getpriority,
+            crate::syscall::SYS_getpriority,
             PRIO_PROCESS,
             0,
         ) as u64;
@@ -39,7 +39,7 @@ pub extern "C" fn nice(inc: c_int) -> c_int {
     let set_val = (20 - new_nice) as i64;
     let r = unsafe {
         let r = raw_syscall3(
-            rusl_internal::syscall::SYS_setpriority,
+            crate::syscall::SYS_setpriority,
             PRIO_PROCESS,
             0,
             set_val,

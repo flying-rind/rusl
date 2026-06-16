@@ -133,4 +133,17 @@ System Algorithm:
    - 调用 `parse_atom()` → `static` 函数 → **递归生成 spec**
    - ...以此类推直到所有内部依赖被覆盖
 
+## 签名格式规则
+
+**spec 中只生成 C 签名，禁止生成 Rust 签名。** spec 文件专注于从 musl C 源码中提取形式化归约（前置/后置条件、不变量、意图、系统算法），不包含任何 Rust 实现细节。C 函数签名写在每个符号规约的最前面。
+
+示例：
+```
+int aio_read(struct aiocb *cb)
+
+/* Hoare-style Specification */
+Pre-condition: ...
+Post-condition: ...
+```
+
 ## 注意事项

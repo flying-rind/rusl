@@ -4,7 +4,7 @@
 //! 基于 setitimer(ITIMER_REAL, ...) 构建，返回之前闹钟剩余秒数。
 
 use core::ffi::c_uint;
-use rusl_internal::syscall::{raw_syscall3, __syscall_ret};
+use crate::syscall::{raw_syscall3, __syscall_ret};
 
 /// itimerval 结构体（用于 setitimer/getitimer）。
 #[repr(C)]
@@ -41,7 +41,7 @@ pub extern "C" fn alarm(seconds: c_uint) -> c_uint {
     };
     unsafe {
         raw_syscall3(
-            rusl_internal::syscall::SYS_setitimer,
+            crate::syscall::SYS_setitimer,
             ITIMER_REAL,
             &it as *const ITimerVal as i64,
             &mut old as *mut ITimerVal as i64,

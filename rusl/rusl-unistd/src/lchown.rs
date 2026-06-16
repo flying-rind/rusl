@@ -4,7 +4,7 @@
 //! SYS_lchown 系统调用的薄封装。
 
 use core::ffi::{c_char, c_int};
-use rusl_internal::do_syscall;
+use crate::import::do_syscall;
 
 /// lchown(path, uid, gid) — 改变符号链接 `path` 自身（而非目标）的所有者/组。
 ///
@@ -13,5 +13,5 @@ use rusl_internal::do_syscall;
 #[no_mangle]
 /// [Visibility]: External
 pub extern "C" fn lchown(path: *const c_char, uid: u32, gid: u32) -> c_int {
-    unsafe { do_syscall!(rusl_internal::syscall::SYS_lchown, path, uid, gid) as c_int }
+    unsafe { do_syscall!(crate::syscall::SYS_lchown, path, uid, gid) as c_int }
 }

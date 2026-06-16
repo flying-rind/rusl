@@ -4,7 +4,7 @@
 //! SYS_symlink 系统调用的薄封装。
 
 use core::ffi::{c_char, c_int};
-use rusl_internal::do_syscall;
+use crate::import::do_syscall;
 
 /// symlink(existing, new) — 创建符号链接 `new` 指向目标 `existing`。
 ///
@@ -13,5 +13,5 @@ use rusl_internal::do_syscall;
 #[no_mangle]
 /// [Visibility]: External
 pub extern "C" fn symlink(existing: *const c_char, new: *const c_char) -> c_int {
-    unsafe { do_syscall!(rusl_internal::syscall::SYS_symlink, existing, new) as c_int }
+    unsafe { do_syscall!(crate::syscall::SYS_symlink, existing, new) as c_int }
 }

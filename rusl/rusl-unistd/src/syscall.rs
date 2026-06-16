@@ -1,0 +1,314 @@
+//! syscall 模块 — feature-gated 路由
+//!
+//! - `rusl` feature: 从 `rusl_internal::syscall` 导入
+//! - 否则: 从 `rusl_syscall` 导入 + 本地 SYS 常量
+
+// ========== rusl 路径 ==========
+#[cfg(feature = "rusl")]
+pub use rusl_internal::syscall::*;
+
+// ========== 非 rusl 路径 ==========
+#[cfg(not(feature = "rusl"))]
+pub use rusl_syscall::do_syscall;
+
+#[cfg(not(feature = "rusl"))]
+pub use rusl_syscall::__syscall_ret;
+
+#[cfg(not(feature = "rusl"))]
+pub use rusl_syscall::__syscall0 as raw_syscall0;
+#[cfg(not(feature = "rusl"))]
+pub use rusl_syscall::__syscall1 as raw_syscall1;
+#[cfg(not(feature = "rusl"))]
+pub use rusl_syscall::__syscall2 as raw_syscall2;
+#[cfg(not(feature = "rusl"))]
+pub use rusl_syscall::__syscall3 as raw_syscall3;
+#[cfg(not(feature = "rusl"))]
+pub use rusl_syscall::__syscall4 as raw_syscall4;
+#[cfg(not(feature = "rusl"))]
+pub use rusl_syscall::__syscall5 as raw_syscall5;
+#[cfg(not(feature = "rusl"))]
+pub use rusl_syscall::__syscall6 as raw_syscall6;
+
+// ========== SYS 常量 (非 rusl 路径需要自定义) ==========
+
+#[cfg(not(feature = "rusl"))]
+#[allow(non_upper_case_globals)]
+mod num {
+    // --- x86_64 ---
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_read: i64 = 0;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_write: i64 = 1;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_close: i64 = 3;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_lseek: i64 = 8;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_ioctl: i64 = 16;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_pread: i64 = 17;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_pwrite: i64 = 18;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_readv: i64 = 19;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_writev: i64 = 20;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_access: i64 = 21;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_pipe: i64 = 22;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_dup: i64 = 32;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_dup2: i64 = 33;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_pause: i64 = 34;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_nanosleep: i64 = 35;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_getpid: i64 = 39;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_getuid: i64 = 102;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_getgid: i64 = 104;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_setuid: i64 = 105;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_setgid: i64 = 106;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_geteuid: i64 = 107;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_getegid: i64 = 108;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_setpgid: i64 = 109;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_getppid: i64 = 110;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_getpgid: i64 = 121;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_getsid: i64 = 124;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_setsid: i64 = 112;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_setreuid: i64 = 113;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_setregid: i64 = 114;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_getgroups: i64 = 115;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_setresuid: i64 = 117;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_setresgid: i64 = 119;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_exit: i64 = 60;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_exit_group: i64 = 231;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_uname: i64 = 63;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_fsync: i64 = 74;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_fdatasync: i64 = 75;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_truncate: i64 = 76;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_ftruncate: i64 = 77;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_getcwd: i64 = 79;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_chdir: i64 = 80;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_fchdir: i64 = 81;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_rmdir: i64 = 84;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_link: i64 = 86;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_unlink: i64 = 87;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_symlink: i64 = 88;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_readlink: i64 = 89;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_chown: i64 = 92;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_fchown: i64 = 93;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_lchown: i64 = 94;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_sync: i64 = 162;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_acct: i64 = 163;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_pipe2: i64 = 293;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_dup3: i64 = 292;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_preadv: i64 = 295;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_pwritev: i64 = 296;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_faccessat: i64 = 269;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_faccessat2: i64 = 439;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_fchownat: i64 = 260;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_linkat: i64 = 265;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_unlinkat: i64 = 263;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_symlinkat: i64 = 266;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_readlinkat: i64 = 267;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_renameat: i64 = 264;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_getitimer: i64 = 36;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_setitimer: i64 = 38;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_getpriority: i64 = 140;
+    #[cfg(target_arch = "x86_64")]
+    pub const SYS_setpriority: i64 = 141;
+
+    // --- aarch64 ---
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_read: i64 = 63;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_write: i64 = 64;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_close: i64 = 57;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_lseek: i64 = 62;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_ioctl: i64 = 29;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_pread: i64 = 67;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_pwrite: i64 = 68;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_readv: i64 = 65;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_writev: i64 = 66;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_access: i64 = 1033;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_pipe: i64 = 1035;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_dup: i64 = 23;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_dup2: i64 = 1041;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_pause: i64 = 1061;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_nanosleep: i64 = 101;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_getpid: i64 = 172;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_getuid: i64 = 174;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_getgid: i64 = 176;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_setuid: i64 = 146;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_setgid: i64 = 144;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_geteuid: i64 = 175;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_getegid: i64 = 177;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_setpgid: i64 = 154;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_getppid: i64 = 173;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_getpgid: i64 = 155;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_getsid: i64 = 156;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_setsid: i64 = 157;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_setreuid: i64 = 145;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_setregid: i64 = 143;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_getgroups: i64 = 158;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_setresuid: i64 = 147;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_setresgid: i64 = 149;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_exit: i64 = 93;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_exit_group: i64 = 94;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_uname: i64 = 160;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_fsync: i64 = 82;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_fdatasync: i64 = 83;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_truncate: i64 = 45;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_ftruncate: i64 = 46;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_getcwd: i64 = 17;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_chdir: i64 = 49;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_fchdir: i64 = 50;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_rmdir: i64 = 1039;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_link: i64 = 1040;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_unlink: i64 = 1038;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_symlink: i64 = 1036;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_readlink: i64 = 1037;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_chown: i64 = 1032;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_fchown: i64 = 1034;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_lchown: i64 = 1032;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_sync: i64 = 81;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_acct: i64 = 89;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_pipe2: i64 = 59;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_dup3: i64 = 24;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_preadv: i64 = 69;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_pwritev: i64 = 70;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_faccessat: i64 = 48;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_faccessat2: i64 = 439;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_fchownat: i64 = 54;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_linkat: i64 = 37;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_unlinkat: i64 = 35;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_symlinkat: i64 = 36;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_readlinkat: i64 = 78;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_renameat: i64 = 38;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_getitimer: i64 = 102;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_setitimer: i64 = 103;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_getpriority: i64 = 141;
+    #[cfg(target_arch = "aarch64")]
+    pub const SYS_setpriority: i64 = 140;
+}
+#[cfg(not(feature = "rusl"))]
+pub use num::*;

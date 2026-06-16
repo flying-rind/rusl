@@ -4,7 +4,7 @@
 //! 通过 TIOCGWINSZ ioctl 判断。
 
 use core::ffi::c_int;
-use rusl_internal::syscall::raw_syscall3;
+use crate::syscall::raw_syscall3;
 
 /// winsize 结构体（用于 TIOCGWINSZ ioctl）。
 #[repr(C)]
@@ -33,7 +33,7 @@ pub extern "C" fn isatty(fd: c_int) -> c_int {
     };
     let r = unsafe {
         raw_syscall3(
-            rusl_internal::syscall::SYS_ioctl,
+            crate::syscall::SYS_ioctl,
             fd as i64,
             TIOCGWINSZ,
             &_wsz as *const WinSize as i64,

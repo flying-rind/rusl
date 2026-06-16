@@ -4,7 +4,7 @@
 //! SYS_getcwd 系统调用封装。
 
 use core::ffi::c_char;
-use rusl_internal::syscall::raw_syscall2;
+use crate::syscall::raw_syscall2;
 
 /// getcwd(buf, size) — 获取当前工作目录的绝对路径名。
 ///
@@ -33,7 +33,7 @@ pub extern "C" fn getcwd(buf: *mut c_char, size: usize) -> *mut c_char {
 
     unsafe {
         let r = raw_syscall2(
-            rusl_internal::syscall::SYS_getcwd,
+            crate::syscall::SYS_getcwd,
             work_buf as i64,
             work_size as i64,
         );

@@ -4,7 +4,7 @@
 //! 通过 uname 系统调用获取内核 nodename。
 
 use core::ffi::{c_char, c_int};
-use rusl_internal::syscall::raw_syscall1;
+use crate::syscall::raw_syscall1;
 
 /// utsname 结构体（用于 uname 系统调用）。
 /// 仅关心 nodename 字段（偏移 65 字节）。
@@ -29,12 +29,12 @@ pub extern "C" fn gethostname(name: *mut c_char, len: usize) -> c_int {
     };
     let r = unsafe {
         raw_syscall1(
-            rusl_internal::syscall::SYS_uname,
+            crate::syscall::SYS_uname,
             &mut uts as *mut UtsName as i64,
         )
     };
     if r < 0 {
-        let _ = unsafe { rusl_internal::syscall::__syscall_ret(r as u64) };
+        let _ = unsafe { crate::syscall::__syscall_ret(r as u64) };
         return -1;
     }
     // 拷贝 nodename 到用户缓冲区

@@ -5,7 +5,7 @@
 //! 需要 CAP_SYS_PACCT 权限。
 
 use core::ffi::{c_char, c_int};
-use rusl_internal::do_syscall;
+use crate::import::do_syscall;
 
 /// 启用或禁用进程记账。
 /// `filename` 非 NULL 时启用记账并将信息写入指定文件；
@@ -15,5 +15,5 @@ use rusl_internal::do_syscall;
 /// [Visibility]: External
 pub extern "C" fn acct(filename: *const c_char) -> c_int {
     // 调用 syscall(SYS_acct, filename)，通过 syscall_ret 转换返回值
-    unsafe { do_syscall!(rusl_internal::syscall::SYS_acct, filename) as c_int }
+    unsafe { do_syscall!(crate::syscall::SYS_acct, filename) as c_int }
 }

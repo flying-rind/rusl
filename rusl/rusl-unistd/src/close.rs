@@ -4,7 +4,7 @@
 //! 特殊处理：若被 EINTR 中断则视为成功（符合 Linux 内核语义）。
 
 use core::ffi::c_int;
-use rusl_internal::syscall::{raw_syscall1, __syscall_ret};
+use crate::syscall::{raw_syscall1, __syscall_ret};
 
 /// close(fd) — 关闭文件描述符 `fd`，释放关联的内核资源。
 ///
@@ -14,7 +14,7 @@ use rusl_internal::syscall::{raw_syscall1, __syscall_ret};
 /// [Visibility]: External
 pub extern "C" fn close(fd: c_int) -> c_int {
     unsafe {
-        let r = raw_syscall1(rusl_internal::syscall::SYS_close, fd as i64) as usize;
+        let r = raw_syscall1(crate::syscall::SYS_close, fd as i64) as usize;
         // EINTR (-4) 在内核返回值中为 0xfffffffffffffffc
         // 需要检查 errno 级别：若原始返回值为 -EINTR，视为成功
         if r == (-(4i64) as usize) {

@@ -5,8 +5,8 @@
 //! 简化实现：直接执行系统调用（单线程场景足够，多线程安全需额外 synccall 机制）。
 
 use core::ffi::c_int;
-use rusl_internal::syscall::raw_syscall3;
-use rusl_internal::syscall::__syscall_ret;
+use crate::syscall::raw_syscall3;
+use crate::syscall::__syscall_ret;
 
 /// `__setxid` — musl 内部 `hidden` 函数。
 ///
@@ -41,7 +41,7 @@ mod tests {
         // 使用 setresuid 将所有 ID 设置为 -1（不修改），应该成功返回 0
         // 这是无操作调用，不需要特权
         let ret = __setxid(
-            rusl_internal::syscall::SYS_setresuid as c_int,
+            crate::syscall::SYS_setresuid as c_int,
             -1, -1, -1,
         );
         assert_eq!(ret, 0, "__setxid(SYS_setresuid, -1, -1, -1) should succeed (no-op)");
@@ -50,7 +50,7 @@ mod tests {
     test!("test_setxid_setresgid_noop" {
         // 同样对 setresgid 做无操作调用
         let ret = __setxid(
-            rusl_internal::syscall::SYS_setresgid as c_int,
+            crate::syscall::SYS_setresgid as c_int,
             -1, -1, -1,
         );
         assert_eq!(ret, 0, "__setxid(SYS_setresgid, -1, -1, -1) should succeed (no-op)");
@@ -65,7 +65,7 @@ mod tests {
     test!("test_setxid_setreuid_noop" {
         // setreuid(-1, -1): 不修改真实和有效 UID
         let ret = __setxid(
-            rusl_internal::syscall::SYS_setreuid as c_int,
+            crate::syscall::SYS_setreuid as c_int,
             -1, -1, -1,
         );
         assert_eq!(ret, 0, "__setxid(SYS_setreuid, -1, -1, -1) should succeed (no-op)");
@@ -74,7 +74,7 @@ mod tests {
     test!("test_setxid_setregid_noop" {
         // setregid(-1, -1): 不修改真实和有效 GID
         let ret = __setxid(
-            rusl_internal::syscall::SYS_setregid as c_int,
+            crate::syscall::SYS_setregid as c_int,
             -1, -1, -1,
         );
         assert_eq!(ret, 0, "__setxid(SYS_setregid, -1, -1, -1) should succeed (no-op)");
@@ -83,11 +83,11 @@ mod tests {
     test!("test_setxid_consistency_same_syscall" {
         // 多次无操作调用应返回相同的成功结果
         let r1 = __setxid(
-            rusl_internal::syscall::SYS_setresuid as c_int,
+            crate::syscall::SYS_setresuid as c_int,
             -1, -1, -1,
         );
         let r2 = __setxid(
-            rusl_internal::syscall::SYS_setresuid as c_int,
+            crate::syscall::SYS_setresuid as c_int,
             -1, -1, -1,
         );
         assert_eq!(r1, r2, "consecutive no-op calls should return same result");

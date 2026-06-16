@@ -1,0 +1,42 @@
+[package]
+name = "rusl-aio"
+version = "0.1.0"
+edition = "2021"
+description = "rusl aio module — POSIX asynchronous I/O"
+
+[lib]
+crate-type = ["lib", "staticlib"]
+doctest = false
+test = true
+
+[features]
+default = ["rusl"]
+# 开启时依赖各rusl crate,否则使用musl C接口
+rusl = [
+    "dep:rusl-malloc",
+    "dep:rusl-unistd",
+    "dep:rusl-string",
+    "dep:rusl-internal",
+    "dep:rusl-errno",
+]
+
+[dependencies]
+rusl-core = { path = "../rusl-core", features = ["rusl"] }
+rusl-syscall = { path = "../rusl-syscall" }
+rusl-malloc = { path = "../rusl-malloc", optional = true }
+rusl-unistd = { path = "../rusl-unistd", optional = true }
+rusl-string = { path = "../rusl-string", optional = true }
+rusl-internal = { path = "../rusl-internal", optional = true }
+rusl-errno = { path = "../rusl-errno", optional = true }
+
+[profile.dev]
+panic = "abort"
+
+[profile.test]
+# no_std 测试：由自定义 test framework (setjmp/longjmp) 处理 panic 捕获
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+opt-level = "s"
+lto = true

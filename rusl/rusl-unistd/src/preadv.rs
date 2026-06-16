@@ -4,7 +4,7 @@
 //! SYS_preadv 系统调用的薄封装。
 
 use core::ffi::c_int;
-use rusl_internal::do_syscall;
+use crate::import::do_syscall;
 
 /// preadv(fd, iov, count, ofs) — 从文件描述符 `fd` 的偏移 `ofs` 处分批读取。
 ///
@@ -13,5 +13,5 @@ use rusl_internal::do_syscall;
 #[no_mangle]
 /// [Visibility]: External
 pub extern "C" fn preadv(fd: c_int, iov: *const crate::types::iovec, count: c_int, ofs: i64) -> isize {
-    unsafe { do_syscall!(rusl_internal::syscall::SYS_preadv, fd, iov, count, ofs) as isize }
+    unsafe { do_syscall!(crate::syscall::SYS_preadv, fd, iov, count, ofs) as isize }
 }

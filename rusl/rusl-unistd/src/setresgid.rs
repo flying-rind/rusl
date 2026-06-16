@@ -10,7 +10,7 @@ use core::ffi::c_int;
 /// [Visibility]: External
 pub extern "C" fn setresgid(rgid: u32, egid: u32, sgid: u32) -> c_int {
     super::__setxid(
-        rusl_internal::syscall::SYS_setresgid as c_int,
+        crate::syscall::SYS_setresgid as c_int,
         rgid as c_int,
         egid as c_int,
         sgid as c_int,

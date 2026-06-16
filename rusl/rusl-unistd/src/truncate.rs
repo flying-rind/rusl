@@ -4,7 +4,7 @@
 //! SYS_truncate 系统调用的薄封装。
 
 use core::ffi::{c_char, c_int};
-use rusl_internal::do_syscall;
+use crate::import::do_syscall;
 
 /// truncate(path, length) — 将 `path` 指定的普通文件截断为精确 `length` 字节。
 ///
@@ -13,5 +13,5 @@ use rusl_internal::do_syscall;
 #[no_mangle]
 /// [Visibility]: External
 pub extern "C" fn truncate(path: *const c_char, length: i64) -> c_int {
-    unsafe { do_syscall!(rusl_internal::syscall::SYS_truncate, path, length) as c_int }
+    unsafe { do_syscall!(crate::syscall::SYS_truncate, path, length) as c_int }
 }

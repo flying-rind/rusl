@@ -4,7 +4,7 @@
 //! 通过 TIOCSPGRP ioctl 控制命令实现。
 
 use core::ffi::c_int;
-use rusl_internal::do_syscall;
+use crate::import::do_syscall;
 
 /// TIOCSPGRP — 设置前台进程组的 ioctl 命令
 const TIOCSPGRP: i64 = 0x5410;
@@ -19,7 +19,7 @@ const TIOCSPGRP: i64 = 0x5410;
 pub extern "C" fn tcsetpgrp(fd: c_int, pgrp: c_int) -> c_int {
     unsafe {
         do_syscall!(
-            rusl_internal::syscall::SYS_ioctl,
+            crate::syscall::SYS_ioctl,
             fd,
             TIOCSPGRP,
             &pgrp as *const c_int

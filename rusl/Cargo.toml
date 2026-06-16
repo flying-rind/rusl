@@ -16,6 +16,7 @@ members = [
     "rusl-exit",
     "rusl-errno",
     "rusl-syscall",
+    "rusl-aio",
     "rusl-main",
 ]
 resolver = "2"

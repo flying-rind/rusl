@@ -10,7 +10,7 @@ use core::ffi::c_int;
 /// [Visibility]: External
 pub extern "C" fn setreuid(ruid: u32, euid: u32) -> c_int {
     super::__setxid(
-        rusl_internal::syscall::SYS_setreuid as c_int,
+        crate::syscall::SYS_setreuid as c_int,
         ruid as c_int,
         euid as c_int,
         -1,

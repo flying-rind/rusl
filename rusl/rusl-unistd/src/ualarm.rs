@@ -4,7 +4,7 @@
 //! 基于 setitimer(ITIMER_REAL, ...) 构建，提供微秒精度和自动重复。
 
 use core::ffi::c_uint;
-use rusl_internal::syscall::raw_syscall3;
+use crate::syscall::raw_syscall3;
 
 /// itimerval 结构体。
 #[repr(C)]
@@ -44,7 +44,7 @@ pub extern "C" fn ualarm(value: c_uint, interval: c_uint) -> c_uint {
     };
     unsafe {
         raw_syscall3(
-            rusl_internal::syscall::SYS_setitimer,
+            crate::syscall::SYS_setitimer,
             ITIMER_REAL,
             &it as *const ITimerVal as i64,
             &mut old as *mut ITimerVal as i64,

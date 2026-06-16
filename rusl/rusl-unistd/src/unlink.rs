@@ -4,7 +4,7 @@
 //! SYS_unlink 系统调用的薄封装。
 
 use core::ffi::{c_char, c_int};
-use rusl_internal::do_syscall;
+use crate::import::do_syscall;
 
 /// unlink(path) — 删除 `path` 指定的文件名。
 ///
@@ -14,5 +14,5 @@ use rusl_internal::do_syscall;
 #[no_mangle]
 /// [Visibility]: External
 pub extern "C" fn unlink(path: *const c_char) -> c_int {
-    unsafe { do_syscall!(rusl_internal::syscall::SYS_unlink, path) as c_int }
+    unsafe { do_syscall!(crate::syscall::SYS_unlink, path) as c_int }
 }

@@ -4,7 +4,7 @@
 //! SYS_fchown 系统调用的薄封装。
 
 use core::ffi::c_int;
-use rusl_internal::do_syscall;
+use crate::import::do_syscall;
 
 /// fchown(fd, uid, gid) — 通过文件描述符 `fd` 改变文件所有者/组。
 ///
@@ -13,5 +13,5 @@ use rusl_internal::do_syscall;
 #[no_mangle]
 /// [Visibility]: External
 pub extern "C" fn fchown(fd: c_int, uid: u32, gid: u32) -> c_int {
-    unsafe { do_syscall!(rusl_internal::syscall::SYS_fchown, fd, uid, gid) as c_int }
+    unsafe { do_syscall!(crate::syscall::SYS_fchown, fd, uid, gid) as c_int }
 }

@@ -4,7 +4,7 @@
 //! SYS_writev 系统调用的薄封装。
 
 use core::ffi::c_int;
-use rusl_internal::do_syscall;
+use crate::import::do_syscall;
 
 /// writev(fd, iov, count) — 将多个不连续缓冲区的数据原子写入文件描述符 `fd`。
 ///
@@ -13,5 +13,5 @@ use rusl_internal::do_syscall;
 #[no_mangle]
 /// [Visibility]: External
 pub extern "C" fn writev(fd: c_int, iov: *const crate::types::iovec, count: c_int) -> isize {
-    unsafe { do_syscall!(rusl_internal::syscall::SYS_writev, fd, iov, count) as isize }
+    unsafe { do_syscall!(crate::syscall::SYS_writev, fd, iov, count) as isize }
 }

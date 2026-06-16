@@ -117,3 +117,11 @@ pub mod errno {
 #[cfg(not(feature = "rusl"))]
 #[path = "errno.rs"]
 pub mod errno;
+
+#[cfg(feature = "rusl")]
+pub mod aio {
+    pub use rusl_aio::*;
+}
+#[cfg(not(feature = "rusl"))]
+#[path = "aio.rs"]
+pub mod aio;

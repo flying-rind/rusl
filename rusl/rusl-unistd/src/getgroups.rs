@@ -4,7 +4,7 @@
 //! SYS_getgroups 系统调用的薄封装。
 
 use core::ffi::c_int;
-use rusl_internal::do_syscall;
+use crate::import::do_syscall;
 
 /// POSIX `getgroups` — 获取调用进程的附加组 ID 列表。
 ///
@@ -14,5 +14,5 @@ use rusl_internal::do_syscall;
 #[no_mangle]
 /// [Visibility]: External
 pub extern "C" fn getgroups(count: c_int, list: *mut u32) -> c_int {
-    unsafe { do_syscall!(rusl_internal::syscall::SYS_getgroups, count, list) as c_int }
+    unsafe { do_syscall!(crate::syscall::SYS_getgroups, count, list) as c_int }
 }

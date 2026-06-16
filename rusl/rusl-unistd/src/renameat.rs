@@ -4,7 +4,7 @@
 //! SYS_renameat 系统调用的薄封装。
 
 use core::ffi::{c_char, c_int};
-use rusl_internal::do_syscall;
+use crate::import::do_syscall;
 
 /// renameat(oldfd, old, newfd, new) — 原子性地将 `old` 重命名为 `new`。
 ///
@@ -20,5 +20,5 @@ pub extern "C" fn renameat(
     newfd: c_int,
     new: *const c_char,
 ) -> c_int {
-    unsafe { do_syscall!(rusl_internal::syscall::SYS_renameat, oldfd, old, newfd, new) as c_int }
+    unsafe { do_syscall!(crate::syscall::SYS_renameat, oldfd, old, newfd, new) as c_int }
 }

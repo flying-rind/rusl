@@ -5,7 +5,7 @@
 //! bufsize=0 时使用内部缓冲区保护内核调用并返回 0。
 
 use core::ffi::c_char;
-use rusl_internal::syscall::raw_syscall3;
+use crate::syscall::raw_syscall3;
 
 /// readlink(path, buf, bufsize) — 读取符号链接 `path` 的目标路径。
 ///
@@ -24,7 +24,7 @@ pub extern "C" fn readlink(
         let mut tmp: [u8; 256] = [0; 256];
         unsafe {
             raw_syscall3(
-                rusl_internal::syscall::SYS_readlink,
+                crate::syscall::SYS_readlink,
                 path as i64,
                 tmp.as_mut_ptr() as i64,
                 256,
@@ -34,13 +34,13 @@ pub extern "C" fn readlink(
     }
     unsafe {
         let r = raw_syscall3(
-            rusl_internal::syscall::SYS_readlink,
+            crate::syscall::SYS_readlink,
             path as i64,
             buf as i64,
             bufsize as i64,
         );
         if r < 0 {
-            let _ = rusl_internal::syscall::__syscall_ret(r as u64);
+            let _ = crate::syscall::__syscall_ret(r as u64);
             -1
         } else {
             r as isize

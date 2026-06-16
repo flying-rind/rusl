@@ -26,6 +26,7 @@ rusl = [
     "dep:rusl-stdio",
     "rusl-stdio/rusl",
     "dep:rusl-exit",
+    "dep:rusl-aio",
     "rusl-core/rusl"
 ]
 
@@ -44,6 +45,7 @@ rusl-env = { path = "../rusl-env", optional = true, default-features = false }
 rusl-unistd = { path = "../rusl-unistd", optional = true }
 rusl-stdio = { path = "../rusl-stdio", optional = true, default-features = false }
 rusl-exit = { path = "../rusl-exit", optional = true }
+rusl-aio = { path = "../rusl-aio", optional = true, default-features = false }
 test-framework = {path = "../test-framework"}
 
 [lib]
@@ -108,6 +110,11 @@ test = true
 
 [[test]]
 name = "errno_integration"
+harness = true
+test = true
+
+[[test]]
+name = "aio_integration"
 harness = true
 test = true
 

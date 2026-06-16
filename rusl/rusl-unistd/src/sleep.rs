@@ -1,12 +1,9 @@
 //! sleep — 暂停执行指定秒数。
 //! 对应 musl src/unistd/sleep.c
-//!
-//! 基于 nanosleep() 构建，被信号中断时返回剩余秒数。
 
-use core::ffi::c_uint;
-use rusl_internal::syscall::raw_syscall2;
+use core::ffi::{c_int, c_uint};
 
-/// timespec 结构体（用于 nanosleep）。
+/// timespec 结构体（与 musl 的 struct timespec 布局一致）。
 #[repr(C)]
 struct TimeSpec {
     tv_sec: i64,
@@ -22,18 +19,32 @@ pub extern "C" fn sleep(seconds: c_uint) -> c_uint {
         tv_sec: seconds as i64,
         tv_nsec: 0,
     };
+    let r = nanosleep(&tv, &mut tv);
+    if r != 0 {
+        tv.tv_sec as c_uint
+    } else {
+        0
+    }
+}
+
+// 非 rusl 路径: FFI 调用 musl 的 nanosleep（内部使用 __syscall_cp，确保取消点语义）
+#[cfg(not(feature = "rusl"))]
+fn nanosleep(req: *const TimeSpec, rem: *mut TimeSpec) -> c_int {
+    extern "C" {
+        fn nanosleep(req: *const TimeSpec, rem: *mut TimeSpec) -> c_int;
+    }
+    unsafe { nanosleep(req, rem) }
+}
+
+// rusl 路径: 直接系统调用（TODO: 通过 __syscall_cp 实现取消点）
+#[cfg(feature = "rusl")]
+fn nanosleep(req: *const TimeSpec, rem: *mut TimeSpec) -> c_int {
     unsafe {
-        let r = raw_syscall2(
-            rusl_internal::syscall::SYS_nanosleep,
-            &tv as *const TimeSpec as i64,
-            &mut tv as *mut TimeSpec as i64,
-        );
-        if r != 0 {
-            // 被信号中断，返回剩余时间
-            tv.tv_sec as c_uint
-        } else {
-            0
-        }
+        crate::syscall::raw_syscall2(
+            crate::syscall::SYS_nanosleep,
+            req as i64,
+            rem as i64,
+        ) as c_int
     }
 }
 
@@ -46,27 +57,22 @@ mod tests {
     use rusl_core::test;
 
     test!("test_sleep_zero" {
-        // sleep(0) 应立即返回 0
         let ret = sleep(0);
         assert_eq!(ret, 0, "sleep(0) should return 0 immediately");
     });
 
     test!("test_sleep_return_value_is_unsigned" {
-        // 返回值类型是 unsigned，且成功时总是 0
         let ret = sleep(0);
         assert_eq!(ret, 0);
     });
 
     test!("test_sleep_timespec_layout" {
-        // 验证 TimeSpec 结构体布局
         let tv = TimeSpec { tv_sec: 10, tv_nsec: 500_000_000 };
         assert_eq!(tv.tv_sec, 10);
         assert_eq!(tv.tv_nsec, 500_000_000);
     });
 
     test!("test_sleep_nanosleep_integration" {
-        // sleep 底层使用 nanosleep，验证基本行为
-        // sleep(0) 是安全的
         let r = sleep(0);
         assert_eq!(r, 0);
     });

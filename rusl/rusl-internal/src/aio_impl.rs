@@ -25,45 +25,37 @@ use core::sync::atomic::{AtomicI32, Ordering};
 /// * `fork()` 前必须等待此计数器归零
 pub static AIO_FUT: AtomicI32 = AtomicI32::new(0);
 
-/// 关闭与 AIO 操作关联的文件描述符。
+/// 关闭与 AIO 操作关联的文件描述符 (内部占位实现)。
 ///
-/// 仅在 rusl feature 启用时导出。禁用时由 musl src/aio/aio.c 提供。
+/// 实际导出版本位于 `rusl-aio` crate。
+/// 此版本仅为 `rusl-internal` 的单元测试提供内部调用目标。
 #[cfg(feature = "rusl")]
-#[no_mangle]
-pub unsafe extern "C" fn __aio_close(fd: c_int) -> c_int {
+#[allow(dead_code)]
+pub fn __aio_close(fd: c_int) -> c_int {
     AIO_FUT.fetch_add(1, Ordering::AcqRel);
     let _ = fd;
     AIO_FUT.fetch_sub(1, Ordering::AcqRel);
     0
 }
 
-/// `fork()` 处理程序。
+/// `fork()` 处理程序 (内部占位实现)。
 ///
-/// 仅在 rusl feature 启用时导出。禁用时由 musl src/aio/aio.c 提供。
+/// 实际导出版本位于 `rusl-aio` crate。
+/// 此版本仅为 `rusl-internal` 的单元测试提供内部调用目标。
 #[cfg(feature = "rusl")]
-#[no_mangle]
-pub unsafe extern "C" fn __aio_atfork(arg: c_int) {
+#[allow(dead_code)]
+pub fn __aio_atfork(arg: c_int) {
     match arg {
         // pre-fork: 等待所有 AIO 操作完成
         0 => {
-            // 自旋等待 AIO_FUT 变为 0
-            // 完整实现应使用 futex_wait 而非忙等，
-            // 以避免 CPU 空转 — 参见 spec 建议：
-            //   while AIO_FUT.load(Ordering::SeqCst) > 0 {
-            //       futex_wait(&AIO_FUT, ...);
-            //   }
             while AIO_FUT.load(Ordering::Acquire) > 0 {
-                // 主动让出 CPU（x86_64 PAUSE 指令），减少忙等功耗
                 core::hint::spin_loop();
             }
         }
         // post-fork parent: 无需操作，计数器保持一致
-        1 => {
-            // 父进程中 AIO 状态无需修改
-        }
+        1 => {}
         // post-fork child: 重置 AIO 状态
         2 => {
-            // 子进程中不应保留父进程的进行中操作计数
             AIO_FUT.store(0, Ordering::Release);
         }
         // 非法 arg 值：静默忽略，与 C 实现的宽容行为一致

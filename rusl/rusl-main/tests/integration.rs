@@ -66,3 +66,6 @@ mod unistd;
 #[path = "stdio/mod.rs"]
 mod stdio;
 
+#[path = "aio/mod.rs"]
+mod aio;
+

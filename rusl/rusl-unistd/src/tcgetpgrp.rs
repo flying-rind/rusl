@@ -4,7 +4,7 @@
 //! 通过 TIOCGPGRP ioctl 控制命令实现。
 
 use core::ffi::c_int;
-use rusl_internal::syscall::raw_syscall3;
+use crate::syscall::raw_syscall3;
 
 /// TIOCGPGRP — 获取前台进程组的 ioctl 命令
 const TIOCGPGRP: i64 = 0x540F;
@@ -19,7 +19,7 @@ pub extern "C" fn tcgetpgrp(fd: c_int) -> c_int {
     let mut pgrp: c_int = 0;
     let r = unsafe {
         raw_syscall3(
-            rusl_internal::syscall::SYS_ioctl,
+            crate::syscall::SYS_ioctl,
             fd as i64,
             TIOCGPGRP,
             &mut pgrp as *mut c_int as i64,
@@ -27,7 +27,7 @@ pub extern "C" fn tcgetpgrp(fd: c_int) -> c_int {
     };
     if r < 0 {
         // 设置 errno 并返回 -1
-        let _ = rusl_internal::syscall::__syscall_ret(r as u64);
+        let _ = crate::syscall::__syscall_ret(r as u64);
         -1
     } else {
         pgrp

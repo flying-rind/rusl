@@ -4,7 +4,7 @@
 //! SYS_linkat 系统调用的薄封装。
 
 use core::ffi::{c_char, c_int};
-use rusl_internal::do_syscall;
+use crate::import::do_syscall;
 
 /// linkat(fd1, existing, fd2, new, flag) — 相对于目录 fd 创建硬链接。
 ///
@@ -22,5 +22,5 @@ pub extern "C" fn linkat(
     new: *const c_char,
     flag: c_int,
 ) -> c_int {
-    unsafe { do_syscall!(rusl_internal::syscall::SYS_linkat, fd1, existing, fd2, new, flag) as c_int }
+    unsafe { do_syscall!(crate::syscall::SYS_linkat, fd1, existing, fd2, new, flag) as c_int }
 }

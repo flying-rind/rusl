@@ -4,7 +4,7 @@
 //! 等价于 getpgid(0)，以 pid=0 调用 SYS_getpgid，始终成功。
 
 use core::ffi::c_int;
-use rusl_internal::do_syscall;
+use crate::import::do_syscall;
 
 /// 获取调用进程的进程组 ID（PGID）。
 /// 等价于 `getpgid(0)`，始终成功，返回正整数。
@@ -12,5 +12,5 @@ use rusl_internal::do_syscall;
 /// [Visibility]: External
 pub extern "C" fn getpgrp() -> c_int {
     // 以参数 pid=0 调用 SYS_getpgid，直接返回原始值（始终成功）
-    unsafe { do_syscall!(rusl_internal::syscall::SYS_getpgid, 0) as c_int }
+    unsafe { do_syscall!(crate::syscall::SYS_getpgid, 0) as c_int }
 }

@@ -12,6 +12,7 @@
 extern crate rusl_core;
 
 pub(crate) mod import;
+pub(crate) mod syscall;
 
 #[path = "unistd_inner.rs"]
 pub(crate) mod unistd_inner;

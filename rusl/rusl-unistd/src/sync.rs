@@ -3,7 +3,7 @@
 //!
 //! SYS_sync 系统调用的薄封装（无返回值）。
 
-use rusl_internal::syscall::raw_syscall0;
+use crate::syscall::raw_syscall0;
 
 /// sync() — 将所有已修改的文件系统缓冲区和元数据提交到磁盘 I/O 队列。
 ///
@@ -11,5 +11,5 @@ use rusl_internal::syscall::raw_syscall0;
 #[no_mangle]
 /// [Visibility]: External
 pub extern "C" fn sync() {
-    unsafe { raw_syscall0(rusl_internal::syscall::SYS_sync); }
+    unsafe { raw_syscall0(crate::syscall::SYS_sync); }
 }

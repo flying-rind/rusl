@@ -4,7 +4,7 @@
 //! SYS_pread 系统调用的薄封装。
 
 use core::ffi::{c_int, c_void};
-use rusl_internal::do_syscall;
+use crate::import::do_syscall;
 
 /// pread(fd, buf, size, ofs) — 从文件描述符 `fd` 的偏移 `ofs` 处读取数据。
 ///
@@ -14,5 +14,5 @@ use rusl_internal::do_syscall;
 #[no_mangle]
 /// [Visibility]: External
 pub extern "C" fn pread(fd: c_int, buf: *mut c_void, size: usize, ofs: i64) -> isize {
-    unsafe { do_syscall!(rusl_internal::syscall::SYS_pread, fd, buf, size, ofs) as isize }
+    unsafe { do_syscall!(crate::syscall::SYS_pread, fd, buf, size, ofs) as isize }
 }

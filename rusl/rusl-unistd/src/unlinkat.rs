@@ -4,7 +4,7 @@
 //! SYS_unlinkat 系统调用的薄封装。
 
 use core::ffi::{c_char, c_int};
-use rusl_internal::do_syscall;
+use crate::import::do_syscall;
 
 /// unlinkat(fd, path, flag) — 相对于目录 `fd` 删除 `path`。
 ///
@@ -15,5 +15,5 @@ use rusl_internal::do_syscall;
 #[no_mangle]
 /// [Visibility]: External
 pub extern "C" fn unlinkat(fd: c_int, path: *const c_char, flag: c_int) -> c_int {
-    unsafe { do_syscall!(rusl_internal::syscall::SYS_unlinkat, fd, path, flag) as c_int }
+    unsafe { do_syscall!(crate::syscall::SYS_unlinkat, fd, path, flag) as c_int }
 }

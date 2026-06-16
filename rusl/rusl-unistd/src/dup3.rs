@@ -4,7 +4,7 @@
 //! SYS_dup3 系统调用的薄封装。
 
 use core::ffi::c_int;
-use rusl_internal::do_syscall;
+use crate::import::do_syscall;
 
 /// __dup3(old, new, flags) — musl 内部主实现。
 ///
@@ -14,14 +14,14 @@ use rusl_internal::do_syscall;
 #[no_mangle]
 /// [Visibility]: External
 pub extern "C" fn __dup3(old: c_int, new: c_int, flags: c_int) -> c_int {
-    unsafe { do_syscall!(rusl_internal::syscall::SYS_dup3, old, new, flags) as c_int }
+    unsafe { do_syscall!(crate::syscall::SYS_dup3, old, new, flags) as c_int }
 }
 
 /// dup3 — __dup3 的公开别名。
 #[no_mangle]
 /// [Visibility]: External
 pub extern "C" fn dup3(old: c_int, new: c_int, flags: c_int) -> c_int {
-    unsafe { do_syscall!(rusl_internal::syscall::SYS_dup3, old, new, flags) as c_int }
+    unsafe { do_syscall!(crate::syscall::SYS_dup3, old, new, flags) as c_int }
 }
 
 // ===========================================================================

@@ -36,6 +36,8 @@ RUSL_A_exit     = $(abspath $(srcdir)/../rusl/target/release/librusl_exit.a)
 RUSL_A_search   = $(abspath $(srcdir)/../rusl/target/release/librusl_search.a)
 RUSL_A_stdio    = $(abspath $(srcdir)/../rusl/target/release/librusl_stdio.a)
 RUSL_A_stdlib   = $(abspath $(srcdir)/../rusl/target/release/librusl_stdlib.a)
+RUSL_A_unistd   = $(abspath $(srcdir)/../rusl/target/release/librusl_unistd.a)
+RUSL_A_aio      = $(abspath $(srcdir)/../rusl/target/release/librusl_aio.a)
 
 RUSL_FEATURES_malloc   = --no-default-features
 RUSL_FEATURES_string   = --no-default-features
@@ -48,9 +50,11 @@ RUSL_FEATURES_exit     = --no-default-features
 RUSL_FEATURES_search   = --no-default-features
 RUSL_FEATURES_stdio    = --no-default-features
 RUSL_FEATURES_stdlib   = --no-default-features
+RUSL_FEATURES_unistd   = --no-default-features
+RUSL_FEATURES_aio      = --no-default-features
 
 # 有效的可替换模块列表
-RUSL_MODULES = malloc string ctype prng env internal errno exit search stdio stdlib
+RUSL_MODULES = malloc string ctype prng env internal errno exit search stdio stdlib unistd aio
 
 # ---- REPLACE 解析 ----
 # 支持 make replace mod1 mod2 ... (通过 MAKECMDGOALS 解析)
@@ -75,6 +79,9 @@ RUSL_ERRNO_STRING_FILTER = $(if $(findstring errno,$(REPLACE)),$(srcdir)/src/str
 RUSL_STAMP_DEPS = $(foreach m,$(REPLACE),$(RUSL_A_$(m)))
 # 链接时添加的 .o 文件
 RUSL_LINK_OBJS  = $(if $(REPLACE),$(RUSL_OBJDIR)/*.o,)
+# 非替换模块对应的 .o 文件 (staticlib 的 LTO 会内联依赖，需在提取后清理)
+NON_REPLACED_MODULES = $(filter-out $(REPLACE),$(RUSL_MODULES))
+RUSL_CLEAN_NONREPLACE = $(foreach m,$(NON_REPLACED_MODULES),$(RUSL_OBJDIR)/rusl_$(m)-*.o)
 
 # floatscan_wrap.c: C ABI 包装层 (f64→long double), 替换 internal 时保留编译
 RUSL_WRAP_OBJ = $(if $(findstring internal,$(REPLACE)),obj/src/internal/floatscan_wrap.o,)
@@ -239,6 +246,7 @@ $(RUSL_STAMP): $(RUSL_STAMP_DEPS)
 	rm -f $(RUSL_OBJDIR)/test_framework-*.o
 	rm -f $(RUSL_OBJDIR)/rustc_std_workspace_core-*.o
 	rm -f $(RUSL_OBJDIR)/compiler_builtins-*.o
+	rm -f $(RUSL_CLEAN_NONREPLACE)
 	@touch $@
 
 endif
@@ -358,6 +366,9 @@ $(RUSL_A_stdio): FORCE
 
 $(RUSL_A_stdlib): FORCE
 	cd $(RUSL_WORKSPACE) && cargo build --package rusl-stdlib $(RUSL_FEATURES_stdlib) --release
+
+$(RUSL_A_unistd): FORCE
+	cd $(RUSL_WORKSPACE) && cargo build --package rusl-unistd $(RUSL_FEATURES_unistd) --release
 
 # ---- replace 目标 ----
 # 用法: make replace string malloc ctype prng env

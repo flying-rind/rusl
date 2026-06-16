@@ -4,7 +4,7 @@
 //! SYS_fsync 系统调用的薄封装。
 
 use core::ffi::c_int;
-use rusl_internal::do_syscall;
+use crate::import::do_syscall;
 
 /// fsync(fd) — 将文件描述符 `fd` 的所有已修改数据和元数据同步到磁盘。
 ///
@@ -12,5 +12,5 @@ use rusl_internal::do_syscall;
 #[no_mangle]
 /// [Visibility]: External
 pub extern "C" fn fsync(fd: c_int) -> c_int {
-    unsafe { do_syscall!(rusl_internal::syscall::SYS_fsync, fd) as c_int }
+    unsafe { do_syscall!(crate::syscall::SYS_fsync, fd) as c_int }
 }

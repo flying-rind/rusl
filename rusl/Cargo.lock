@@ -6,6 +6,7 @@ version = 4
 name = "rusl"
 version = "0.1.0"
 dependencies = [
+ "rusl-aio",
  "rusl-core",
  "rusl-ctype",
  "rusl-env",
@@ -21,6 +22,19 @@ dependencies = [
  "rusl-string",
  "rusl-unistd",
  "test-framework",
+]
+
+[[package]]
+name = "rusl-aio"
+version = "0.1.0"
+dependencies = [
+ "rusl-core",
+ "rusl-errno",
+ "rusl-internal",
+ "rusl-malloc",
+ "rusl-string",
+ "rusl-syscall",
+ "rusl-unistd",
 ]
 
 [[package]]
@@ -153,6 +167,7 @@ version = "0.1.0"
 dependencies = [
  "rusl-core",
  "rusl-internal",
+ "rusl-syscall",
 ]
 
 [[package]]

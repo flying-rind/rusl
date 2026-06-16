@@ -4,7 +4,7 @@
 //! SYS_pwrite 系统调用的薄封装。
 
 use core::ffi::{c_int, c_void};
-use rusl_internal::do_syscall;
+use crate::import::do_syscall;
 
 /// pwrite(fd, buf, size, ofs) — 向文件描述符 `fd` 的偏移 `ofs` 处写入数据。
 ///
@@ -13,5 +13,5 @@ use rusl_internal::do_syscall;
 #[no_mangle]
 /// [Visibility]: External
 pub extern "C" fn pwrite(fd: c_int, buf: *const c_void, size: usize, ofs: i64) -> isize {
-    unsafe { do_syscall!(rusl_internal::syscall::SYS_pwrite, fd, buf, size, ofs) as isize }
+    unsafe { do_syscall!(crate::syscall::SYS_pwrite, fd, buf, size, ofs) as isize }
 }

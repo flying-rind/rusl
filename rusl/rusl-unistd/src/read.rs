@@ -2,7 +2,7 @@
 //! 对应 musl src/unistd/read.c
 
 use core::ffi::{c_int, c_void};
-use rusl_internal::do_syscall;
+use crate::import::do_syscall;
 
 /// read(fd, buf, count) — 将文件描述符 `fd` 中至多 `count` 字节读入缓冲区 `buf`。
 ///
@@ -11,5 +11,5 @@ use rusl_internal::do_syscall;
 #[no_mangle]
 /// [Visibility]: External
 pub extern "C" fn read(fd: c_int, buf: *mut c_void, count: usize) -> isize {
-    unsafe { do_syscall!(rusl_internal::syscall::SYS_read, fd, buf, count) as isize }
+    unsafe { do_syscall!(crate::syscall::SYS_read, fd, buf, count) as isize }
 }

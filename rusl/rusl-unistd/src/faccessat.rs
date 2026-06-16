@@ -4,7 +4,7 @@
 //! SYS_faccessat 系统调用的薄封装。
 
 use core::ffi::{c_char, c_int};
-use rusl_internal::do_syscall;
+use crate::import::do_syscall;
 
 /// faccessat(fd, filename, amode, flag) — 相对于目录 `fd` 检查文件访问权限。
 ///
@@ -21,5 +21,5 @@ pub extern "C" fn faccessat(
     amode: c_int,
     flag: c_int,
 ) -> c_int {
-    unsafe { do_syscall!(rusl_internal::syscall::SYS_faccessat, fd, filename, amode, flag) as c_int }
+    unsafe { do_syscall!(crate::syscall::SYS_faccessat, fd, filename, amode, flag) as c_int }
 }

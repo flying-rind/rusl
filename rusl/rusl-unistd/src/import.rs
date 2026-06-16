@@ -1,14 +1,9 @@
 //! 声明所有依赖其他模块的接口
 //!
-//! 当不开启 rusl feature 时，使用 musl 的 C 接口
+//! do_syscall! 宏路由: rusl feature 时用 rusl_internal, 否则用 rusl_syscall
 
-// ========== 系统调用 ==========
 #[cfg(feature = "rusl")]
 pub use rusl_internal::do_syscall;
 
 #[cfg(not(feature = "rusl"))]
-mod internal {
-    pub use rusl_syscall::do_syscall;
-}
-#[cfg(not(feature = "rusl"))]
-pub use internal::do_syscall;
+pub use rusl_syscall::do_syscall;

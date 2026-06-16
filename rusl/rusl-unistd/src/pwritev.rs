@@ -4,7 +4,7 @@
 //! SYS_pwritev 系统调用的薄封装。
 
 use core::ffi::c_int;
-use rusl_internal::do_syscall;
+use crate::import::do_syscall;
 
 /// pwritev(fd, iov, count, ofs) — 将多个缓冲区写入文件描述符 `fd` 的偏移 `ofs` 处。
 ///
@@ -12,5 +12,5 @@ use rusl_internal::do_syscall;
 #[no_mangle]
 /// [Visibility]: External
 pub extern "C" fn pwritev(fd: c_int, iov: *const crate::types::iovec, count: c_int, ofs: i64) -> isize {
-    unsafe { do_syscall!(rusl_internal::syscall::SYS_pwritev, fd, iov, count, ofs) as isize }
+    unsafe { do_syscall!(crate::syscall::SYS_pwritev, fd, iov, count, ofs) as isize }
 }

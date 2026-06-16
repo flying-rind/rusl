@@ -4,7 +4,7 @@
 //! 通过 /proc/self/fd/<fd> 符号链接读取终端路径。
 
 use core::ffi::{c_char, c_int};
-use rusl_internal::syscall::raw_syscall3;
+use crate::syscall::raw_syscall3;
 
 /// POSIX `ttyname_r` — 将 `fd` 关联终端设备的路径名写入用户提供的缓冲区 `name`。
 ///
@@ -41,7 +41,7 @@ pub extern "C" fn ttyname_r(fd: c_int, name: *mut c_char, size: usize) -> c_int 
     let mut link_buf: [u8; 64] = [0; 64];
     let link_len = unsafe {
         let r = raw_syscall3(
-            rusl_internal::syscall::SYS_readlink,
+            crate::syscall::SYS_readlink,
             procname.as_ptr() as i64,
             link_buf.as_mut_ptr() as i64,
             63,

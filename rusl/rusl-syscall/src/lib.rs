@@ -44,13 +44,18 @@ fn panic_handler(_info: &PanicInfo) -> ! {
 // ===========================================================================
 
 extern "C" {
-    /// musl libc 的 `__syscall_ret` — 将内核原始返回值转换为 libc 约定。
-    ///
-    /// - 若 `r` 在 [-4095, -1] 范围内（即 `r > -4096UL`），
-    ///   设置 `errno = -r` 并返回 `-1`。
-    /// - 否则原样返回 `r` 的符号扩展值。
     #[link_name = "__syscall_ret"]
-    pub fn __syscall_ret(r: usize) -> isize;
+    fn __syscall_ret_ffi(r: u64) -> isize;
+}
+
+/// musl libc 的 `__syscall_ret` — 将内核原始返回值转换为 libc 约定。
+///
+/// - 若 `r` 在 [-4095, -1] 范围内（即 `r > -4096UL`），
+///   设置 `errno = -r` 并返回 `-1`。
+/// - 否则原样返回 `r` 的符号扩展值。
+#[inline]
+pub fn __syscall_ret(r: u64) -> isize {
+    unsafe { __syscall_ret_ffi(r) }
 }
 
 // ===========================================================================
@@ -213,14 +218,14 @@ macro_rules! do_syscall {
     ($nr:expr) => {{
         let _nr: i64 = $nr;
         let ret = unsafe { $crate::__syscall0(_nr) };
-        unsafe { $crate::__syscall_ret(ret as usize) }
+        unsafe { $crate::__syscall_ret(ret as u64) }
     }};
     // 1-arg
     ($nr:expr, $a1:expr) => {{
         let _nr: i64 = $nr;
         let _a1: i64 = $a1 as i64;
         let ret = unsafe { $crate::__syscall1(_nr, _a1) };
-        unsafe { $crate::__syscall_ret(ret as usize) }
+        unsafe { $crate::__syscall_ret(ret as u64) }
     }};
     // 2-arg
     ($nr:expr, $a1:expr, $a2:expr) => {{
@@ -228,7 +233,7 @@ macro_rules! do_syscall {
         let _a1: i64 = $a1 as i64;
         let _a2: i64 = $a2 as i64;
         let ret = unsafe { $crate::__syscall2(_nr, _a1, _a2) };
-        unsafe { $crate::__syscall_ret(ret as usize) }
+        unsafe { $crate::__syscall_ret(ret as u64) }
     }};
     // 3-arg
     ($nr:expr, $a1:expr, $a2:expr, $a3:expr) => {{
@@ -237,7 +242,7 @@ macro_rules! do_syscall {
         let _a2: i64 = $a2 as i64;
         let _a3: i64 = $a3 as i64;
         let ret = unsafe { $crate::__syscall3(_nr, _a1, _a2, _a3) };
-        unsafe { $crate::__syscall_ret(ret as usize) }
+        unsafe { $crate::__syscall_ret(ret as u64) }
     }};
     // 4-arg
     ($nr:expr, $a1:expr, $a2:expr, $a3:expr, $a4:expr) => {{
@@ -247,7 +252,7 @@ macro_rules! do_syscall {
         let _a3: i64 = $a3 as i64;
         let _a4: i64 = $a4 as i64;
         let ret = unsafe { $crate::__syscall4(_nr, _a1, _a2, _a3, _a4) };
-        unsafe { $crate::__syscall_ret(ret as usize) }
+        unsafe { $crate::__syscall_ret(ret as u64) }
     }};
     // 5-arg
     ($nr:expr, $a1:expr, $a2:expr, $a3:expr, $a4:expr, $a5:expr) => {{
@@ -258,7 +263,7 @@ macro_rules! do_syscall {
         let _a4: i64 = $a4 as i64;
         let _a5: i64 = $a5 as i64;
         let ret = unsafe { $crate::__syscall5(_nr, _a1, _a2, _a3, _a4, _a5) };
-        unsafe { $crate::__syscall_ret(ret as usize) }
+        unsafe { $crate::__syscall_ret(ret as u64) }
     }};
     // 6-arg
     ($nr:expr, $a1:expr, $a2:expr, $a3:expr, $a4:expr, $a5:expr, $a6:expr) => {{
@@ -272,6 +277,6 @@ macro_rules! do_syscall {
         let ret = unsafe {
             $crate::__syscall6(_nr, _a1, _a2, _a3, _a4, _a5, _a6)
         };
-        unsafe { $crate::__syscall_ret(ret as usize) }
+        unsafe { $crate::__syscall_ret(ret as u64) }
     }};
 }
